@@ -4,8 +4,10 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SlimePredicate;
-import net.minecraft.data.loot.EntityLoot;
+import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -29,7 +31,11 @@ import slimeknights.tconstruct.world.TinkerWorld;
 
 import java.util.Map.Entry;
 
-public class EntityLootTableProvider extends EntityLoot {
+public class EntityLootTableProvider extends EntityLootSubProvider {
+
+  protected EntityLootTableProvider() {
+    super(FeatureFlags.DEFAULT_FLAGS);
+  }
 
   @Override
   protected Iterable<EntityType<?>> getKnownEntities() {
@@ -41,7 +47,7 @@ public class EntityLootTableProvider extends EntityLoot {
   }
 
   @Override
-  protected void addTables() {
+  public void generate() {
     this.add(TinkerWorld.skySlimeEntity.get(), dropSlimeballs(SlimeType.SKY));
     this.add(TinkerWorld.enderSlimeEntity.get(), dropSlimeballs(SlimeType.ENDER));
     this.add(TinkerWorld.terracubeEntity.get(),

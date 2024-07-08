@@ -1,8 +1,9 @@
 package slimeknights.tconstruct.common.data.tags;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -11,12 +12,13 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.Nullable;
 import slimeknights.mantle.registration.object.BuildingBlockObject;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.MetalItemObject;
 import slimeknights.mantle.registration.object.WoodBlockObject;
-import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.registration.GeodeItemObject;
 import slimeknights.tconstruct.common.registration.GeodeItemObject.BudSize;
@@ -36,28 +38,23 @@ import slimeknights.tconstruct.world.block.DirtType;
 import slimeknights.tconstruct.world.block.FoliageType;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_HOE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL;
-import static net.minecraft.tags.BlockTags.NEEDS_DIAMOND_TOOL;
-import static net.minecraft.tags.BlockTags.NEEDS_IRON_TOOL;
-import static net.minecraft.tags.BlockTags.NEEDS_STONE_TOOL;
+import static net.minecraft.tags.BlockTags.*;
 import static net.minecraftforge.common.Tags.Blocks.NEEDS_GOLD_TOOL;
 import static net.minecraftforge.common.Tags.Blocks.NEEDS_NETHERITE_TOOL;
 
 @SuppressWarnings({"unchecked", "SameParameterValue"})
 public class BlockTagProvider extends BlockTagsProvider {
 
-  public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
-    super(generatorIn, TConstruct.MOD_ID, existingFileHelper);
+  public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+    super(output, lookupProvider, modId, existingFileHelper);
   }
 
   @Override
-  protected void addTags() {
+  protected void addTags(HolderLookup.Provider provider) {
     this.addCommon();
     this.addTools();
     this.addWorld();
@@ -580,7 +577,7 @@ public class BlockTagProvider extends BlockTagsProvider {
   private void addGlass(EnumObject<GlassColor,? extends Block> blockObj, String tagPrefix, TagAppender<Block> blockTag) {
     blockObj.forEach((color, block) -> {
       blockTag.add(block);
-      this.tag(TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", tagPrefix + color.getSerializedName()))).add(block);
+      this.tag(TagKey.create(Registries.BLOCK, new ResourceLocation("forge", tagPrefix + color.getSerializedName()))).add(block);
     });
   }
 

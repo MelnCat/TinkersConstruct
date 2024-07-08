@@ -3,6 +3,7 @@ package slimeknights.tconstruct.common;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
 import slimeknights.mantle.item.BlockTooltipItem;
@@ -32,7 +34,6 @@ import slimeknights.mantle.registration.deferred.EntityTypeDeferredRegister;
 import slimeknights.mantle.registration.deferred.FluidDeferredRegister;
 import slimeknights.mantle.registration.deferred.MenuTypeDeferredRegister;
 import slimeknights.mantle.registration.deferred.SynchronizedDeferredRegister;
-import slimeknights.mantle.util.SupplierCreativeTab;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.registration.BlockDeferredRegisterExtension;
 import slimeknights.tconstruct.common.registration.ConfiguredFeatureDeferredRegister;
@@ -79,7 +80,8 @@ public abstract class TinkerModule {
 
   /** Creative tab for items that do not fit in another tab */
   @SuppressWarnings("WeakerAccess")
-  public static final CreativeModeTab TAB_GENERAL = new SupplierCreativeTab(TConstruct.MOD_ID, "general", () -> new ItemStack(TinkerCommons.slimeball.get(SlimeType.SKY)));
+  private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(CREATIVE_MODE_TAB, TestMod3.MODID);
+  public static final CreativeModeTab TAB_GENERAL = DeferredRegister.create(Registries.TConstruct.MOD_ID, "general", () -> new ItemStack(TinkerCommons.slimeball.get(SlimeType.SKY)));
 
   // base item properties
   protected static final Item.Properties HIDDEN_PROPS = new Item.Properties();

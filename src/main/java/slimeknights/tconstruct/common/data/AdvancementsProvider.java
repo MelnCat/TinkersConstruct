@@ -7,17 +7,9 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.NbtPredicate;
-import net.minecraft.advancements.critereon.PlacedBlockTrigger;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.nbt.CompoundTag;
@@ -191,7 +183,7 @@ public class AdvancementsProvider extends GenericDataProvider {
     Advancement punySmelting = builder(TinkerCommons.punySmelting, resource("smeltery/puny_smelting"), materialsAndYou, FrameType.TASK, builder ->
       builder.addCriterion("crafted_book", hasItem(TinkerCommons.punySmelting)));
     Advancement melter = builder(TinkerSmeltery.searedMelter, resource("smeltery/melter"), punySmelting, FrameType.TASK, builder -> {
-      Consumer<Block> with = block -> builder.addCriterion(Registry.BLOCK.getKey(block).getPath(), PlacedBlockTrigger.TriggerInstance.placedBlock(block));
+      Consumer<Block> with = block -> builder.addCriterion(BuiltInRegistries.BLOCK.getKey(block).getPath(), ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(block));
       with.accept(TinkerSmeltery.searedMelter.get());
       with.accept(TinkerSmeltery.searedTable.get());
       with.accept(TinkerSmeltery.searedBasin.get());

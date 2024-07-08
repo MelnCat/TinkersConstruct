@@ -4,13 +4,11 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -59,20 +57,19 @@ import slimeknights.tconstruct.world.block.FoliageType;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BlockLootTableProvider extends BlockLootSubProvider {
-  protected BlockLootTableProvider(Set<Item> pExplosionResistant, FeatureFlagSet pEnabledFeatures) {
-    super(pExplosionResistant, pEnabledFeatures);
+  protected BlockLootTableProvider() {
+    super(Set.of(), FeatureFlags.DEFAULT_FLAGS);
   }
 
   @Nonnull
   @Override
   protected Iterable<Block> getKnownBlocks() {
     return ForgeRegistries.BLOCKS.getValues().stream()
-                                 .filter((block) -> TConstruct.MOD_ID.equals(ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.BLOCK).getKey(block).getNamespace()))
+                                 .filter((block) -> TConstruct.MOD_ID.equals(BuiltInRegistries.BLOCK.getKey(block).getNamespace()))
                                  .collect(Collectors.toList());
   }
 
@@ -317,32 +314,32 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
   private static final LootItemCondition.Builder SHEARS = CanToolPerformAction.canToolPerformAction(ToolActions.SHEARS_DIG);
   private static final LootItemCondition.Builder SILK_TOUCH_OR_SHEARS = SHEARS.or(SILK_TOUCH);
 
-  protected static LootTable.Builder onlyShears(ItemLike item) {
+  protected LootTable.Builder onlyShears(ItemLike item) {
     return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(SHEARS).add(LootItem.lootTableItem(item)));
   }
 
-  private static LootTable.Builder droppingSilkOrShears(Block block, LootPoolEntryContainer.Builder<?> alternativeLootEntry) {
+  private LootTable.Builder droppingSilkOrShears(Block block, LootPoolEntryContainer.Builder<?> alternativeLootEntry) {
     return createSelfDropDispatchTable(block, SILK_TOUCH_OR_SHEARS, alternativeLootEntry);
   }
 
-  private static LootTable.Builder dropSapling(Block blockIn, Block saplingIn, float... fortuneIn) {
+  private LootTable.Builder dropSapling(Block blockIn, Block saplingIn, float... fortuneIn) {
     return droppingSilkOrShears(blockIn, applyExplosionCondition(blockIn, LootItem.lootTableItem(saplingIn)).when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, fortuneIn)));
   }
 
-  private static LootTable.Builder randomDropSlimeBallOrSapling(FoliageType foliageType, Block blockIn, Block sapling, float... fortuneIn) {
+  private LootTable.Builder randomDropSlimeBallOrSapling(FoliageType foliageType, Block blockIn, Block sapling, float... fortuneIn) {
     LootTable.Builder builder = dropSapling(blockIn, sapling, fortuneIn);
     SlimeType slime = foliageType.asSlime();
     if (slime != null) {
       return builder.withPool(
         LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                .when(HAS_NO_SHEARS_OR_SILK_TOUCH)
+                .when(HAS_SHEARS.or(HAS_SILK_TOUCH).invert())
                 .add(applyExplosionCondition(blockIn, LootItem.lootTableItem(TinkerCommons.slimeball.get(slime)))
                        .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 1 / 50f, 1 / 45f, 1 / 40f, 1 / 30f, 1 / 20f))));
     }
     return builder;
   }
 
-  private static LootTable.Builder droppingWithFunctions(Block block, Function<LootItem.Builder<?>,LootItem.Builder<?>> mapping) {
+  private LootTable.Builder droppingWithFunctions(Block block, Function<LootItem.Builder<?>,LootItem.Builder<?>> mapping) {
     return LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(mapping.apply(LootItem.lootTableItem(block)))));
   }
 
@@ -352,7 +349,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
    */
   private void registerBuildingLootTables(BuildingBlockObject object) {
     this.dropSelf(object.get());
-    this.add(object.getSlab(), BlockLoot::createSlabItemTable);
+    this.add(object.getSlab(), this::createSlabItemTable);
     this.dropSelf(object.getStairs());
   }
 

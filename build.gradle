@@ -211,7 +211,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
     // implementation fg.deobf("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${minecraft_base_version}-${probe_version}")
 
-    // compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crt_version}")
+//    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${minecraft_version}:${crt_version}")
     compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${minecraft_version}-${ie_version}")
 //    runtimeOnly fg.deobf("curse.maven:MoonlightLib-499980:4983974")
 //    runtimeOnly fg.deobf("curse.maven:MmmMmmMmmMmm-225738:4410143")
@@ -222,7 +222,7 @@ dependencies {
     // runtimeOnly fg.deobf("curse.maven:terralith-513688:3606078")
     compileOnly fg.deobf("curse.maven:diet-443570:4813890")
 
-    //compileOnly fg.deobf("dev.gigaherz.jsonthings:JsonThings-${minecraft_version}:${json_things_version}")
+    compileOnly fg.deobf("dev.gigaherz.jsonthings:JsonThings-${minecraft_version}:${json_things_version}")
 
     deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
@@ -385,5 +385,6 @@ publishing {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-Xmaxerrs" << "1000000000"
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

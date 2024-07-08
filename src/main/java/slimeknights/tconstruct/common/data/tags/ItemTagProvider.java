@@ -1,9 +1,11 @@
 package slimeknights.tconstruct.common.data.tags;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -12,8 +14,11 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.Nullable;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.MetalItemObject;
 import slimeknights.tconstruct.TConstruct;
@@ -34,67 +39,22 @@ import slimeknights.tconstruct.tools.item.ArmorSlotType;
 import slimeknights.tconstruct.world.TinkerHeadType;
 import slimeknights.tconstruct.world.TinkerWorld;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static net.minecraft.tags.ItemTags.CLUSTER_MAX_HARVESTABLES;
-import static slimeknights.tconstruct.common.TinkerTags.Items.AOE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BASIC_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BONUS_SLOTS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BOOK_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BOOTS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BOWS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.BROAD_TOOLS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.CHESTPLATES;
-import static slimeknights.tconstruct.common.TinkerTags.Items.CROSSBOWS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.DURABILITY;
-import static slimeknights.tconstruct.common.TinkerTags.Items.DYEABLE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.EMBELLISHMENT_SLIME;
-import static slimeknights.tconstruct.common.TinkerTags.Items.EMBELLISHMENT_WOOD;
-import static slimeknights.tconstruct.common.TinkerTags.Items.FANTASTIC_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.GADGETRY_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.GOLDEN_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HARVEST;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HARVEST_PRIMARY;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HELD;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HELD_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HELMETS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.INTERACTABLE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.INTERACTABLE_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.INTERACTABLE_DUAL;
-import static slimeknights.tconstruct.common.TinkerTags.Items.INTERACTABLE_LEFT;
-import static slimeknights.tconstruct.common.TinkerTags.Items.INTERACTABLE_RIGHT;
-import static slimeknights.tconstruct.common.TinkerTags.Items.LEGGINGS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.LONGBOWS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.LOOT_CAPABLE_TOOL;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MELEE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MELEE_PRIMARY;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MELEE_WEAPON;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MIGHTY_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MODIFIABLE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MULTIPART_TOOL;
-import static slimeknights.tconstruct.common.TinkerTags.Items.PARRY;
-import static slimeknights.tconstruct.common.TinkerTags.Items.PUNY_ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.RANGED;
-import static slimeknights.tconstruct.common.TinkerTags.Items.SHIELDS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.SMALL_TOOLS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.SPECIAL_TOOLS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.STAFFS;
-import static slimeknights.tconstruct.common.TinkerTags.Items.STONE_HARVEST;
-import static slimeknights.tconstruct.common.TinkerTags.Items.SWORD;
-import static slimeknights.tconstruct.common.TinkerTags.Items.UNARMED;
-import static slimeknights.tconstruct.common.TinkerTags.Items.UNSALVAGABLE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.WORN_ARMOR;
+import static slimeknights.tconstruct.common.TinkerTags.Items.*;
 
 @SuppressWarnings("unchecked")
 public class ItemTagProvider extends ItemTagsProvider {
 
-  public ItemTagProvider(DataGenerator generatorIn, BlockTagsProvider blockTagProvider, ExistingFileHelper existingFileHelper) {
-    super(generatorIn, blockTagProvider, TConstruct.MOD_ID, existingFileHelper);
+
+  public ItemTagProvider(PackOutput p_255871_, CompletableFuture<HolderLookup.Provider> p_256035_, TagsProvider<Block> p_256467_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+    super(p_255871_, p_256035_, p_256467_, modId, existingFileHelper);
   }
 
   @Override
-  protected void addTags() {
+  protected void addTags(HolderLookup.Provider provider) {
     this.addCommon();
     this.addWorld();
     this.addSmeltery();

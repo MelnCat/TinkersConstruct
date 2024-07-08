@@ -5,8 +5,12 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +34,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.loot.CanToolPerformAction;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import slimeknights.mantle.loot.function.RetexturedLootFunction;
 import slimeknights.mantle.registration.object.BuildingBlockObject;
 import slimeknights.mantle.registration.object.FenceBuildingBlockObject;
@@ -53,20 +58,26 @@ import slimeknights.tconstruct.world.block.DirtType;
 import slimeknights.tconstruct.world.block.FoliageType;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class BlockLootTableProvider extends BlockLoot {
+public class BlockLootTableProvider extends BlockLootSubProvider {
+  protected BlockLootTableProvider(Set<Item> pExplosionResistant, FeatureFlagSet pEnabledFeatures) {
+    super(pExplosionResistant, pEnabledFeatures);
+  }
+
   @Nonnull
   @Override
   protected Iterable<Block> getKnownBlocks() {
     return ForgeRegistries.BLOCKS.getValues().stream()
-                                 .filter((block) -> TConstruct.MOD_ID.equals(Registry.BLOCK.getKey(block).getNamespace()))
+                                 .filter((block) -> TConstruct.MOD_ID.equals(ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.BLOCK).getKey(block).getNamespace()))
                                  .collect(Collectors.toList());
   }
 
   @Override
-  protected void addTables() {
+  public void generate() {
     this.addCommon();
     this.addDecorative();
     this.addGadgets();

@@ -1,6 +1,8 @@
 package slimeknights.tconstruct.common.data.tags;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
@@ -9,11 +11,13 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 
+import java.util.concurrent.CompletableFuture;
+
 @SuppressWarnings("unchecked")
 public class FluidTagProvider extends FluidTagsProvider {
 
-  public FluidTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
-    super(generatorIn, TConstruct.MOD_ID, helper);
+  public FluidTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, ExistingFileHelper helper) {
+    super(output, provider, TConstruct.MOD_ID, helper);
   }
 
   @Override

@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.feature.HugeFungusConfiguration;
  */
 public class SlimeFungusConfig extends HugeFungusConfiguration {
   public static final Codec<HugeFungusConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-    TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("valid_base").forGetter(
+    TagKey.codec(Registries.BLOCK).fieldOf("valid_base").forGetter(
       config -> config instanceof SlimeFungusConfig ? ((SlimeFungusConfig)config).getGroundTag() : BlockTags.NYLIUM),
     BlockState.CODEC.fieldOf("stem_state").forGetter(config -> config.stemState),
     BlockState.CODEC.fieldOf("hat_state").forGetter(config -> config.hatState),

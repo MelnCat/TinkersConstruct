@@ -12,7 +12,7 @@ public class ToolTagInjectorTransformer extends AbstractTagInjectingTransformer<
   public static final ToolTagInjectorTransformer INSTANCE = new ToolTagInjectorTransformer();
 
   private ToolTagInjectorTransformer() {
-    super(Registry.ITEM_REGISTRY, TConstruct.getResource("load_tools"), ContentTool.ID);
+    super(Registries.ITEM, TConstruct.getResource("load_tools"), ContentTool.ID);
   }
 
   @Override

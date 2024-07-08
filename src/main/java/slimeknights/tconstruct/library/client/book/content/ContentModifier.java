@@ -109,7 +109,7 @@ public class ContentModifier extends PageContent {
       return null;
     }
     if (this.toolFilterTag == null) {
-      this.toolFilterTag = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(toolFilter));
+      this.toolFilterTag = TagKey.create(Registries.ITEM, new ResourceLocation(toolFilter));
     }
     return this.toolFilterTag;
   }

@@ -6,6 +6,7 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -41,8 +42,8 @@ import slimeknights.tconstruct.tools.modifiers.loot.HasModifierLootCondition;
 import slimeknights.tconstruct.tools.modifiers.loot.ModifierBonusLootFunction;
 
 public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
-  public GlobalLootModifiersProvider(DataGenerator gen) {
-    super(gen, TConstruct.MOD_ID);
+  public GlobalLootModifiersProvider(PackOutput output) {
+    super(output, TConstruct.MOD_ID);
   }
 
   @Override

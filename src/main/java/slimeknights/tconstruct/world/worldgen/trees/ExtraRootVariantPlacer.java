@@ -65,7 +65,7 @@ public class ExtraRootVariantPlacer extends MangroveRootPlacer {
   /** Variant of roots to replace in the tree */
   public record RootVariant(HolderSet<Block> holder, BlockStateProvider state) implements Predicate<BlockState> {
     public static final Codec<RootVariant> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-      RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("matches").forGetter(RootVariant::holder),
+      RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("matches").forGetter(RootVariant::holder),
       BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(RootVariant::state)).apply(inst, RootVariant::new));
 
     @Override

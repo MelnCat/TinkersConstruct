@@ -2,6 +2,8 @@ package slimeknights.tconstruct.library.data.tinkering;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +16,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierId;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /** Data generator for mappings from enchantments to modifiers */
 public abstract class AbstractEnchantmentToModifierProvider extends GenericDataProvider {
@@ -28,17 +31,18 @@ public abstract class AbstractEnchantmentToModifierProvider extends GenericDataP
   protected abstract void addEnchantmentMappings();
 
   @Override
-  public void run(CachedOutput pCache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput pCache) {
     enchantmentMap.entrySet().clear();
     addEnchantmentMappings();
     saveJson(pCache, TConstruct.getResource("enchantments_to_modifiers"), enchantmentMap);
+    return CompletableFuture.completedFuture(null);
   }
 
   /* Helpers */
 
   /** Adds the given enchantment */
   protected void add(Enchantment enchantment, ModifierId modifierId) {
-    String key = Objects.requireNonNull(Registry.ENCHANTMENT.getKey(enchantment)).toString();
+    String key = Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(enchantment)).toString();
     if (enchantmentMap.has(key)) {
       throw new IllegalArgumentException("Duplicate enchantment " + key);
     }
@@ -56,6 +60,6 @@ public abstract class AbstractEnchantmentToModifierProvider extends GenericDataP
 
   /** Adds the given enchantment tag */
   protected void add(ResourceLocation tag, ModifierId modifierId) {
-    add(TagKey.create(Registry.ENCHANTMENT_REGISTRY, tag), modifierId);
+    add(TagKey.create(Registries.ENCHANTMENT, tag), modifierId);
   }
 }

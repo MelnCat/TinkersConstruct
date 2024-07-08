@@ -359,7 +359,7 @@ public class JEIPlugin implements IModPlugin {
 
   /** Helper to get an item tag */
   private static ITag<Item> getTag(ResourceLocation name) {
-    return getTag(TagKey.create(Registry.ITEM_REGISTRY, name));
+    return getTag(TagKey.create(Registries.ITEM, name));
   }
 
   /** Helper to get an item tag */

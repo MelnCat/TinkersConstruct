@@ -2036,7 +2036,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
     String ceramics = "ceramics";
     String ceramicsFolder = folder + ceramics + "/";
     Function<String,ResourceLocation> ceramicsId = name -> new ResourceLocation(ceramics, name);
-    Function<String,TagKey<Item>> ceramicsTag = name -> TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(ceramics, name));
+    Function<String,TagKey<Item>> ceramicsTag = name -> TagKey.create(Registries.ITEM, new ResourceLocation(ceramics, name));
     Consumer<FinishedRecipe> ceramicsConsumer = withCondition(consumer, new ModLoadedCondition(ceramics));
 
     // fill clay and cracked clay buckets

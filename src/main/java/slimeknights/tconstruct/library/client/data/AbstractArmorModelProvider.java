@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /** Data provider for armor models */
@@ -28,9 +29,10 @@ public abstract class AbstractArmorModelProvider extends GenericDataProvider {
   protected abstract void addModels();
 
   @Override
-  public void run(CachedOutput output) throws IOException {
+  public CompletableFuture<?> run(CachedOutput output) {
     addModels();
     models.forEach((id, model) -> saveJson(output, id, ArmorModel.LOADABLE.serialize(model)));
+    return CompletableFuture.completedFuture(null);
   }
 
   /** Adds a model to the generator */

@@ -1,7 +1,9 @@
 package slimeknights.tconstruct;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -30,13 +32,7 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.data.AdvancementsProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
-import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
-import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
-import slimeknights.tconstruct.common.data.tags.EnchantmentTagProvider;
-import slimeknights.tconstruct.common.data.tags.EntityTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.FluidTagProvider;
-import slimeknights.tconstruct.common.data.tags.ItemTagProvider;
+import slimeknights.tconstruct.common.data.tags.*;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
@@ -141,19 +137,22 @@ public class TConstruct {
   @SubscribeEvent
   static void gatherData(final GatherDataEvent event) {
     DataGenerator datagenerator = event.getGenerator();
+    PackOutput output = event.getGenerator().getPackOutput();
     ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
     boolean server = event.includeServer();
-    BlockTagProvider blockTags = new BlockTagProvider(datagenerator, existingFileHelper);
+    var provider = event.getLookupProvider();
+    BlockTagProvider blockTags = new BlockTagProvider(output, provider, TConstruct.MOD_ID, existingFileHelper);
     datagenerator.addProvider(server, blockTags);
-    datagenerator.addProvider(server, new ItemTagProvider(datagenerator, blockTags, existingFileHelper));
-    datagenerator.addProvider(server, new FluidTagProvider(datagenerator, existingFileHelper));
-    datagenerator.addProvider(server, new EntityTypeTagProvider(datagenerator, existingFileHelper));
-    datagenerator.addProvider(server, new BlockEntityTypeTagProvider(datagenerator, existingFileHelper));
-    datagenerator.addProvider(server, new BiomeTagProvider(datagenerator, existingFileHelper));
-    datagenerator.addProvider(server, new EnchantmentTagProvider(datagenerator, existingFileHelper));
-    datagenerator.addProvider(server, new TConstructLootTableProvider(datagenerator));
+    datagenerator.addProvider(server, new ItemTagProvider(output, provider, blockTags, TConstruct.MOD_ID, existingFileHelper));
+    datagenerator.addProvider(server, new FluidTagProvider(output, provider, existingFileHelper));
+    datagenerator.addProvider(server, new EntityTypeTagProvider(output, provider, existingFileHelper));
+    datagenerator.addProvider(server, new BlockEntityTypeTagProvider(output, provider, existingFileHelper));
+    datagenerator.addProvider(server, new BiomeTagProvider(output, provider, existingFileHelper));
+    datagenerator.addProvider(server, new EnchantmentTagProvider(output, provider, existingFileHelper));
+    datagenerator.addProvider(server, new TConstructLootTableProvider(output));
     datagenerator.addProvider(server, new AdvancementsProvider(datagenerator));
-    datagenerator.addProvider(server, new GlobalLootModifiersProvider(datagenerator));
+    datagenerator.addProvider(server, new GlobalLootModifiersProvider(output));
+    datagenerator.addProvider(server, new DamageTypeTagProvider(output, provider, TConstruct.MOD_ID, existingFileHelper));
   }
 
   /** Shared behavior between item and block missing mappings */
@@ -178,14 +177,14 @@ public class TConstruct {
 
   /** Handles missing mappings of all types */
   private static void missingMappings(MissingMappingsEvent event) {
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registry.BLOCK_REGISTRY, name -> {
+    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.BLOCK, name -> {
       // no item form so we handle it directly
       if (name.equals("blood_fluid")) {
         return TinkerFluids.earthSlime.getBlock();
       }
       return missingBlock(name);
     });
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registry.ITEM_REGISTRY, name -> switch (name) {
+    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.ITEM, name -> switch (name) {
       // slings are modifiers now
       case "earth_slime_sling" -> TinkerTools.earthStaff.get();
       case "sky_slime_sling" -> TinkerTools.skyStaff.get();

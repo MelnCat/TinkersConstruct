@@ -168,15 +168,15 @@ public class TinkerTags {
     public static final TagKey<Block> CHRYSOPHILITE_ORES = tag("chrysophilite_ores");
 
     // ceramics compat
-    public static final TagKey<Block> CISTERN_CONNECTIONS = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("ceramics", "cistern_connections"));
+    public static final TagKey<Block> CISTERN_CONNECTIONS = TagKey.create(Registries.BLOCK, new ResourceLocation("ceramics", "cistern_connections"));
 
     /** Makes a tag in the tinkers domain */
     public static TagKey<Block> tag(String name) {
-      return TagKey.create(Registry.BLOCK_REGISTRY, TConstruct.getResource(name));
+      return TagKey.create(Registries.BLOCK, TConstruct.getResource(name));
     }
 
     private static TagKey<Block> forgeTag(String name) {
-      return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", name));
+      return TagKey.create(Registries.BLOCK, new ResourceLocation("forge", name));
     }
   }
 
@@ -425,12 +425,12 @@ public class TinkerTags {
 
     /** Makes a tag in the tinkers domain */
     private static TagKey<Item> tag(String name) {
-      return TagKey.create(Registry.ITEM_REGISTRY, TConstruct.getResource(name));
+      return TagKey.create(Registries.ITEM, TConstruct.getResource(name));
     }
 
     /** Makes a tag in the forge domain */
     public static TagKey<Item> forgeTag(String name) {
-      return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge", name));
+      return TagKey.create(Registries.ITEM, new ResourceLocation("forge", name));
     }
   }
 

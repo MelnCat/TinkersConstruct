@@ -50,7 +50,7 @@ public class TagPreferenceLootEntry extends LootPoolSingletonContainer {
 
     @Override
     protected TagPreferenceLootEntry deserialize(JsonObject json, JsonDeserializationContext context, int weight, int quality, LootItemCondition[] conditions, LootItemFunction[] functions) {
-      TagKey<Item> tag = TagKey.create(Registry.ITEM_REGISTRY, JsonHelper.getResourceLocation(json, "tag"));
+      TagKey<Item> tag = TagKey.create(Registries.ITEM, JsonHelper.getResourceLocation(json, "tag"));
       return new TagPreferenceLootEntry(tag, weight, quality, conditions, functions);
     }
   }

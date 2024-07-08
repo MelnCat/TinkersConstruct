@@ -25,9 +25,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -62,6 +60,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import slimeknights.mantle.client.model.util.ColoredBlockModel;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.TConstruct;
@@ -149,7 +149,7 @@ public record FluidContainerModel(FluidStack fluid, boolean flipGas) implements 
 
     // if its a gas and we flipping, flip it
     if (flipGas && !fluid.isEmpty() && fluid.getFluid().getFluidType().isLighterThanAir()) {
-      modelState = new SimpleModelState(modelState.getRotation().compose(new Transformation(null, new Quaternion(0, 0, 1, 0), null, null)));
+      modelState = new SimpleModelState(modelState.getRotation().compose(new Transformation(null, new Quaternionf(0, 0, 1, 0), null, null)));
     }
 
     // start building the mode

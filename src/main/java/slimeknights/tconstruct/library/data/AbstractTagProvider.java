@@ -6,6 +6,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
@@ -42,7 +43,7 @@ public abstract class AbstractTagProvider<T> extends GenericDataProvider {
   protected final Map<ResourceLocation, TagBuilder> builders = Maps.newLinkedHashMap();
 
   protected AbstractTagProvider(DataGenerator generator, String modId, String folder, Function<T,ResourceLocation> keyGetter, Predicate<ResourceLocation> staticValuePredicate, ExistingFileHelper existingFileHelper) {
-    super(generator, PackOutput.Target.DATA_PACK, folder);
+    super(generator, PackType.SERVER_DATA, folder);
     this.generator = generator;
     this.modId = modId;
     this.keyGetter = keyGetter;

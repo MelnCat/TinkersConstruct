@@ -1,10 +1,10 @@
 package slimeknights.tconstruct.library.tools.capability;
 
-import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.data.FloatMultiplier;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.ComputableDataKey;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.TinkerDataKey;
+import slimeknights.tconstruct.library.utils.IdAwareComponentRegistry;
 
 /** All tinker data keys intended to be used by multiple modifiers */
 public interface TinkerDataKeys {

@@ -3,11 +3,11 @@ package slimeknights.tconstruct.shared.inventory;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate.Composite;
 import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -18,6 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tconstruct.TConstruct;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.Objects;
 
 /** Criteria that triggers when a container is opened */
@@ -30,7 +31,7 @@ public class BlockContainerOpenedTrigger extends SimpleCriterionTrigger<BlockCon
   }
 
   @Override
-  protected Instance createInstance(JsonObject json, Composite entityPredicate, DeserializationContext conditionsParser) {
+  protected Instance createInstance(JsonObject json, ContextAwarePredicate entityPredicate, DeserializationContext conditionsParser) {
     ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "type"));
     BlockEntityType<?> type = ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(id);
     if (type == null) {
@@ -48,7 +49,7 @@ public class BlockContainerOpenedTrigger extends SimpleCriterionTrigger<BlockCon
 
   public static class Instance extends AbstractCriterionTriggerInstance {
     private final BlockEntityType<?> type;
-    public Instance(Composite playerCondition, BlockEntityType<?> type) {
+    public Instance(ContextAwarePredicate playerCondition, BlockEntityType<?> type) {
       super(ID, playerCondition);
       this.type = type;
     }
@@ -65,7 +66,7 @@ public class BlockContainerOpenedTrigger extends SimpleCriterionTrigger<BlockCon
     @Override
     public JsonObject serializeToJson(SerializationContext conditions) {
       JsonObject json = super.serializeToJson(conditions);
-      json.addProperty("type", Objects.requireNonNull(Registry.BLOCK_ENTITY_TYPE.getKey(type)).toString());
+      json.addProperty("type", Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).toString());
       return json;
     }
   }

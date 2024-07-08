@@ -33,7 +33,7 @@ import slimeknights.tconstruct.plugin.jei.IRecipeTooltipReplacement;
 import slimeknights.tconstruct.plugin.jei.TConstructJEIConstants;
 import slimeknights.tconstruct.plugin.jei.melting.MeltingFuelHandler;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 
 /**

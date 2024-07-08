@@ -16,7 +16,7 @@ public class PatternGuiTextureLoader extends ResourceValidator {
   public static void init() {
     PatternGuiTextureLoader loader = new PatternGuiTextureLoader();
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-    bus.addListener(EventPriority.NORMAL, false, TextureStitchEvent.Pre.class, loader::onTextureStitch);
+    bus.addListener(EventPriority.NORMAL, false, TextureStitchEvent.Post.class, loader::onTextureStitch);
   }
 
   private PatternGuiTextureLoader() {
@@ -24,11 +24,11 @@ public class PatternGuiTextureLoader extends ResourceValidator {
   }
 
   /** Called during texture stitch to add the textures in */
-  private void onTextureStitch(TextureStitchEvent.Pre event) {
+  private void onTextureStitch(TextureStitchEvent.Post event) {
     if (InventoryMenu.BLOCK_ATLAS.equals(event.getAtlas().location())) {
       // manually call reload to ensure it runs at the proper time
       this.onReloadSafe(Minecraft.getInstance().getResourceManager());
-      this.resources.forEach(event::addSprite);
+      //this.resources.forEach(event::addSprite);
       this.clear();
     }
   }

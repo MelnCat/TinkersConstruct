@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.smeltery;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -14,8 +15,8 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,7 +33,6 @@ import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.FenceBuildingBlockObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.mantle.registration.object.WallBuildingBlockObject;
-import slimeknights.mantle.util.SupplierCreativeTab;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -122,7 +122,8 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public final class TinkerSmeltery extends TinkerModule {
   /** Tab for all blocks related to the smeltery */
-  public static final CreativeModeTab TAB_SMELTERY = new SupplierCreativeTab(TConstruct.MOD_ID, "smeltery", () -> new ItemStack(TinkerSmeltery.smelteryController));
+  //TODO!:Creative tab
+  //public static final CreativeModeTab TAB_SMELTERY = new SupplierCreativeTab(TConstruct.MOD_ID, "smeltery", () -> new ItemStack(TinkerSmeltery.smelteryController));
   public static final Logger log = Util.getLogger("tinker_smeltery");
 
   /* Bricks */
@@ -131,26 +132,26 @@ public final class TinkerSmeltery extends TinkerModule {
   /*
    * Block base properties
    */
-  private static final Item.Properties SMELTERY_PROPS = new Item.Properties().tab(TAB_SMELTERY);
+  private static final Item.Properties SMELTERY_PROPS = new Item.Properties();
   private static final Function<Block,? extends BlockItem> TOOLTIP_BLOCK_ITEM = (b) -> new BlockTooltipItem(b, SMELTERY_PROPS);
 
   /*
    * Blocks
    */
-  public static final ItemObject<Block> grout = BLOCKS.register("grout", builder(Material.SAND, MaterialColor.COLOR_LIGHT_GRAY, SoundType.SAND).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
-  public static final ItemObject<Block> netherGrout = BLOCKS.register("nether_grout", builder(Material.SAND, SoundType.SOUL_SOIL).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
+  public static final ItemObject<Block> grout = BLOCKS.register("grout", builder(MapColor.COLOR_LIGHT_GRAY, SoundType.SAND).instrument(NoteBlockInstrument.SNARE).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
+  public static final ItemObject<Block> netherGrout = BLOCKS.register("nether_grout", builder(SoundType.SOUL_SOIL).instrument(NoteBlockInstrument.SNARE).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
 
   // seared blocks
   private static final Properties SEARED, TOUGH_SEARED, SEARED_GLASS, SEARED_SOUL_GLASS, SEARED_NON_SOLID, SEARED_LANTERN;
   static {
     // solid
     IntFunction<Properties> solidProps = factor ->
-      builder(Material.STONE, MaterialColor.COLOR_GRAY, SoundType.METAL).requiresCorrectToolForDrops().strength(3.0F * factor, 9.0F * factor)
+      builder(MapColor.COLOR_GRAY, SoundType.METAL).requiresCorrectToolForDrops().strength(3.0F * factor, 9.0F * factor)
                                                                                    .isValidSpawn((s, r, p, e) -> !s.hasProperty(SearedBlock.IN_STRUCTURE) || !s.getValue(SearedBlock.IN_STRUCTURE));
     SEARED = solidProps.apply(1);
     TOUGH_SEARED = solidProps.apply(2);
     // non-solid
-    Function<SoundType,Properties> nonSolidProps = sound -> builder(Material.STONE, MaterialColor.COLOR_GRAY, sound)
+    Function<SoundType,Properties> nonSolidProps = sound -> builder(MapColor.COLOR_GRAY, sound)
       .requiresCorrectToolForDrops().strength(3.0F, 9.0F).noOcclusion()
       .isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never);
     SEARED_GLASS = nonSolidProps.apply(SoundType.GLASS);
@@ -187,11 +188,11 @@ public final class TinkerSmeltery extends TinkerModule {
   // scorched blocks
   private static final Properties SCORCHED, TOUGH_SCORCHED, SCORCHED_GLASS, SCORCHED_SOUL_GLASS, SCORCHED_NON_SOLID, SCORCHED_LANTERN;
   static {
-    IntFunction<Properties> solidProps = factor -> builder(Material.STONE, MaterialColor.TERRACOTTA_BROWN, SoundType.BASALT)
+    IntFunction<Properties> solidProps = factor -> builder(MapColor.TERRACOTTA_BROWN, SoundType.BASALT)
       .requiresCorrectToolForDrops().strength(2.5F * factor, 8.0F * factor).isValidSpawn((s, r, p, e) -> !s.hasProperty(SearedBlock.IN_STRUCTURE) || !s.getValue(SearedBlock.IN_STRUCTURE));
     SCORCHED = solidProps.apply(1);
     TOUGH_SCORCHED = solidProps.apply(3);
-    Function<SoundType,Properties> nonSolidProps = sound -> builder(Material.STONE, MaterialColor.TERRACOTTA_BROWN, sound)
+    Function<SoundType,Properties> nonSolidProps = sound -> builder(MapColor.TERRACOTTA_BROWN, sound)
       .requiresCorrectToolForDrops().strength(2.5F, 8.0F).noOcclusion()
       .isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never);
     SCORCHED_GLASS = nonSolidProps.apply(SoundType.GLASS);
@@ -248,8 +249,8 @@ public final class TinkerSmeltery extends TinkerModule {
   public static final ItemObject<HeaterBlock> searedHeater;
   public static final ItemObject<AlloyerBlock> scorchedAlloyer;
   static {
-    Supplier<Properties> seared = () -> builder(Material.STONE, MaterialColor.COLOR_GRAY, SoundType.METAL).requiresCorrectToolForDrops().strength(8.0F, 28F).lightLevel(s -> s.getValue(ControllerBlock.ACTIVE) ? 13 : 0);
-    Supplier<Properties> scorched = () -> builder(Material.STONE, MaterialColor.TERRACOTTA_BROWN, SoundType.BASALT).requiresCorrectToolForDrops().strength(9.0F, 35f).lightLevel(s -> s.getValue(ControllerBlock.ACTIVE) ? 13 : 0);
+    Supplier<Properties> seared = () -> builder(MapColor.COLOR_GRAY, SoundType.METAL).requiresCorrectToolForDrops().strength(8.0F, 28F).lightLevel(s -> s.getValue(ControllerBlock.ACTIVE) ? 13 : 0);
+    Supplier<Properties> scorched = () -> builder(MapColor.TERRACOTTA_BROWN, SoundType.BASALT).requiresCorrectToolForDrops().strength(9.0F, 35f).lightLevel(s -> s.getValue(ControllerBlock.ACTIVE) ? 13 : 0);
     smelteryController = BLOCKS.register("smeltery_controller", () -> new SmelteryControllerBlock(seared.get()),  SEARED_IO_BLOCK_ITEM);
     foundryController = BLOCKS.register("foundry_controller", () -> new FoundryControllerBlock(scorched.get()),  SCORCHED_IO_BLOCK_ITEM);
     // tiny
@@ -300,7 +301,7 @@ public final class TinkerSmeltery extends TinkerModule {
    */
   public static final ItemObject<Item> searedBrick = ITEMS.register("seared_brick", SMELTERY_PROPS);
   public static final ItemObject<Item> scorchedBrick = ITEMS.register("scorched_brick", SMELTERY_PROPS);
-  public static final ItemObject<Item> copperCan = ITEMS.register("copper_can", () -> new CopperCanItem(new Item.Properties().stacksTo(16).tab(TAB_SMELTERY)));
+  public static final ItemObject<Item> copperCan = ITEMS.register("copper_can", () -> new CopperCanItem(new Item.Properties().stacksTo(16)));
 
   // casts
   // basic
@@ -394,7 +395,7 @@ public final class TinkerSmeltery extends TinkerModule {
 
   @SubscribeEvent
   void registerSerializers(RegisterEvent event) {
-    if (event.getRegistryKey() == Registry.RECIPE_SERIALIZER_REGISTRY) {
+    if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
       FluidContainerTransferManager.TRANSFER_LOADERS.registerDeserializer(EmptyPotionTransfer.ID, EmptyPotionTransfer.DESERIALIZER);
     }
   }

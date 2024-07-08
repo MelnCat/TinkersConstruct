@@ -6,7 +6,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
-import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorWalkModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.DamageBlockModifierHook;
@@ -55,6 +54,7 @@ import slimeknights.tconstruct.library.modifiers.hook.special.PlantHarvestModifi
 import slimeknights.tconstruct.library.modifiers.hook.special.ShearsModifierHook;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+import slimeknights.tconstruct.library.utils.IdAwareComponentRegistry;
 import slimeknights.tconstruct.library.utils.RestrictedCompoundTag;
 
 import javax.annotation.Nullable;

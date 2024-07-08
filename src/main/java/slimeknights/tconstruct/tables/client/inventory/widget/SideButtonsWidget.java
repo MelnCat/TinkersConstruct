@@ -3,7 +3,7 @@ package slimeknights.tconstruct.tables.client.inventory.widget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import org.apache.commons.compress.utils.Lists;
@@ -11,7 +11,7 @@ import slimeknights.mantle.client.screen.MultiModuleScreen;
 
 import java.util.List;
 
-public class SideButtonsWidget<T extends Button> implements Widget, GuiEventListener {
+public class SideButtonsWidget<T extends Button> implements Renderable, GuiEventListener {
 
   private static final int SPACING = 4;
 

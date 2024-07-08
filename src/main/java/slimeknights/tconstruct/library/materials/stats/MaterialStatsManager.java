@@ -10,21 +10,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import slimeknights.mantle.data.listener.MergingJsonDataLoader;
-import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.mantle.util.typed.TypedMapBuilder;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.json.MaterialStatJson;
+import slimeknights.tconstruct.library.utils.IdAwareComponentRegistry;
 import slimeknights.tconstruct.library.utils.Util;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

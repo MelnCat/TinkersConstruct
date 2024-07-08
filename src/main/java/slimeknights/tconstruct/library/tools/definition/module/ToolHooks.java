@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.tools.definition.module;
 
 import net.minecraft.resources.ResourceLocation;
-import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
@@ -24,6 +23,7 @@ import slimeknights.tconstruct.library.tools.definition.module.mining.MiningTier
 import slimeknights.tconstruct.library.tools.definition.module.weapon.MeleeHitToolHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.MaterialNBT;
+import slimeknights.tconstruct.library.utils.IdAwareComponentRegistry;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

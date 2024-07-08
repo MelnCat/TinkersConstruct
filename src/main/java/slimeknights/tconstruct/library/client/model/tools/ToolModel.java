@@ -10,14 +10,12 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -30,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.model.BakedModelWrapper;
@@ -37,6 +36,7 @@ import net.minecraftforge.client.model.IModelBuilder;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
+import org.joml.Vector3f;
 import slimeknights.mantle.client.model.util.MantleItemLayerModel;
 import slimeknights.mantle.data.loadable.Loadable;
 import slimeknights.mantle.data.loadable.mapping.CompactLoadable;
@@ -85,7 +85,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
   private static final BitSet SMALL_TOOL_TYPES = new BitSet();
 
   /** Registers a new small tool transform type */
-  public static synchronized TransformType registerSmallTool(TransformType type) {
+  public static synchronized ItemDisplayContext registerSmallTool(ItemDisplayContext type) {
     SMALL_TOOL_TYPES.set(type.ordinal());
     return type;
   }
@@ -418,9 +418,9 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     }
 
     @Override
-    public BakedModel applyTransform(TransformType cameraTransformType, PoseStack mat, boolean applyLeftHandTransform) {
+    public BakedModel applyTransform(ItemDisplayContext cameraTransformType, PoseStack mat, boolean applyLeftHandTransform) {
       BakedModel model = originalModel;
-      if (cameraTransformType == TransformType.GUI) {
+      if (cameraTransformType == ItemDisplayContext.GUI) {
         model = gui;
       } else if (SMALL_TOOL_TYPES.get(cameraTransformType.ordinal())) {
         model = small;

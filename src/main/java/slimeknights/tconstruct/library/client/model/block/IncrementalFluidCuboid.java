@@ -40,11 +40,11 @@ public class IncrementalFluidCuboid extends FluidCuboid {
     float minY = from.y();
     float maxY = to.y();
     if (gas) {
-      from = from.copy();
-      from.setY(maxY + (amount * (minY - maxY) / increments));
+      from = new Vector3f(from);
+      from.y = maxY + (amount * (minY - maxY) / increments);
     } else {
-      to = to.copy();
-      to.setY(minY + (amount * (maxY - minY) / increments));
+      to = new Vector3f(to);
+      to.y = minY + (amount * (maxY - minY) / increments);
     }
 
     // create faces based on face data

@@ -4,12 +4,13 @@ import com.google.common.base.Preconditions;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * Extension of {@link CraftingContainer} to use instead wrap an existing {@link Container}
  */
-public class CraftingContainerWrapper extends CraftingContainer {
+public class CraftingContainerWrapper extends TransientCraftingContainer {
   private final Container crafter;
   public CraftingContainerWrapper(Container crafter, int width, int height) {
     //noinspection ConstantConditions

@@ -3,6 +3,7 @@ package slimeknights.tconstruct.library.recipe.casting;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -44,7 +45,7 @@ public abstract class AbstractCastingRecipe implements ICastingRecipe {
   }
 
   @Override
-  public abstract ItemStack getResultItem();
+  public abstract ItemStack getResultItem(RegistryAccess access);
 
   @Override
   public NonNullList<Ingredient> getIngredients() {

@@ -114,8 +114,8 @@ public final class TinkerTools extends TinkerModule {
     RandomMaterial.init();
   }
 
-  /** Creative tab for all tool items */
-  public static final CreativeModeTab TAB_TOOLS = new SupplierCreativeTab(TConstruct.MOD_ID, "tools", () -> TinkerTools.pickaxe.get().getRenderTool());
+  /** Creative tab for all tool items TODO!: creative tab */
+  //public static final CreativeModeTab TAB_TOOLS = new SupplierCreativeTab(TConstruct.MOD_ID, "tools", () -> TinkerTools.pickaxe.get().getRenderTool());
 
   /** Loot function type for tool add data */
   public static final RegistryObject<LootItemFunctionType> lootAddToolData = LOOT_FUNCTIONS.register("add_tool_data", () -> new LootItemFunctionType(AddToolDataFunction.SERIALIZER));
@@ -123,7 +123,7 @@ public final class TinkerTools extends TinkerModule {
   /*
    * Items
    */
-  private static final Item.Properties TOOL = new Item.Properties().stacksTo(1).tab(TAB_TOOLS);
+  private static final Item.Properties TOOL = new Item.Properties().stacksTo(1);
 
   public static final ItemObject<ModifiableItem> pickaxe = ITEMS.register("pickaxe", () -> new ModifiableItem(TOOL, ToolDefinitions.PICKAXE));
   public static final ItemObject<ModifiableItem> sledgeHammer = ITEMS.register("sledge_hammer", () -> new ModifiableItem(TOOL, ToolDefinitions.SLEDGE_HAMMER));

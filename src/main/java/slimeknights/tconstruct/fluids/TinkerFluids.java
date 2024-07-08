@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
@@ -32,7 +31,6 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 import slimeknights.mantle.fluid.UnplaceableFluid;
-import slimeknights.mantle.registration.ItemProperties;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.mantle.registration.object.FluidObject;
@@ -86,11 +84,11 @@ public final class TinkerFluids extends TinkerModule {
   // bottles of slime
   public static final EnumObject<SlimeType, Item> slimeBottle = new EnumObject.Builder<SlimeType, Item>(SlimeType.class)
     .putAll(ITEMS.registerEnum(SlimeType.LIQUID, "slime_bottle", type -> new FluidContainerFoodItem(
-      new Item.Properties().food(TinkerFood.getBottle(type)).tab(TAB_GENERAL).stacksTo(1).craftRemainder(Items.GLASS_BOTTLE), () -> new FluidStack(slime.get(type), FluidValues.BOTTLE))))
+      new Item.Properties().food(TinkerFood.getBottle(type)).stacksTo(1).craftRemainder(Items.GLASS_BOTTLE), () -> new FluidStack(slime.get(type), FluidValues.BOTTLE))))
     .put(SlimeType.ICHOR, ITEMS.register("ichor_slime_bottle", () -> new ContainerFoodItem(new Item.Properties().food(TinkerFood.ICHOR_BOTTLE).tab(TAB_GENERAL).stacksTo(1).craftRemainder(Items.GLASS_BOTTLE))))
     .build();
   public static final ItemObject<Item> magmaBottle = ITEMS.register("magma_bottle", () -> new FluidContainerFoodItem(
-    new Item.Properties().food(TinkerFood.MAGMA_BOTTLE).tab(TAB_GENERAL).stacksTo(1).craftRemainder(Items.GLASS_BOTTLE),
+    new Item.Properties().food(TinkerFood.MAGMA_BOTTLE).stacksTo(1).craftRemainder(Items.GLASS_BOTTLE),
     () -> new FluidStack(magma.get(), FluidValues.BOTTLE)));
 
   // foods

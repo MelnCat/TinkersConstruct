@@ -4,6 +4,7 @@ import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -86,11 +87,11 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
 
   /** Adds lustrous for an ore */
   private void addLustrous(String name, boolean optional) {
-    TagKey<Item> nuggets = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge", "nuggets/" + name));
+    TagKey<Item> nuggets = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "nuggets/" + name));
     ResourceLocation ores = new ResourceLocation("forge", "ores/" + name);
     AddEntryLootModifier.Builder builder = AddEntryLootModifier.builder(TagPreferenceLootEntry.tagPreference(nuggets));
-    builder.addCondition(new BlockTagLootCondition(TagKey.create(Registry.BLOCK_REGISTRY, ores)))
-           .addCondition(new ContainsItemModifierLootCondition(Ingredient.of(TagKey.create(Registry.ITEM_REGISTRY, ores))).inverted());
+    builder.addCondition(new BlockTagLootCondition(TagKey.create(Registries.BLOCK, ores)))
+           .addCondition(new ContainsItemModifierLootCondition(Ingredient.of(TagKey.create(Registries.ITEM, ores))).inverted());
     if (optional) {
       builder.addCondition(new TagNotEmptyCondition<>(nuggets));
     }

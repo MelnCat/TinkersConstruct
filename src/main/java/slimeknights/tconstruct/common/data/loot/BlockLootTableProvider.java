@@ -332,7 +332,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
     if (slime != null) {
       return builder.withPool(
         LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                .when(HAS_SHEARS.or(HAS_SILK_TOUCH).invert())
+                .when(HAS_NO_SHEARS_OR_SILK_TOUCH)
                 .add(applyExplosionCondition(blockIn, LootItem.lootTableItem(TinkerCommons.slimeball.get(slime)))
                        .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 1 / 50f, 1 / 45f, 1 / 40f, 1 / 30f, 1 / 20f))));
     }
@@ -381,7 +381,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
     this.dropSelf(object.getStrippedWood());
     // door
     this.dropSelf(object.getFenceGate());
-    this.add(object.getDoor(), BlockLoot::createDoorTable);
+    this.add(object.getDoor(), this::createDoorTable);
     this.dropSelf(object.getTrapdoor());
     // redstone
     this.dropSelf(object.getPressurePlate());

@@ -1,13 +1,7 @@
 package slimeknights.tconstruct.library.client.data.spritetransformer;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
+import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
@@ -21,11 +15,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-import static com.mojang.blaze3d.platform.NativeImage.combine;
-import static com.mojang.blaze3d.platform.NativeImage.getA;
-import static com.mojang.blaze3d.platform.NativeImage.getB;
-import static com.mojang.blaze3d.platform.NativeImage.getG;
-import static com.mojang.blaze3d.platform.NativeImage.getR;
+import static slimeknights.tconstruct.library.utils.ColorHelper.*;
 
 /** Color mcom.mojang.blaze3d.platform.NativeImager each value */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)

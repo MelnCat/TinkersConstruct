@@ -1,13 +1,7 @@
 package slimeknights.tconstruct.library.client.data.spritetransformer;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
+import com.google.gson.*;
 import com.mojang.blaze3d.platform.NativeImage;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +18,7 @@ import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToColor
 import slimeknights.tconstruct.library.client.data.util.AbstractSpriteReader;
 import slimeknights.tconstruct.library.client.data.util.DataGenSpriteReader;
 import slimeknights.tconstruct.library.client.data.util.ResourceManagerSpriteReader;
+import slimeknights.tconstruct.library.utils.ColorHelper;
 import slimeknights.tconstruct.library.utils.Util;
 
 import javax.annotation.Nullable;
@@ -33,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.ToIntFunction;
-
-import static com.mojang.blaze3d.platform.NativeImage.getA;
 
 /**
  * Supports including sprites as "part of the palette"
@@ -75,7 +68,7 @@ public class GreyToSpriteTransformer implements ISpriteTransformer {
   private int getNewColor(int color, int x, int y) {
     // if fully transparent, just return fully transparent
     // we do not do 0 alpha RGB values to save effort
-    if (getA(color) == 0) {
+    if (ColorHelper.getA(color) == 0) {
       return 0x00000000;
     }
     int grey = GreyToColorMapping.getGrey(color);

@@ -40,7 +40,6 @@ import slimeknights.mantle.client.model.util.ColoredBlockModel.ColorData;
 import slimeknights.mantle.client.model.util.DynamicBakedWrapper;
 import slimeknights.mantle.client.model.util.ModelHelper;
 import slimeknights.mantle.client.model.util.SimpleBlockModel;
-import slimeknights.mantle.item.RetexturedBlockItem;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.mantle.util.LogicHelper;
 import slimeknights.mantle.util.RetexturedHelper;
@@ -57,6 +56,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+
+import static slimeknights.mantle.util.RetexturedHelper.getTextureName;
 
 /**
  * Model that replaces fluid textures with the fluid from model data
@@ -236,7 +237,7 @@ public class FluidTextureModel implements IUnbakedGeometry<FluidTextureModel> {
       }
 
       // get the block first, ensuring its valid
-      Block block = RetexturedBlockItem.getTexture(stack);
+      Block block = RetexturedHelper.getBlock(getTextureName(stack));
       if (block == Blocks.AIR) {
         return originalModel;
       }

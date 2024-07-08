@@ -11,4 +11,10 @@ public abstract class AbstractMaterialTagProvider extends AbstractTagProvider<IM
   protected AbstractMaterialTagProvider(DataGenerator generator, String modId, ExistingFileHelper existingFileHelper) {
     super(generator, modId, MaterialManager.TAG_FOLDER, IMaterial::getIdentifier, id -> true, existingFileHelper);
   }
+
+  @Override
+  abstract protected void addTags();
+  
+  @Override
+  abstract public String getName();
 }

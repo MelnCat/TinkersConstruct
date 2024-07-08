@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.smeltery.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -43,49 +44,48 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
   }
 
   @Override
-  public void render(PoseStack matrices, int x, int y, float partialTicks) {
-    this.renderBackground(matrices);
-    super.render(matrices, x, y, partialTicks);
-    this.renderTooltip(matrices, x, y);
+  public void render(GuiGraphics graphics, int x, int y, float partialTicks) {
+    this.renderBackground(graphics);
+    super.render(graphics, x, y, partialTicks);
+    this.renderTooltip(graphics, x, y);
   }
 
   @Override
-  protected void renderBg(PoseStack matrices, float partialTicks, int mouseX, int mouseY) {
-    GuiUtil.drawBackground(matrices, this, BACKGROUND);
+  protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    GuiUtil.drawBackground(graphics, this, BACKGROUND);
 
     // fuel
     if (fuel != null) {
       // draw the correct background for the fuel type
       if (menu.isHasFuelSlot()) {
-        FUEL_SLOT.draw(matrices, leftPos + 150, topPos + 31);
+        FUEL_SLOT.draw(graphics, leftPos + 150, topPos + 31);
       } else {
-        FUEL_TANK.draw(matrices, leftPos + 152, topPos + 31);
+        FUEL_TANK.draw(graphics, leftPos + 152, topPos + 31);
       }
-      fuel.draw(matrices);
+      fuel.draw(graphics);
     }
 
     // fluids
-    if (tank != null) tank.draw(matrices);
+    if (tank != null) tank.draw(graphics);
   }
 
   @Override
-  protected void renderLabels(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderLabels(matrices, mouseX, mouseY);
+  protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderLabels(graphics, mouseX, mouseY);
     int checkX = mouseX - this.leftPos;
     int checkY = mouseY - this.topPos;
 
     // highlight hovered tank
-    if (tank != null) tank.highlightHoveredFluid(matrices, checkX, checkY);
+    if (tank != null) tank.highlightHoveredFluid(graphics, checkX, checkY);
     // highlight hovered fuel
-    if (fuel != null) fuel.renderHighlight(matrices, checkX, checkY);
+    if (fuel != null) fuel.renderHighlight(graphics, checkX, checkY);
 
     // scala
-    RenderUtils.setup(BACKGROUND);
-    SCALA.draw(matrices, 90, 16);
+    SCALA.draw(graphics, 90, 16);
 
     // heat bars
     if (melting != null) {
-      melting.drawHeatBars(matrices);
+      melting.drawHeatBars(graphics, BACKGROUND);
     }
   }
 

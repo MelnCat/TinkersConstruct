@@ -6,7 +6,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SlimePredicate;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -30,6 +29,7 @@ import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.world.TinkerWorld;
 
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 public class EntityLootTableProvider extends EntityLootSubProvider {
 
@@ -38,12 +38,11 @@ public class EntityLootTableProvider extends EntityLootSubProvider {
   }
 
   @Override
-  protected Iterable<EntityType<?>> getKnownEntities() {
+  protected Stream<EntityType<?>> getKnownEntityTypes() {
     return ForgeRegistries.ENTITY_TYPES.getEntries().stream()
                                    // remove earth slime entity, we redirect to the vanilla loot table
                                    .filter(entry -> TConstruct.MOD_ID.equals(entry.getKey().location().getNamespace()))
-                                   .<EntityType<?>>map(Entry::getValue)
-                                   .toList();
+                                   .map(Entry::getValue);
   }
 
   @Override
@@ -77,11 +76,11 @@ public class EntityLootTableProvider extends EntityLootSubProvider {
 
   }
 
-  private static LootItemCondition.Builder killedByFrog() {
+  protected LootItemCondition.Builder killedByFrog() {
     return DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().source(EntityPredicate.Builder.entity().of(EntityType.FROG)));
   }
 
-  private static LootTable.Builder dropSlimeballs(SlimeType type) {
+  private LootTable.Builder dropSlimeballs(SlimeType type) {
     LootItemCondition.Builder killedByFrog = killedByFrog();
     Item slimeball = TinkerCommons.slimeball.get(type);
     return LootTable.lootTable().withPool(

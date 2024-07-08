@@ -8,9 +8,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -32,12 +33,14 @@ public class MobEffectLiquidBlock extends LiquidBlock {
   }
 
   /** Creates a new block supplier */
-  public static Function<Supplier<? extends FlowingFluid>, LiquidBlock> createEffect(Material material, int lightLevel, Supplier<MobEffectInstance> effect) {
-    return fluid -> new MobEffectLiquidBlock(fluid, Properties.of(material).lightLevel(state -> lightLevel).noCollission().strength(100f).noLootTable(), effect);
+  public static Function<Supplier<? extends FlowingFluid>, LiquidBlock> createEffect(Consumer<Properties> properties, int lightLevel, Supplier<MobEffectInstance> effect) {
+    Properties props = Properties.of().lightLevel(state -> lightLevel).noCollission().strength(100f).noLootTable();
+    properties.accept(props);
+    return fluid -> new MobEffectLiquidBlock(fluid, props, effect);
   }
 
   /** Creates a new block supplier */
   public static Function<Supplier<? extends FlowingFluid>, LiquidBlock> createEffect(int lightLevel, Supplier<MobEffectInstance> effect) {
-    return createEffect(Material.WATER, lightLevel, effect);
+    return createEffect(p -> p.replaceable().pushReaction(PushReaction.DESTROY).liquid(), lightLevel, effect);
   }
 }

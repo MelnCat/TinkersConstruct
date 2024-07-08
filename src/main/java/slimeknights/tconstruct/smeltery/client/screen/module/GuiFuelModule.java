@@ -3,6 +3,7 @@ package slimeknights.tconstruct.smeltery.client.screen.module;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
@@ -57,12 +58,12 @@ public class GuiFuelModule {
    * Draws the fuel at the correct location
    * @param matrices  Matrix stack instance
    */
-  public void draw(PoseStack matrices) {
+  public void draw(GuiGraphics graphics) {
     // draw fire
     int fuel = fuelModule.getFuel();
     int fuelQuality = fuelModule.getFuelQuality();
     if (fuel > 0 && fuelQuality > 0) {
-      FIRE.drawScaledYUp(matrices, fireX + screen.leftPos, fireY + screen.topPos, 14 * fuel / fuelQuality);
+      FIRE.drawScaledYUp(graphics, fireX + screen.leftPos, fireY + screen.topPos, 14 * fuel / fuelQuality);
     }
 
     // draw tank second, it changes the image
@@ -70,7 +71,7 @@ public class GuiFuelModule {
     if (!hasFuelSlot) {
       fuelInfo = fuelModule.getFuelInfo();
       if (!fuelInfo.isEmpty()) {
-        GuiUtil.renderFluidTank(matrices, screen, fuelInfo.getFluid(), fuelInfo.getTotalAmount(), fuelInfo.getCapacity(), x, y, width, height, 100);
+        GuiUtil.renderFluidTank(graphics, screen, fuelInfo.getFluid(), fuelInfo.getTotalAmount(), fuelInfo.getCapacity(), x, y, width, height, 100);
       }
     }
   }

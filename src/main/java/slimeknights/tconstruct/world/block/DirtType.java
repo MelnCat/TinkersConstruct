@@ -6,7 +6,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.MaterialColor;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.shared.block.SlimeType;
 

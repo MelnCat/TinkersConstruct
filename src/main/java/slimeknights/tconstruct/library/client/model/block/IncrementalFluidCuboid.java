@@ -1,13 +1,13 @@
 package slimeknights.tconstruct.library.client.model.block;
 
 import com.google.gson.JsonObject;
-import com.mojang.math.Vector3f;
 import lombok.Getter;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.core.Direction;
 import net.minecraft.util.GsonHelper;
+import org.joml.Vector3f;
 import slimeknights.mantle.client.model.fluid.FluidCuboid;
 import slimeknights.mantle.client.model.util.ModelHelper;
 

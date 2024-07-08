@@ -241,7 +241,7 @@ public class StationSlotLayout {
 
     /** Adds an input as the given item */
     public Builder addInputItem(ItemLike item, int x, int y) {
-      return addInputItem(new Pattern(Registry.ITEM.getKey(item.asItem())), item, x, y);
+      return addInputItem(new Pattern(BuiltInRegistries.ITEM.getKey(item.asItem())), item, x, y);
     }
 
     /** Adds an input slot with the given properties */

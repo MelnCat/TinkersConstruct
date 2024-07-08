@@ -37,7 +37,7 @@ public class CompositeCastingRecipeBuilder extends AbstractRecipeBuilder<Composi
 
   @Override
   public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Registry.ITEM.getKey(result.asItem()));
+    save(consumer, BuiltInRegistries.ITEM.getKey(result.asItem()));
   }
 
   @Override
@@ -56,7 +56,7 @@ public class CompositeCastingRecipeBuilder extends AbstractRecipeBuilder<Composi
       if (!group.isEmpty()) {
         json.addProperty("group", group);
       }
-      json.addProperty("result", Registry.ITEM.getKey(result.asItem()).toString());
+      json.addProperty("result", BuiltInRegistries.ITEM.getKey(result.asItem()).toString());
       json.addProperty("item_cost", itemCost);
     }
 

@@ -59,7 +59,7 @@ public class CommonsEvents {
       Level world = event.getLevel();
       BlockState state = world.getBlockState(pos);
       // only handle our blocks, no guarantee this will work with other mods
-      if (TConstruct.MOD_ID.equals(Registry.BLOCK.getKey(state.getBlock()).getNamespace())) {
+      if (TConstruct.MOD_ID.equals(BuiltInRegistries.BLOCK.getKey(state.getBlock()).getNamespace())) {
         MenuProvider provider = state.getMenuProvider(world, pos);
         event.setCanceled(true);
         if (provider != null) {

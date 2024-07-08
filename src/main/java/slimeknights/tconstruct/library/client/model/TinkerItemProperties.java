@@ -35,7 +35,7 @@ public class TinkerItemProperties {
         CompoundTag ammo = persistentData.getCompound(ModifiableCrossbowItem.KEY_CROSSBOW_AMMO.toString());
         if (!ammo.isEmpty()) {
           // no sense having two keys for ammo, just set 1 for arrow, 2 for fireworks
-          return ammo.getString("id").equals(Registry.ITEM.getKey(Items.FIREWORK_ROCKET).toString()) ? 2 : 1;
+          return ammo.getString("id").equals(BuiltInRegistries.ITEM.getKey(Items.FIREWORK_ROCKET).toString()) ? 2 : 1;
         }
       }
     }

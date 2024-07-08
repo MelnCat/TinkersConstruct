@@ -110,7 +110,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
 
   /** Generated item with a texture */
   private ItemModelBuilder basicItem(ItemLike item, String texture) {
-    return basicItem(Registry.ITEM.getKey(item.asItem()), texture);
+    return basicItem(BuiltInRegistries.ITEM.getKey(item.asItem()), texture);
   }
 
 
@@ -125,7 +125,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
 
   /** Creates a part model in the parts folder */
   private MaterialModelBuilder<ItemModelBuilder> part(Item item, String texture) {
-    return part(Registry.ITEM.getKey(item), texture);
+    return part(BuiltInRegistries.ITEM.getKey(item), texture);
   }
 
   /** Creates a part model with the given texture */

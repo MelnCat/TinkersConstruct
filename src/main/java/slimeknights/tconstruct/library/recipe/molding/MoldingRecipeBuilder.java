@@ -85,7 +85,7 @@ public class MoldingRecipeBuilder extends AbstractRecipeBuilder<MoldingRecipeBui
 
   @Override
   public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Registry.ITEM.getKey(output.get().getItem()));
+    save(consumer, BuiltInRegistries.ITEM.getKey(output.get().getItem()));
   }
 
   @Override

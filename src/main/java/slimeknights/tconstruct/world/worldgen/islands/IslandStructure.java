@@ -37,8 +37,8 @@ public class IslandStructure extends Structure {
                IslandPlacement.CODEC.fieldOf("placement").forGetter(s -> s.placement),
                SimpleWeightedRandomList.wrappedCodec(ResourceLocation.CODEC).fieldOf("templates").forGetter(s -> s.templates),
                SimpleWeightedRandomList.wrappedCodec(ConfiguredFeature.CODEC).fieldOf("trees").forGetter(s -> s.trees),
-               Registry.BLOCK.byNameCodec().optionalFieldOf("vines").forGetter(s -> s.vines),
-               SimpleWeightedRandomList.wrappedCodec(Registry.BLOCK.byNameCodec()).fieldOf("grasses").forGetter(s -> s.grasses)))
+               BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("vines").forGetter(s -> s.vines),
+               SimpleWeightedRandomList.wrappedCodec(BuiltInRegistries.BLOCK.byNameCodec()).fieldOf("grasses").forGetter(s -> s.grasses)))
         .apply(inst, IslandStructure::new));
 
   @Getter

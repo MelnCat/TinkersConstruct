@@ -160,7 +160,7 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     if (te == null) {
       this.defaultLayout = StationSlotLayout.EMPTY;
     } else {
-      this.defaultLayout = StationSlotLayoutLoader.getInstance().get(Registry.BLOCK.getKey(te.getBlockState().getBlock()));
+      this.defaultLayout = StationSlotLayoutLoader.getInstance().get(BuiltInRegistries.BLOCK.getKey(te.getBlockState().getBlock()));
     }
     this.currentLayout = this.defaultLayout;
     this.activeInputs = Math.min(defaultLayout.getInputCount(), max);

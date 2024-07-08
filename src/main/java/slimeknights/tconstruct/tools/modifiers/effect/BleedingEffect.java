@@ -1,9 +1,10 @@
 package slimeknights.tconstruct.tools.modifiers.effect;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,9 +54,9 @@ public class BleedingEffect extends NoMilkEffect {
 
   /** Guardians use the direct entity to determine if they should thorns, while the direct marks for player kills
    * treat this as indirect damage by making the direct entity null, so guardians treat it like arrows */
-  private static class BleedingDamageSource extends EntityDamageSource {
-    public BleedingDamageSource(String name, Entity entity) {
-      super(name, entity);
+  private static class BleedingDamageSource extends DamageSource {
+    public BleedingDamageSource(Holder<DamageType> holder, Entity entity) {
+      super(holder, entity);
     }
 
     @Nullable

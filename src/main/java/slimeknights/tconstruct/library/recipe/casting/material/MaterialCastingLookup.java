@@ -71,7 +71,7 @@ public class MaterialCastingLookup {
     if (ITEM_COST_LOOKUP.containsKey(item)) {
       int original = ITEM_COST_LOOKUP.getInt(item);
       if (cost != original) {
-        TConstruct.LOG.error("Inconsistent cost for item {}", Registry.ITEM.getKey(item.asItem()));
+        TConstruct.LOG.error("Inconsistent cost for item {}", BuiltInRegistries.ITEM.getKey(item.asItem()));
         ITEM_COST_LOOKUP.put(item, Math.min(cost, original));
       }
     } else {

@@ -28,10 +28,10 @@ public class CastItemObject extends ItemObject<Item> {
   private final TagKey<Item> multiUseTag;
 
   public CastItemObject(ResourceLocation name, Item gold, Item sand, Item redSand) {
-    super(Registry.ITEM, gold);
+    super(BuiltInRegistries.ITEM, gold);
     this.name = name;
-    this.sand = getHolder(Registry.ITEM, sand);
-    this.redSand = getHolder(Registry.ITEM, redSand);
+    this.sand = getHolder(BuiltInRegistries.ITEM, sand);
+    this.redSand = getHolder(BuiltInRegistries.ITEM, redSand);
     this.singleUseTag = makeTag("single_use");
     this.multiUseTag = makeTag("multi_use");
   }

@@ -20,6 +20,6 @@ public interface IDisplayPartBuilderRecipe extends IPartBuilderRecipe {
    * @return  Pattern items
    */
   default List<ItemStack> getPatternItems() {
-    return RegistryHelper.getTagValueStream(Registry.ITEM, TinkerTags.Items.DEFAULT_PATTERNS).map(ItemStack::new).toList();
+    return RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, TinkerTags.Items.DEFAULT_PATTERNS).map(ItemStack::new).toList();
   }
 }

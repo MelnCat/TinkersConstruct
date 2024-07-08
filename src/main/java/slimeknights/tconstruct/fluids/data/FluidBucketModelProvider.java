@@ -36,7 +36,7 @@ public class FluidBucketModelProvider extends GenericDataProvider {
   @Override
   public void run(CachedOutput cache) throws IOException {
     // loop over all liquid blocks, adding a blockstate for them
-    for (Entry<ResourceKey<Item>,Item> entry : Registry.ITEM.entrySet()) {
+    for (Entry<ResourceKey<Item>,Item> entry : BuiltInRegistries.ITEM.entrySet()) {
       ResourceLocation id = entry.getKey().location();
       if (id.getNamespace().equals(modId) && entry.getValue() instanceof BucketItem bucket) {
         saveJson(cache, id, makeJson(bucket));

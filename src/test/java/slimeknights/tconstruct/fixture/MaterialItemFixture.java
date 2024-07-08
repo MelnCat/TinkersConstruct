@@ -22,7 +22,7 @@ public class MaterialItemFixture {
       return;
     }
     init = true;
-    Registry.ITEM.unfreeze(); // yes, I know this is bad, but this is testing so we do bad things sometimes
+    BuiltInRegistries.ITEM.unfreeze(); // yes, I know this is bad, but this is testing so we do bad things sometimes
     MATERIAL_ITEM = new ToolPartItem(new Item.Properties(), MaterialStatsFixture.STATS_TYPE);
     MATERIAL_ITEM_2 = new ToolPartItem(new Item.Properties(), MaterialStatsFixture.STATS_TYPE_2);
     MATERIAL_ITEM_HEAD = new ToolPartItem(new Item.Properties(), HeadMaterialStats.ID);

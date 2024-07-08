@@ -138,7 +138,7 @@ public final class TinkerStructures extends TinkerModule {
   public static final RegistryObject<ConfiguredFeature<TreeConfiguration,Feature<TreeConfiguration>>> enderSlimeTree = CONFIGURED_FEATURES.registerSupplier(
     "ender_slime_tree", () -> Feature.TREE,
     () -> new TreeConfigurationBuilder(BlockStateProvider.simple(TinkerWorld.enderbark.getLog()),
-                                 new UpwardsBranchingTrunkPlacer(2, 1, 4, UniformInt.of(1, 4), 0.5F, UniformInt.of(0, 1), Registry.BLOCK.getOrCreateTag(TinkerTags.Blocks.ENDERBARK_LOGS_CAN_GROW_THROUGH)),
+                                 new UpwardsBranchingTrunkPlacer(2, 1, 4, UniformInt.of(1, 4), 0.5F, UniformInt.of(0, 1), BuiltInRegistries.BLOCK.getOrCreateTag(TinkerTags.Blocks.ENDERBARK_LOGS_CAN_GROW_THROUGH)),
                                  BlockStateProvider.simple(TinkerWorld.slimeLeaves.get(FoliageType.ENDER)),
                                  new RandomSpreadFoliagePlacer(ConstantInt.of(3), ConstantInt.of(0), ConstantInt.of(2), 70),
                                  ExtraRootVariantPlacer.builder()
@@ -155,7 +155,7 @@ public final class TinkerStructures extends TinkerModule {
   public static final RegistryObject<ConfiguredFeature<TreeConfiguration,Feature<TreeConfiguration>>> enderSlimeTreeTall = CONFIGURED_FEATURES.registerSupplier(
     "ender_slime_tree_tall", () -> Feature.TREE,
     () -> new TreeConfigurationBuilder(BlockStateProvider.simple(TinkerWorld.enderbark.getLog()),
-                                       new UpwardsBranchingTrunkPlacer(4, 1, 9, UniformInt.of(1, 6), 0.5F, UniformInt.of(0, 1), Registry.BLOCK.getOrCreateTag(TinkerTags.Blocks.ENDERBARK_LOGS_CAN_GROW_THROUGH)),
+                                       new UpwardsBranchingTrunkPlacer(4, 1, 9, UniformInt.of(1, 6), 0.5F, UniformInt.of(0, 1), BuiltInRegistries.BLOCK.getOrCreateTag(TinkerTags.Blocks.ENDERBARK_LOGS_CAN_GROW_THROUGH)),
                                        BlockStateProvider.simple(TinkerWorld.slimeLeaves.get(FoliageType.ENDER)),
                                        new RandomSpreadFoliagePlacer(ConstantInt.of(3), ConstantInt.of(0), ConstantInt.of(2), 70),
                                        ExtraRootVariantPlacer.builder()

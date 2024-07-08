@@ -106,12 +106,12 @@ public class ContentTool extends PageContent {
 
   public ContentTool(IModifiableDisplay tool) {
     this.tool = tool;
-    this.toolName = Registry.ITEM.getKey(tool.asItem()).toString();
+    this.toolName = BuiltInRegistries.ITEM.getKey(tool.asItem()).toString();
     this.text = new TextData[] { new TextData(ForgeI18n.getPattern(tool.asItem().getDescriptionId() + ".description"))};
   }
 
   public ContentTool(Item item) {
-    this.toolName = Registry.ITEM.getKey(item.asItem()).toString();
+    this.toolName = BuiltInRegistries.ITEM.getKey(item.asItem()).toString();
     if (item instanceof IModifiableDisplay tool) {
       this.tool = tool;
     } else {

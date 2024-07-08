@@ -131,7 +131,7 @@ public abstract class AbstractStructureRepalleter extends GenericNBTProvider {
 
     /** Adds a mapping replacing from with to */
     public Replacement addMapping(Block from, Block to) {
-      return addMapping(Registry.BLOCK.getKey(from), Registry.BLOCK.getKey(to));
+      return addMapping(BuiltInRegistries.BLOCK.getKey(from), BuiltInRegistries.BLOCK.getKey(to));
     }
 
     /** Builds this replacement */

@@ -25,7 +25,7 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import slimeknights.tconstruct.TConstruct;
@@ -110,7 +110,8 @@ public class ToolRenderEvents {
 
   /** Renders the block damage process on the extra blocks */
   @SubscribeEvent
-  static void renderBlockDamageProgress(RenderLevelLastEvent event) {
+  static void renderBlockDamageProgress(RenderLevelStageEvent event) {
+    if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
     // validate required variables are set
     MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
     if (controller == null || !controller.isDestroying()) {

@@ -314,7 +314,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
   private static final LootItemCondition.Builder SHEARS = CanToolPerformAction.canToolPerformAction(ToolActions.SHEARS_DIG);
   private static final LootItemCondition.Builder SILK_TOUCH_OR_SHEARS = SHEARS.or(SILK_TOUCH);
 
-  protected LootTable.Builder onlyShears(ItemLike item) {
+  protected static LootTable.Builder onlyShears(ItemLike item) {
     return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(SHEARS).add(LootItem.lootTableItem(item)));
   }
 
@@ -339,7 +339,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
     return builder;
   }
 
-  private LootTable.Builder droppingWithFunctions(Block block, Function<LootItem.Builder<?>,LootItem.Builder<?>> mapping) {
+  private LootTable.Builder droppingWithFunctions(Block block, Function<LootItem.Builder<?>, LootItem.Builder<?>> mapping) {
     return LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(mapping.apply(LootItem.lootTableItem(block)))));
   }
 
@@ -390,7 +390,7 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
     this.dropSelf(object.getSign());
   }
 
-  private static Function<Block, LootTable.Builder> ADD_TABLE = block -> droppingWithFunctions(block, (builder) ->
+  private Function<Block, LootTable.Builder> ADD_TABLE = block -> droppingWithFunctions(block, (builder) ->
     builder.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)).apply(RetexturedLootFunction::new));
 
   /** Registers a block that drops with its own texture stored in NBT */

@@ -30,7 +30,7 @@ public class OverslimeModifierRecipeBuilder extends AbstractRecipeBuilder<Oversl
     if (stacks.length == 0) {
       throw new IllegalStateException("Empty ingredient not allowed");
     }
-    save(consumer, Registry.ITEM.getKey(stacks[0].getItem()));
+    save(consumer, BuiltInRegistries.ITEM.getKey(stacks[0].getItem()));
   }
 
   @Override

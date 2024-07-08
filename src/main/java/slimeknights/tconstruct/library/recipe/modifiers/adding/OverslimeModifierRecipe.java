@@ -146,7 +146,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
   @Override
   public List<ItemStack> getToolWithoutModifier() {
     if (toolWithoutModifier == null) {
-      toolWithoutModifier = RegistryHelper.getTagValueStream(Registry.ITEM, TinkerTags.Items.DURABILITY).map(MAP_TOOL_FOR_RENDERING).toList();
+      toolWithoutModifier = RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, TinkerTags.Items.DURABILITY).map(MAP_TOOL_FOR_RENDERING).toList();
     }
     return toolWithoutModifier;
   }
@@ -156,7 +156,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
     if (toolWithModifier == null) {
       OverslimeModifier overslime = TinkerModifiers.overslime.get();
       List<ModifierEntry> result = List.of(RESULT);
-      toolWithModifier = RegistryHelper.getTagValueStream(Registry.ITEM, TinkerTags.Items.DURABILITY)
+      toolWithModifier = RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, TinkerTags.Items.DURABILITY)
                                        .map(MAP_TOOL_FOR_RENDERING)
                                        .map(stack -> withModifiers(stack, result, data -> overslime.setShield(data, restoreAmount)))
                                        .toList();

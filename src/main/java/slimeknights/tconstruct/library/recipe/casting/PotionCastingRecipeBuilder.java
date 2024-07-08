@@ -109,7 +109,7 @@ public class PotionCastingRecipeBuilder extends AbstractRecipeBuilder<PotionCast
    */
   @Override
   public void save(Consumer<FinishedRecipe> consumerIn) {
-    this.save(consumerIn, Registry.ITEM.getKey(this.result));
+    this.save(consumerIn, BuiltInRegistries.ITEM.getKey(this.result));
   }
 
   @Override

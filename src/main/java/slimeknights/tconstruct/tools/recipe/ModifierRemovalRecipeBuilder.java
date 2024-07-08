@@ -79,7 +79,7 @@ public class ModifierRemovalRecipeBuilder extends AbstractSizedIngredientRecipeB
 
   @Override
   public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Registry.ITEM.getKey(leftovers.get(0).getItem()));
+    save(consumer, BuiltInRegistries.ITEM.getKey(leftovers.get(0).getItem()));
   }
 
   @Override

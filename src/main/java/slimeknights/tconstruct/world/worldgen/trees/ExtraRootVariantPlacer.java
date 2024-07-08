@@ -139,7 +139,7 @@ public class ExtraRootVariantPlacer extends MangroveRootPlacer {
     /** Sets the blocks that the roots can grow though */
     @CanIgnoreReturnValue
     public Builder canGrowThroughTag(TagKey<Block> tag) {
-      return canGrowThrough(Registry.BLOCK.getOrCreateTag(tag));
+      return canGrowThrough(BuiltInRegistries.BLOCK.getOrCreateTag(tag));
     }
 
     /** Builds the final placer */

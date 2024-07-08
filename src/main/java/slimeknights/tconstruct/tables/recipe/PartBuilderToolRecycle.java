@@ -72,7 +72,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe {
   public Stream<Pattern> getPatterns(IPartBuilderContainer inv) {
     if (inv.getStack().getItem() instanceof IModifiable modifiable) {
       return ToolPartsHook.parts(modifiable.getToolDefinition()).stream()
-                          .map(part -> Registry.ITEM.getKey(part.asItem()))
+                          .map(part -> BuiltInRegistries.ITEM.getKey(part.asItem()))
                           .distinct()
                           .map(Pattern::new);
     }
@@ -108,7 +108,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe {
     List<IToolPart> requirements = ToolPartsHook.parts(tool.getDefinition());
     for (int i = 0; i < requirements.size(); i++) {
       IToolPart part = requirements.get(i);
-      if (pattern.equals(Registry.ITEM.getKey(part.asItem()))) {
+      if (pattern.equals(BuiltInRegistries.ITEM.getKey(part.asItem()))) {
         matchIndex = i;
         match = part;
         break;
@@ -141,7 +141,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe {
     List<IToolPart> requirements = ToolPartsHook.parts(tool.getDefinition());
     for (int i = 0; i < requirements.size(); i++) {
       IToolPart part = requirements.get(i);
-      if (found || !pattern.equals(Registry.ITEM.getKey(part.asItem()))) {
+      if (found || !pattern.equals(BuiltInRegistries.ITEM.getKey(part.asItem()))) {
         parts.add(part);
         indices.add(i);
       } else {

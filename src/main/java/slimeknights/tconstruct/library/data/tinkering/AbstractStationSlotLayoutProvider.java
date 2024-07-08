@@ -48,12 +48,12 @@ public abstract class AbstractStationSlotLayoutProvider extends GenericDataProvi
 
   /** Defines the given ID as a item layout */
   protected StationSlotLayout.Builder define(ItemLike item) {
-    return define(Registry.ITEM.getKey(item.asItem()));
+    return define(BuiltInRegistries.ITEM.getKey(item.asItem()));
   }
 
   /** Defines the given ID as a tool layout, sets icon and name */
   protected StationSlotLayout.Builder defineModifiable(IModifiableDisplay item) {
-    return define(Registry.ITEM.getKey(item.asItem()))
+    return define(BuiltInRegistries.ITEM.getKey(item.asItem()))
       .translationKey(item.asItem().getDescriptionId())
       .icon(item.getRenderTool());
   }

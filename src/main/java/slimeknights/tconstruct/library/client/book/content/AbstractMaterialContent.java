@@ -307,7 +307,7 @@ public abstract class AbstractMaterialContent extends PageContent {
     if (displayTools.size() < 9) {
       MaterialId materialId = materialVariant.getId();
       toolLoop:
-      for (Holder<Item> item : Registry.ITEM.getTagOrEmpty(TinkerTags.Items.MULTIPART_TOOL)) {
+      for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(TinkerTags.Items.MULTIPART_TOOL)) {
         if (item.value() instanceof IModifiable tool) {
           List<MaterialStatsId> requirements = ToolMaterialHook.stats(tool.getToolDefinition());
           // start building the tool with the given material
@@ -376,7 +376,7 @@ public abstract class AbstractMaterialContent extends PageContent {
   /** Gets a list of all tool parts */
   private static List<IToolPart> getToolParts() {
     if (ALL_PARTS == null) {
-      ALL_PARTS = RegistryHelper.getTagValueStream(Registry.ITEM, TinkerTags.Items.TOOL_PARTS)
+      ALL_PARTS = RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, TinkerTags.Items.TOOL_PARTS)
                                 .filter(item -> item instanceof IToolPart)
                                 .map(item -> (IToolPart)item)
                                 .toList();

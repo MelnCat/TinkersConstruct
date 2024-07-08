@@ -1,14 +1,8 @@
 package slimeknights.tconstruct.common.data;
 
 import com.google.common.collect.Sets;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -37,12 +31,7 @@ import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
-import slimeknights.tconstruct.library.json.predicate.tool.HasMaterialPredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.HasModifierPredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.StatInRangePredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.StatInSetPredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.ToolContextPredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.ToolStackItemPredicate;
+import slimeknights.tconstruct.library.json.predicate.tool.*;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.util.LazyModifier;
@@ -73,6 +62,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -153,7 +143,7 @@ public class AdvancementsProvider extends GenericDataProvider {
     builder(TinkerTools.travelersGear.get(ArmorSlotType.HELMET).getRenderTool(), resource("tools/travelers_gear"), tinkerStation, FrameType.TASK, builder ->
       TinkerTools.travelersGear.forEach((type, armor) -> builder.addCriterion("crafted_" + type.getSerializedName(), hasItem(armor))));
     builder(TinkerTools.pickaxe.get().getRenderTool(), resource("tools/tool_smith"), tinkerTool, FrameType.CHALLENGE, builder -> {
-      Consumer<Item> with = item -> builder.addCriterion(Registry.ITEM.getKey(item).getPath(), hasItem(item));
+      Consumer<Item> with = item -> builder.addCriterion(BuiltInRegistries.ITEM.getKey(item).getPath(), hasItem(item));
       with.accept(TinkerTools.pickaxe.get());
       with.accept(TinkerTools.mattock.get());
       with.accept(TinkerTools.pickadze.get());
@@ -234,7 +224,7 @@ public class AdvancementsProvider extends GenericDataProvider {
       builder.requirements(RequirementsStrategy.OR);
     });
     builder(TinkerTools.veinHammer.get().getRenderTool(), resource("smeltery/tool_forge"), anvil, FrameType.CHALLENGE, builder -> {
-      Consumer<Item> with = item -> builder.addCriterion(Registry.ITEM.getKey(item).getPath(), hasItem(item));
+      Consumer<Item> with = item -> builder.addCriterion(BuiltInRegistries.ITEM.getKey(item).getPath(), hasItem(item));
       with.accept(TinkerTools.sledgeHammer.get());
       with.accept(TinkerTools.veinHammer.get());
       with.accept(TinkerTools.excavator.get());
@@ -317,7 +307,7 @@ public class AdvancementsProvider extends GenericDataProvider {
     builder(TinkerCommons.encyclopedia, resource("foundry/encyclopedia"), fantasticFoundry, FrameType.GOAL, builder ->
       builder.addCriterion("crafted_book", hasItem(TinkerCommons.encyclopedia)));
     Advancement alloyer = builder(TinkerSmeltery.scorchedAlloyer, resource("foundry/alloyer"), fantasticFoundry, FrameType.TASK, builder -> {
-      Consumer<Block> with = block -> builder.addCriterion(Registry.BLOCK.getKey(block).getPath(), PlacedBlockTrigger.TriggerInstance.placedBlock(block));
+      Consumer<Block> with = block -> builder.addCriterion(BuiltInRegistries.BLOCK.getKey(block).getPath(), ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(block));
       with.accept(TinkerSmeltery.scorchedAlloyer.get());
       with.accept(TinkerSmeltery.scorchedFaucet.get());
       with.accept(TinkerSmeltery.scorchedTable.get());
@@ -334,7 +324,7 @@ public class AdvancementsProvider extends GenericDataProvider {
       Consumer<SearedTankBlock> with = block -> {
         CompoundTag nbt = new CompoundTag();
         nbt.put(NBTTags.TANK, getTankWith(TinkerFluids.blazingBlood.get(), block.getCapacity()).writeToNBT(new CompoundTag()));
-        builder.addCriterion(Registry.BLOCK.getKey(block).getPath(),
+        builder.addCriterion(BuiltInRegistries.BLOCK.getKey(block).getPath(),
                               InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(block).hasNbt(nbt).build()));
         builder.requirements(RequirementsStrategy.OR);
       };
@@ -348,7 +338,7 @@ public class AdvancementsProvider extends GenericDataProvider {
       Consumer<SearedLanternBlock> with = block -> {
         CompoundTag nbt = new CompoundTag();
         nbt.put(NBTTags.TANK, getTankWith(TinkerFluids.moltenManyullyn.get(), block.getCapacity()).writeToNBT(new CompoundTag()));
-        builder.addCriterion(Registry.BLOCK.getKey(block).getPath(),
+        builder.addCriterion(BuiltInRegistries.BLOCK.getKey(block).getPath(),
                               InventoryChangeTrigger.TriggerInstance.hasItems(new ItemPredicate(null, Collections.singleton(block.asItem()), MinMaxBounds.Ints.atLeast(64), MinMaxBounds.Ints.ANY,
                                                                                                 EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, new NbtPredicate(nbt))));
         builder.requirements(RequirementsStrategy.OR);
@@ -377,7 +367,7 @@ public class AdvancementsProvider extends GenericDataProvider {
       builder.addCriterion("magma_cream", hasItem(Items.MAGMA_CREAM));
     });
     builder(TinkerGadgets.piggyBackpack, resource("world/piggybackpack"), tinkersGadgetry, FrameType.GOAL, builder ->
-      builder.addCriterion("used_pack", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(EntityPredicate.Composite.ANY, ItemPredicate.Builder.item().of(TinkerGadgets.piggyBackpack), EntityPredicate.Composite.wrap(EntityPredicate.Builder.entity().of(EntityType.PIG).build()))));
+      builder.addCriterion("used_pack", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(TinkerGadgets.piggyBackpack), ContextAwarePredicate.create(EntityPredicate.Builder.entity().of(EntityType.PIG).build()))));
     Advancement slimesuit = builder(TinkerTools.slimesuit.get(ArmorSlotType.CHESTPLATE).getRenderTool(), resource("world/slimesuit"), enderslimeIsland, FrameType.GOAL, builder ->
       TinkerTools.slimesuit.forEach((type, armor) -> builder.addCriterion("crafted_" + type.getSerializedName(), hasItem(armor))));
     builder(new MaterialIdNBT(Collections.singletonList(MaterialIds.glass)).updateStack(new ItemStack(TinkerTools.slimesuit.get(ArmorSlotType.HELMET))),
@@ -403,7 +393,7 @@ public class AdvancementsProvider extends GenericDataProvider {
 
     // internal advancements
     hiddenBuilder(resource("internal/starting_book"), ConfigEnabledCondition.SPAWN_WITH_BOOK, builder -> {
-      builder.addCriterion("tick", new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), EntityPredicate.Composite.ANY));
+      builder.addCriterion("tick", new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), ContextAwarePredicate.ANY));
       builder.rewards(AdvancementRewards.Builder.loot(TConstruct.getResource("gameplay/starting_book")));
     });
   }
@@ -430,7 +420,7 @@ public class AdvancementsProvider extends GenericDataProvider {
   }
 
   @Override
-  public void run(CachedOutput cache) {
+  public CompletableFuture<?> run(CachedOutput cache) {
     Set<ResourceLocation> set = Sets.newHashSet();
     this.advancementConsumer = advancement -> {
       if (!set.add(advancement.getId())) {
@@ -447,6 +437,7 @@ public class AdvancementsProvider extends GenericDataProvider {
       }
     };
     generate();
+    return CompletableFuture.completedFuture(null);
   }
 
 

@@ -80,7 +80,7 @@ public class ModifierUsageCommand {
                                          .map(ModifierEntry::getModifier)
                                          .collect(Collectors.toSet());
     // finally, tool traits we limit to anything in the modifiable tag
-    Set<Modifier> toolTraits = RegistryHelper.getTagValueStream(Registry.ITEM, TinkerTags.Items.MODIFIABLE)
+    Set<Modifier> toolTraits = RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, TinkerTags.Items.MODIFIABLE)
                                              .filter(item -> item instanceof IModifiable)
                                              .flatMap(item -> {
                                                ToolDefinition definition = ((IModifiable) item).getToolDefinition();

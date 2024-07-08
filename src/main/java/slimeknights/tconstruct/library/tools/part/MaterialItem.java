@@ -133,7 +133,7 @@ public class MaterialItem extends Item implements IMaterialItem {
     if (!IMaterial.UNKNOWN_ID.equals(material)) {
       return material.getId().getNamespace();
     }
-    return Registry.ITEM.getKey(this).getNamespace();
+    return BuiltInRegistries.ITEM.getKey(this).getNamespace();
   }
 
 

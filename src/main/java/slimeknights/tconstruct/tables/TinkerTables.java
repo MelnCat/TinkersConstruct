@@ -6,11 +6,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,14 +25,9 @@ import slimeknights.tconstruct.library.recipe.partbuilder.ItemPartRecipe;
 import slimeknights.tconstruct.library.recipe.partbuilder.PartRecipe;
 import slimeknights.tconstruct.library.recipe.tinkerstation.building.ToolBuildingRecipe;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
+import slimeknights.tconstruct.library.utils.SimpleRecipeSerializer;
 import slimeknights.tconstruct.shared.block.TableBlock;
-import slimeknights.tconstruct.tables.block.ChestBlock;
-import slimeknights.tconstruct.tables.block.CraftingStationBlock;
-import slimeknights.tconstruct.tables.block.GenericTableBlock;
-import slimeknights.tconstruct.tables.block.ScorchedAnvilBlock;
-import slimeknights.tconstruct.tables.block.TinkerStationBlock;
-import slimeknights.tconstruct.tables.block.TinkersAnvilBlock;
-import slimeknights.tconstruct.tables.block.TinkersChestBlock;
+import slimeknights.tconstruct.tables.block.*;
 import slimeknights.tconstruct.tables.block.entity.chest.CastChestBlockEntity;
 import slimeknights.tconstruct.tables.block.entity.chest.PartChestBlockEntity;
 import slimeknights.tconstruct.tables.block.entity.chest.TinkersChestBlockEntity;
@@ -44,16 +38,8 @@ import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntit
 import slimeknights.tconstruct.tables.data.TableRecipeProvider;
 import slimeknights.tconstruct.tables.item.TableBlockItem;
 import slimeknights.tconstruct.tables.item.TinkersChestBlockItem;
-import slimeknights.tconstruct.tables.menu.CraftingStationContainerMenu;
-import slimeknights.tconstruct.tables.menu.ModifierWorktableContainerMenu;
-import slimeknights.tconstruct.tables.menu.PartBuilderContainerMenu;
-import slimeknights.tconstruct.tables.menu.TinkerChestContainerMenu;
-import slimeknights.tconstruct.tables.menu.TinkerStationContainerMenu;
-import slimeknights.tconstruct.tables.recipe.CraftingTableRepairKitRecipe;
-import slimeknights.tconstruct.tables.recipe.PartBuilderToolRecycle;
-import slimeknights.tconstruct.tables.recipe.TinkerStationDamagingRecipe;
-import slimeknights.tconstruct.tables.recipe.TinkerStationPartSwapping;
-import slimeknights.tconstruct.tables.recipe.TinkerStationRepairRecipe;
+import slimeknights.tconstruct.tables.menu.*;
+import slimeknights.tconstruct.tables.recipe.*;
 
 import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
@@ -68,7 +54,7 @@ public final class TinkerTables extends TinkerModule {
   /*
    * Blocks
    */
-  private static final Block.Properties WOOD_TABLE = builder(Material.WOOD, SoundType.WOOD).strength(1.0F, 5.0F).noOcclusion();
+  private static final Block.Properties WOOD_TABLE = builder(SoundType.WOOD).ignitedByLava().strength(1.0F, 5.0F).noOcclusion();
   /** Call with .apply to set the tag type for a block item provider */
   private static final BiFunction<TagKey<Item>,BooleanSupplier,Function<Block,RetexturedBlockItem>> RETEXTURED_BLOCK_ITEM = (tag, cond) -> block -> new TableBlockItem(block, tag, GENERAL_PROPS, cond);
   public static final ItemObject<TableBlock> craftingStation = BLOCKS.register("crafting_station", () -> new CraftingStationBlock(WOOD_TABLE), RETEXTURED_BLOCK_ITEM.apply(ItemTags.LOGS, Config.COMMON.showAllTableVariants::get));
@@ -78,13 +64,13 @@ public final class TinkerTables extends TinkerModule {
   public static final ItemObject<TableBlock> partChest = BLOCKS.register("part_chest", () -> new ChestBlock(WOOD_TABLE, PartChestBlockEntity::new, true), GENERAL_BLOCK_ITEM);
 
   public static final ItemObject<TableBlock> modifierWorktable = BLOCKS.register("modifier_worktable",
-    () -> new GenericTableBlock(builder(Material.STONE, SoundType.STONE).requiresCorrectToolForDrops().strength(3.5F).noOcclusion(), ModifierWorktableBlockEntity::new),
+    () -> new GenericTableBlock(builder(SoundType.STONE).requiresCorrectToolForDrops().strength(3.5F).noOcclusion(), ModifierWorktableBlockEntity::new),
     RETEXTURED_BLOCK_ITEM.apply(TinkerTags.Items.WORKSTATION_ROCK, Config.COMMON.showAllTableVariants::get));
 
-  private static final Block.Properties METAL_TABLE = builder(Material.HEAVY_METAL, SoundType.ANVIL).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).noOcclusion();
+  private static final Block.Properties METAL_TABLE = builder(SoundType.ANVIL).pushReaction(PushReaction.BLOCK).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).noOcclusion();
   public static final ItemObject<TableBlock> tinkersAnvil = BLOCKS.register("tinkers_anvil", () -> new TinkersAnvilBlock(METAL_TABLE, 6), RETEXTURED_BLOCK_ITEM.apply(TinkerTags.Items.ANVIL_METAL, Config.COMMON.showAllAnvilVariants::get));
   public static final ItemObject<TableBlock> scorchedAnvil = BLOCKS.register("scorched_anvil", () -> new ScorchedAnvilBlock(METAL_TABLE, 6), RETEXTURED_BLOCK_ITEM.apply(TinkerTags.Items.ANVIL_METAL, Config.COMMON.showAllAnvilVariants::get));
-  private static final Block.Properties STONE_TABLE = builder(Material.STONE, SoundType.METAL).requiresCorrectToolForDrops().strength(3.0F, 9.0F).noOcclusion();
+  private static final Block.Properties STONE_TABLE = builder(SoundType.METAL).requiresCorrectToolForDrops().strength(3.0F, 9.0F).noOcclusion();
   public static final ItemObject<TableBlock> castChest = BLOCKS.register("cast_chest", () -> new ChestBlock(STONE_TABLE, CastChestBlockEntity::new, false), GENERAL_BLOCK_ITEM);
 
   /*

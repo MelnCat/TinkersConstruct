@@ -232,7 +232,7 @@ public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDi
     public DisplayRecipe(ModifierEntry result, List<ItemStack> tools, DyeColor color) {
       this.displayResult = result;
       this.toolWithoutModifier = tools;
-      this.dyes = RegistryHelper.getTagValueStream(Registry.ITEM, color.getTag()).map(ItemStack::new).toList();
+      this.dyes = RegistryHelper.getTagValueStream(BuiltInRegistries.ITEM, color.getTag()).map(ItemStack::new).toList();
       this.variant = Component.translatable("color.minecraft." + color.getSerializedName());
 
       ResourceLocation id = result.getModifier().getId();

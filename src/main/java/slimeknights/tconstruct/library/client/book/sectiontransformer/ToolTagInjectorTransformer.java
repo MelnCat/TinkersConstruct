@@ -17,7 +17,7 @@ public class ToolTagInjectorTransformer extends AbstractTagInjectingTransformer<
 
   @Override
   protected ResourceLocation getId(Item item) {
-    return Registry.ITEM.getKey(item);
+    return BuiltInRegistries.ITEM.getKey(item);
   }
 
   @Override

@@ -234,7 +234,7 @@ public class ItemCastingRecipeBuilder extends AbstractRecipeBuilder<ItemCastingR
    */
   @Override
   public void save(Consumer<FinishedRecipe> consumerIn) {
-    this.save(consumerIn, Registry.ITEM.getKey(this.result.get().getItem()));
+    this.save(consumerIn, BuiltInRegistries.ITEM.getKey(this.result.get().getItem()));
   }
 
   @Override

@@ -1,7 +1,5 @@
 package slimeknights.tconstruct.tools.modifiers.ability.fluid;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
+import org.joml.AxisAngle4d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
@@ -107,9 +108,9 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
                 FluidEffectProjectile spit = new FluidEffectProjectile(entity.level, entity, new FluidStack(fluid, amount), power);
 
                 // setup projectile target
-                Vector3f targetVector = new Vector3f(entity.getViewVector(1.0f));
+                Vector3f targetVector = entity.getViewVector(1.0f).toVector3f();
                 float angle = startAngle + (10 * shotIndex);
-                targetVector.transform(new Quaternion(new Vector3f(entity.getUpVector(1.0f)), angle, true));
+                targetVector.rotate(new Quaternionf(new AxisAngle4d(angle, entity.getUpVector(1.0f).toVector3f())));
                 spit.shoot(targetVector.x(), targetVector.y(), targetVector.z(), velocity, inaccuracy);
 
                 // store all modifiers on the spit
@@ -123,8 +124,8 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
                 }
 
                 // finally, fire the projectile
-                entity.level.addFreshEntity(spit);
-                entity.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1.0F, 1.0F / (entity.level.getRandom().nextFloat() * 0.4F + 1.2F) + charge * 0.5F + (angle / 10f));
+                entity.level().addFreshEntity(spit);
+                entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1.0F, 1.0F / (entity.level.getRandom().nextFloat() * 0.4F + 1.2F) + charge * 0.5F + (angle / 10f));
 
               }
 

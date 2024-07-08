@@ -23,7 +23,7 @@ import slimeknights.tconstruct.world.TinkerStructures;
 public class LeaveVineDecorator extends TreeDecorator {
   public static final Codec<LeaveVineDecorator> CODEC = RecordCodecBuilder.create(inst ->
     inst.group(
-      Registry.BLOCK.byNameCodec().fieldOf("vines").forGetter(d -> d.vines),
+      BuiltInRegistries.BLOCK.byNameCodec().fieldOf("vines").forGetter(d -> d.vines),
       Codec.floatRange(0.0F, 1.0F).fieldOf("probability").forGetter(d -> d.probability)
     ).apply(inst, LeaveVineDecorator::new));
 

@@ -117,7 +117,7 @@ public class TinkerBlockStateProvider extends BlockStateProvider {
   /** Gets the resource location key for a block */
   @SuppressWarnings("deprecation")
   private ResourceLocation key(Block block) {
-    return Registry.BLOCK.getKey(block);
+    return BuiltInRegistries.BLOCK.getKey(block);
   }
 
   /** Gets the resource path for a block */
@@ -128,7 +128,7 @@ public class TinkerBlockStateProvider extends BlockStateProvider {
   /** Gets the resource location key for a block */
   @SuppressWarnings("deprecation")
   private ResourceLocation itemKey(ItemLike item) {
-    return Registry.ITEM.getKey(item.asItem());
+    return BuiltInRegistries.ITEM.getKey(item.asItem());
   }
 
   /** Gets the resource location key for a block */

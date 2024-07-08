@@ -109,7 +109,7 @@ public class MaterialCastingRecipeBuilder extends AbstractRecipeBuilder<Material
 
   @Override
   public void save(Consumer<FinishedRecipe> consumer) {
-    this.save(consumer, Registry.ITEM.getKey(this.result.asItem()));
+    this.save(consumer, BuiltInRegistries.ITEM.getKey(this.result.asItem()));
   }
 
   @Override

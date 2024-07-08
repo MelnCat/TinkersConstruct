@@ -32,7 +32,7 @@ public class ContainerFillingRecipeBuilder extends AbstractRecipeBuilder<Contain
    * @return  Builder instance
    */
   public static ContainerFillingRecipeBuilder castingRecipe(ItemLike result, int fluidAmount, TypeAwareRecipeSerializer<? extends ContainerFillingRecipe> recipeSerializer) {
-    return new ContainerFillingRecipeBuilder(Registry.ITEM.getKey(result.asItem()), fluidAmount, recipeSerializer);
+    return new ContainerFillingRecipeBuilder(BuiltInRegistries.ITEM.getKey(result.asItem()), fluidAmount, recipeSerializer);
   }
 
   /**

@@ -38,7 +38,7 @@ public class PartRecipeBuilder extends AbstractRecipeBuilder<PartRecipeBuilder> 
 
   @Override
   public void save(Consumer<FinishedRecipe> consumerIn) {
-    this.save(consumerIn, Registry.ITEM.getKey(this.output.asItem()));
+    this.save(consumerIn, BuiltInRegistries.ITEM.getKey(this.output.asItem()));
   }
 
   @Override

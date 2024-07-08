@@ -140,7 +140,7 @@ public class InteractionHandler {
     Player player = context.getPlayer();
     Level world = context.getLevel();
     BlockInWorld info = new BlockInWorld(world, context.getClickedPos(), false);
-    if (player != null && !player.getAbilities().mayBuild && !stack.hasAdventureModePlaceTagForBlock(Registry.BLOCK, info)) {
+    if (player != null && !player.getAbilities().mayBuild && !stack.hasAdventureModePlaceTagForBlock(BuiltInRegistries.BLOCK, info)) {
       return InteractionResult.PASS;
     }
 

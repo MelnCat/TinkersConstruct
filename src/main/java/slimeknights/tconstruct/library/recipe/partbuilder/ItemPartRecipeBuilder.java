@@ -32,7 +32,7 @@ public class ItemPartRecipeBuilder extends AbstractRecipeBuilder<ItemPartRecipeB
 
   @Override
   public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Registry.ITEM.getKey(result.get().getItem()));
+    save(consumer, BuiltInRegistries.ITEM.getKey(result.get().getItem()));
   }
 
   @Override

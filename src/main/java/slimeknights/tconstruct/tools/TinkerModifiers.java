@@ -1,7 +1,7 @@
 package slimeknights.tconstruct.tools;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
@@ -13,9 +13,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -38,11 +37,7 @@ import slimeknights.tconstruct.library.json.predicate.modifier.TagModifierPredic
 import slimeknights.tconstruct.library.json.variable.block.BlockVariable;
 import slimeknights.tconstruct.library.json.variable.block.ConditionalBlockVariable;
 import slimeknights.tconstruct.library.json.variable.block.StatePropertyVariable;
-import slimeknights.tconstruct.library.json.variable.entity.AttributeEntityVariable;
-import slimeknights.tconstruct.library.json.variable.entity.ConditionalEntityVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EntityEffectLevelVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EntityLightVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EntityVariable;
+import slimeknights.tconstruct.library.json.variable.entity.*;
 import slimeknights.tconstruct.library.json.variable.melee.EntityMeleeVariable;
 import slimeknights.tconstruct.library.json.variable.melee.MeleeVariable;
 import slimeknights.tconstruct.library.json.variable.mining.BlockLightVariable;
@@ -63,49 +58,14 @@ import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectManager;
 import slimeknights.tconstruct.library.modifiers.fluid.block.MobEffectCloudFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.block.PlaceBlockFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.block.PotionCloudFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.AddBreathFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.AwardStatFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.CureEffectsFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.DamageFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.FireFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.FreezeFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.PotionFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.RemoveEffectFluidEffect;
-import slimeknights.tconstruct.library.modifiers.fluid.entity.RestoreHungerFluidEffect;
+import slimeknights.tconstruct.library.modifiers.fluid.entity.*;
 import slimeknights.tconstruct.library.modifiers.impl.BasicModifier.TooltipDisplay;
 import slimeknights.tconstruct.library.modifiers.impl.SingleLevelModifier;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.BlockDamageSourceModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.CoverGroundWalkerModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.EffectImmunityModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.MobDisguiseModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ProtectionModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ReplaceBlockWalkerModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ToolActionWalkerTransformModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.AttributeModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ConditionalStatModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ExtinguishCampfireModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ReduceToolDamageModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.RepairModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ShowOffhandModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolActionTransformModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolActionsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.EnchantmentModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierRequirementsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierSlotModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierTraitModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SetStatModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.StatBoostModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SwappableSlotModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SwappableToolTraitsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.VolatileFlagModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.ConditionalMeleeDamageModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.KnockbackModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.LootingModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.MeleeAttributeModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.MobEffectModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.*;
+import slimeknights.tconstruct.library.modifiers.modules.behavior.*;
+import slimeknights.tconstruct.library.modifiers.modules.build.*;
+import slimeknights.tconstruct.library.modifiers.modules.combat.*;
 import slimeknights.tconstruct.library.modifiers.modules.display.DurabilityBarColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.mining.ConditionalMiningSpeedModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorLevelModule;
@@ -117,11 +77,7 @@ import slimeknights.tconstruct.library.modifiers.util.ModifierLevelDisplay.Uniqu
 import slimeknights.tconstruct.library.modifiers.util.StaticModifier;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierSalvage;
-import slimeknights.tconstruct.library.recipe.modifiers.adding.IncrementalModifierRecipe;
-import slimeknights.tconstruct.library.recipe.modifiers.adding.ModifierRecipe;
-import slimeknights.tconstruct.library.recipe.modifiers.adding.MultilevelModifierRecipe;
-import slimeknights.tconstruct.library.recipe.modifiers.adding.OverslimeModifierRecipe;
-import slimeknights.tconstruct.library.recipe.modifiers.adding.SwappableModifierRecipe;
+import slimeknights.tconstruct.library.recipe.modifiers.adding.*;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.AgeableSeveringRecipe;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.SeveringRecipe;
 import slimeknights.tconstruct.library.recipe.tinkerstation.repairing.ModifierMaterialRepairKitRecipe;
@@ -135,6 +91,7 @@ import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataKeys;
 import slimeknights.tconstruct.library.tools.capability.fluid.TankModule;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolTankHelper;
+import slimeknights.tconstruct.library.utils.SimpleRecipeSerializer;
 import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
 import slimeknights.tconstruct.tools.data.FluidEffectProvider;
 import slimeknights.tconstruct.tools.data.ModifierProvider;
@@ -144,25 +101,10 @@ import slimeknights.tconstruct.tools.item.CreativeSlotItem;
 import slimeknights.tconstruct.tools.item.DragonScaleItem;
 import slimeknights.tconstruct.tools.item.ModifierCrystalItem;
 import slimeknights.tconstruct.tools.modifiers.ModifierLootModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.AmbidextrousModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.BouncyModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.DoubleJumpModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.ReflectingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.ShieldStrapModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.ToolBeltModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.armor.ZoomModifier;
+import slimeknights.tconstruct.tools.modifiers.ability.armor.*;
 import slimeknights.tconstruct.tools.modifiers.ability.armor.walker.FlamewakeModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.BurstingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.SlurpingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.SpillingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.SpittingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.SplashingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.fluid.WettingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.interaction.BlockingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.interaction.FirestarterModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.interaction.HarvestAbilityModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.interaction.ShearsAbilityModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.interaction.SilkyShearsAbilityModifier;
+import slimeknights.tconstruct.tools.modifiers.ability.fluid.*;
+import slimeknights.tconstruct.tools.modifiers.ability.interaction.*;
 import slimeknights.tconstruct.tools.modifiers.ability.ranged.BulkQuiverModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.ranged.CrystalshotModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.ranged.TrickQuiverModifier;
@@ -170,20 +112,8 @@ import slimeknights.tconstruct.tools.modifiers.ability.sling.BonkingModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.sling.FlingingModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.sling.SpringingModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.sling.WarpingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.AutosmeltModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.BucketingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.DuelWieldingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.ExchangingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.GlowingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.MeltingModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.OffhandAttackModifier;
-import slimeknights.tconstruct.tools.modifiers.ability.tool.ParryingModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.BlastProtectionModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.DragonbornModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.MagicProtectionModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.MeleeProtectionModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.ProjectileProtectionModifier;
-import slimeknights.tconstruct.tools.modifiers.defense.ShulkingModifier;
+import slimeknights.tconstruct.tools.modifiers.ability.tool.*;
+import slimeknights.tconstruct.tools.modifiers.defense.*;
 import slimeknights.tconstruct.tools.modifiers.effect.BleedingEffect;
 import slimeknights.tconstruct.tools.modifiers.effect.MagneticEffect;
 import slimeknights.tconstruct.tools.modifiers.effect.NoMilkEffect;
@@ -192,76 +122,29 @@ import slimeknights.tconstruct.tools.modifiers.loot.ChrysophiliteBonusFunction;
 import slimeknights.tconstruct.tools.modifiers.loot.ChrysophiliteLootCondition;
 import slimeknights.tconstruct.tools.modifiers.loot.HasModifierLootCondition;
 import slimeknights.tconstruct.tools.modifiers.loot.ModifierBonusLootFunction;
-import slimeknights.tconstruct.tools.modifiers.slotless.CreativeSlotModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.DyedModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.EmbellishmentModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.FarsightedModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.NearsightedModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.OverslimeModifier;
-import slimeknights.tconstruct.tools.modifiers.slotless.StatOverrideModifier;
+import slimeknights.tconstruct.tools.modifiers.slotless.*;
 import slimeknights.tconstruct.tools.modifiers.traits.DamageSpeedTradeModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.EnderportingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.OvergrowthModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.OverlordModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.SolarPoweredModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.StoneshieldModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.TannedModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.general.TastyModifier;
+import slimeknights.tconstruct.tools.modifiers.traits.general.*;
 import slimeknights.tconstruct.tools.modifiers.traits.harvest.DwarvenModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.harvest.MomentumModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.harvest.SearingModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.harvest.TemperateModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.ConductingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.DecayModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.EnderferenceModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.InsatiableModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.InvariantModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.LaceratingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.melee.NecroticModifier;
+import slimeknights.tconstruct.tools.modifiers.traits.melee.*;
 import slimeknights.tconstruct.tools.modifiers.traits.ranged.HolyModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.ranged.OlympicModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.BoonOfSssssModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.BreathtakingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.ChrysophiliteModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.EnderdodgingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.FirebreathModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.FrosttouchModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.GoldGuardModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.PlagueModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.RevengeModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.SelfDestructiveModifier;
+import slimeknights.tconstruct.tools.modifiers.traits.skull.*;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.SelfDestructiveModifier.SelfDestructiveEffect;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.StrongBonesModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.WildfireModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.WitheredModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.armor.ItemFrameModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.armor.LightspeedArmorModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.armor.SoulSpeedModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.armor.SpringyModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.armor.ThornsModifier;
+import slimeknights.tconstruct.tools.modifiers.upgrades.armor.*;
 import slimeknights.tconstruct.tools.modifiers.upgrades.general.MagneticModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.FieryModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.PiercingModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.SeveringModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.SweepingEdgeModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.FreezingModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.ImpalingModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.PunchModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.ScopeModifier;
-import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.SinistralModifier;
+import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.*;
 import slimeknights.tconstruct.tools.modules.TheOneProbeModule;
-import slimeknights.tconstruct.tools.modules.armor.DepthProtectionModule;
-import slimeknights.tconstruct.tools.modules.armor.EnderclearanceModule;
-import slimeknights.tconstruct.tools.modules.armor.FlameBarrierModule;
-import slimeknights.tconstruct.tools.modules.armor.KineticModule;
-import slimeknights.tconstruct.tools.modules.armor.RecurrentProtectionModule;
+import slimeknights.tconstruct.tools.modules.armor.*;
 import slimeknights.tconstruct.tools.modules.ranged.RestrictAngleModule;
-import slimeknights.tconstruct.tools.recipe.ArmorDyeingRecipe;
-import slimeknights.tconstruct.tools.recipe.CreativeSlotRecipe;
-import slimeknights.tconstruct.tools.recipe.EnchantmentConvertingRecipe;
-import slimeknights.tconstruct.tools.recipe.ExtractModifierRecipe;
-import slimeknights.tconstruct.tools.recipe.ModifierRemovalRecipe;
-import slimeknights.tconstruct.tools.recipe.ModifierSortingRecipe;
+import slimeknights.tconstruct.tools.recipe.*;
 import slimeknights.tconstruct.tools.recipe.severing.MooshroomDemushroomingRecipe;
 import slimeknights.tconstruct.tools.recipe.severing.PlayerBeheadingRecipe;
 import slimeknights.tconstruct.tools.recipe.severing.SheepShearingRecipe;
@@ -269,7 +152,6 @@ import slimeknights.tconstruct.tools.recipe.severing.SnowGolemBeheadingRecipe;
 import slimeknights.tconstruct.tools.stats.ToolType;
 
 import static slimeknights.tconstruct.TConstruct.getResource;
-import static slimeknights.tconstruct.tools.TinkerTools.TAB_TOOLS;
 
 /**
  * Contains modifiers and the items or blocks used to craft modifiers
@@ -290,14 +172,14 @@ public final class TinkerModifiers extends TinkerModule {
    * Blocks
    */
   // material
-  public static final ItemObject<Block> silkyJewelBlock = BLOCKS.register("silky_jewel_block", metalBuilder(MaterialColor.GOLD), HIDDEN_BLOCK_ITEM);
+  public static final ItemObject<Block> silkyJewelBlock = BLOCKS.register("silky_jewel_block", metalBuilder(MapColor.GOLD), HIDDEN_BLOCK_ITEM);
 
   /*
    * Items
    */
   public static final ItemObject<Item> silkyCloth = ITEMS.register("silky_cloth", GENERAL_PROPS);
   public static final ItemObject<Item> silkyJewel = ITEMS.register("silky_jewel", HIDDEN_PROPS);
-  public static final ItemObject<Item> dragonScale = ITEMS.register("dragon_scale", () -> new DragonScaleItem(new Item.Properties().tab(TAB_GENERAL).rarity(Rarity.RARE)));
+  public static final ItemObject<Item> dragonScale = ITEMS.register("dragon_scale", () -> new DragonScaleItem(new Item.Properties().rarity(Rarity.RARE)));
   // durability reinforcements
   public static final ItemObject<Item> emeraldReinforcement = ITEMS.register("emerald_reinforcement", GENERAL_PROPS);
   public static final ItemObject<Item> slimesteelReinforcement = ITEMS.register("slimesteel_reinforcement", GENERAL_PROPS);
@@ -308,8 +190,8 @@ public final class TinkerModifiers extends TinkerModule {
   public static final ItemObject<Item> cobaltReinforcement = ITEMS.register("cobalt_reinforcement", GENERAL_PROPS);
   public static final ItemObject<Item> obsidianReinforcement = ITEMS.register("obsidian_reinforcement", GENERAL_PROPS);
   // special
-  public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().tab(TAB_TOOLS).stacksTo(16)));
-  public static final ItemObject<Item> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(new Item.Properties().tab(TAB_TOOLS)));
+  public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().stacksTo(16)));
+  public static final ItemObject<Item> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(new Item.Properties()));
 
   // entity
   public static final RegistryObject<EntityType<FluidEffectProjectile>> fluidSpitEntity = ENTITIES.register("fluid_spit", () ->
@@ -541,7 +423,7 @@ public final class TinkerModifiers extends TinkerModule {
 
   @SubscribeEvent
   void registerSerializers(RegisterEvent event) {
-    if (event.getRegistryKey() == Registry.RECIPE_SERIALIZER_REGISTRY) {
+    if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
       // conditional
       FluidEffect.BLOCK_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Block.LOADER);
       FluidEffect.ENTITY_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Entity.LOADER);

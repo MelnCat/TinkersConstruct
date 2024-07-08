@@ -21,7 +21,6 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -267,7 +266,7 @@ public class SlimeTreeFeature extends Feature<SlimeTreeConfig> {
   }
 
   private static boolean isTallPlantAt(LevelSimulatedReader reader, BlockPos blockPos) {
-    return reader.isStateAtPosition(blockPos, state -> state.getMaterial() == Material.REPLACEABLE_PLANT);
+    return reader.isStateAtPosition(blockPos, state -> state.canBeReplaced());
   }
 
   public static boolean isReplaceableAt(LevelSimulatedReader reader, BlockPos blockPos) {

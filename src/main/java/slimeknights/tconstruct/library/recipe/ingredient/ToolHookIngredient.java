@@ -80,7 +80,7 @@ public class ToolHookIngredient extends AbstractIngredient {
       List<ItemStack> list = new ArrayList<>();
 
       // filtered version of tag values
-      for(Holder<Item> holder : Registry.ITEM.getTagOrEmpty(tag)) {
+      for(Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(tag)) {
         if (holder.value() instanceof IModifiable modifiable && modifiable.getToolDefinition().getData().getHooks().hasHook(hook)) {
           list.add(new ItemStack(modifiable));
         }

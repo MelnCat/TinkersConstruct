@@ -52,7 +52,7 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       // add result slot, will fetch result cache
       this.addSlot(this.resultSlot = new LazyResultSlot(tile.getCraftingResult(), 114, 38));
       // set initial slot filters and activations
-      setToolSelection(StationSlotLayoutLoader.getInstance().get(Registry.BLOCK.getKey(tile.getBlockState().getBlock())));
+      setToolSelection(StationSlotLayoutLoader.getInstance().get(BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock())));
     }
     else {
       // requirement for final variable

@@ -3,6 +3,7 @@ package slimeknights.tconstruct.smeltery.client.screen.module;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -102,7 +103,7 @@ public class GuiFuelModule {
    * @param mouseX    Mouse X position
    * @param mouseY    Mouse Y position
    */
-  public void addTooltip(PoseStack matrices, int mouseX, int mouseY, boolean hasTank) {
+  public void addTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean hasTank) {
     int checkX = mouseX - screen.leftPos;
     int checkY = mouseY - screen.topPos;
 
@@ -139,7 +140,7 @@ public class GuiFuelModule {
         tooltip = hasTank ? TOOLTIP_NO_FUEL : TOOLTIP_NO_TANK;
       }
 
-      screen.renderComponentTooltip(matrices, tooltip, mouseX, mouseY);
+      graphics.renderComponentTooltip(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
     }
   }
 

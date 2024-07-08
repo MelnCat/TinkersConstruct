@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.ToIntFunction;
 
+import static slimeknights.tconstruct.library.utils.ColorHelper.*;
+
 /**
  * Supports including sprites as "part of the palette"
  */
@@ -68,7 +70,7 @@ public class GreyToSpriteTransformer implements ISpriteTransformer {
   private int getNewColor(int color, int x, int y) {
     // if fully transparent, just return fully transparent
     // we do not do 0 alpha RGB values to save effort
-    if (ColorHelper.getA(color) == 0) {
+    if (getA(color) == 0) {
       return 0x00000000;
     }
     int grey = GreyToColorMapping.getGrey(color);
@@ -283,14 +285,14 @@ public class GreyToSpriteTransformer implements ISpriteTransformer {
           for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
               int color = image.getPixelRGBA(x, y);
-              red   += NativeImage.getR(color);
-              green += NativeImage.getG(color);
-              blue  += NativeImage.getB(color);
-              alpha += NativeImage.getA(color);
+              red   += getR(color);
+              green += getG(color);
+              blue  += getB(color);
+              alpha += getA(color);
             }
           }
           int pixels = image.getWidth() * image.getHeight();
-          int spriteColor = NativeImage.combine(alpha / pixels, blue / pixels, green / pixels, red / pixels);
+          int spriteColor = combine(alpha / pixels, blue / pixels, green / pixels, red / pixels);
           // if we have a color set, treat it as a tint
           if (color != -1) {
             spriteColor = GreyToColorMapping.scaleColor(spriteColor, color, 255);

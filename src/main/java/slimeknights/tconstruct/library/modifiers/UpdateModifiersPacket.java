@@ -98,7 +98,7 @@ public class UpdateModifiersPacket implements IThreadsafePacket {
     size = buffer.readVarInt();
     for (int i = 0; i < size; i++) {
       enchantmentTagBuilder.put(
-        TagKey.create(Registry.ENCHANTMENT_REGISTRY, buffer.readResourceLocation()),
+        TagKey.create(Registries.ENCHANTMENT, buffer.readResourceLocation()),
         getModifier(modifiers, new ModifierId(buffer.readResourceLocation())));
     }
     enchantmentTagMappings = enchantmentTagBuilder.build();

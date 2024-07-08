@@ -1,14 +1,18 @@
 package slimeknights.tconstruct.fluids.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -29,7 +33,7 @@ public class BurningLiquidBlock extends LiquidBlock {
   public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
     if (!entity.fireImmune() && entity.getFluidTypeHeight(getFluid().getFluidType()) > 0) {
       entity.setSecondsOnFire(burnTime);
-      if (entity.hurt(DamageSource.LAVA, damage)) {
+      if (entity.hurt(entity.damageSources().lava(), damage)) {
         entity.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + level.random.nextFloat() * 0.4F);
       }
     }

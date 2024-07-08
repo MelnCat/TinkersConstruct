@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /** Base data generator for use in addons, depends on the regular material provider */
@@ -36,7 +37,7 @@ public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvi
   protected abstract void addMaterialStats();
 
   @Override
-  public void run(CachedOutput cache) {
+  public CompletableFuture<?> run(CachedOutput cache) {
     addMaterialStats();
 
     // ensure we have stats for all materials
@@ -49,6 +50,7 @@ public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvi
     // does not ensure we have materials for all stats, we may be adding stats for another mod
     // generate finally
     allMaterialStats.forEach((materialId, materialStats) -> saveJson(cache, materialId, convert(materialStats)));
+    return CompletableFuture.completedFuture(null);
   }
 
 

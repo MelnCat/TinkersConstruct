@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -154,7 +154,7 @@ public class ContentTool extends PageContent {
         // get the stacks for the first crafting table recipe
         Recipe<CraftingContainer> recipe = Optional.ofNullable(Minecraft.getInstance().level)
                                                    .flatMap(world -> world.getRecipeManager().byType(RecipeType.CRAFTING).values().stream()
-                                                                          .filter(r -> r.getResultItem().getItem() == tool.asItem())
+                                                                          .filter(r -> r.getResultItem(world.registryAccess()).getItem() == tool.asItem())
                                                                           .findFirst())
                                                    .orElse(null);
         if (recipe != null) {

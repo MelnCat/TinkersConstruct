@@ -234,16 +234,18 @@ public final class GuiUtil {
    * @param height    Element height
    */
   public static void renderHighlight(GuiGraphics graphics, int x, int y, int width, int height) {
-      RenderSystem.disableDepthTest();
-      RenderSystem.colorMask(true, true, true, false);
-      GuiComponent.fill(matrices, x, y, x + width, y + height, 0x80FFFFFF);
-      RenderSystem.colorMask(true, true, true, true);
-      RenderSystem.enableDepthTest();
+    RenderSystem.disableDepthTest();
+    RenderSystem.colorMask(true, true, true, false);
+    graphics.fill(x, y, x + width, y + height, 0x80FFFFFF);
+    RenderSystem.colorMask(true, true, true, true);
+    RenderSystem.enableDepthTest();
   }
 
-  /** Renders a pattern at the given location */
+  /**
+   * Renders a pattern at the given location
+   */
   public static void renderPattern(GuiGraphics graphics, Pattern pattern, int x, int y) {
     TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(pattern.getTexture());
-    GuiComponent.blit(matrices, x, y, 100, 16, 16, sprite);
+    graphics.blit(x, y, 100, 16, 16, sprite);
   }
 }

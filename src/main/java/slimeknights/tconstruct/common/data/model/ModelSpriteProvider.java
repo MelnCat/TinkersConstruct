@@ -14,8 +14,10 @@ import slimeknights.tconstruct.shared.block.SlimeType;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static slimeknights.tconstruct.TConstruct.getResource;
+import static slimeknights.tconstruct.library.utils.ColorHelper.getA;
 
 /**
  * Provides textures used in general models
@@ -28,7 +30,7 @@ public class ModelSpriteProvider extends GenericTextureGenerator {
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     ResourceLocation rootsSide = getResource("block/wood/enderbark/roots");
     ResourceLocation rootsTop = getResource("block/wood/enderbark/roots_top");
 
@@ -41,6 +43,7 @@ public class ModelSpriteProvider extends GenericTextureGenerator {
     }
 
     spriteReader.closeAll();
+    return CompletableFuture.completedFuture(null);
   }
 
   /** Gets the LCM of two ints */
@@ -91,7 +94,7 @@ public class ModelSpriteProvider extends GenericTextureGenerator {
         for (NativeImage sprite : sprites) {
           // tile the sprite if its smaller than the output, lets you merge multiple animations
           int spriteColor = sprite.getPixelRGBA(x % sprite.getHeight(), y % sprite.getHeight());
-          if (NativeImage.getA(spriteColor) != 0) {
+          if (getA(spriteColor) != 0) {
             // TODO: this does not merge alpha, though will we ever need that?
             color = spriteColor;
             break;

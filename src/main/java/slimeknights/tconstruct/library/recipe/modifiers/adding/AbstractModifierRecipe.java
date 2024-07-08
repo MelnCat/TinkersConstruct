@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.modifiers.adding;
 
 import lombok.Getter;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -93,7 +94,7 @@ public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, ID
 
   /** @deprecated use {@link #getValidatedResult(ITinkerStationContainer)} */
   @Override @Deprecated
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return ItemStack.EMPTY;
   }
 

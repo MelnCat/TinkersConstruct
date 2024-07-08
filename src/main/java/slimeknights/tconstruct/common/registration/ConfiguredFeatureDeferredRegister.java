@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.common.registration;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.block.Blocks;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 
 public class ConfiguredFeatureDeferredRegister extends DeferredRegisterWrapper<ConfiguredFeature<?,?>> {
   public ConfiguredFeatureDeferredRegister(String modID) {
-    super(Registry.CONFIGURED_FEATURE_REGISTRY, modID);
+    super(Registries.CONFIGURED_FEATURE, modID);
   }
 
   /**

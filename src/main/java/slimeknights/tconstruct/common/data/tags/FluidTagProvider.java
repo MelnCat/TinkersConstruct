@@ -21,7 +21,7 @@ public class FluidTagProvider extends FluidTagsProvider {
   }
 
   @Override
-  public void addTags() {
+  public void addTags(HolderLookup.Provider provider) {
     // first, register common tags
     // slime
     tagAll(TinkerFluids.earthSlime);

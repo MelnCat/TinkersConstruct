@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /** Base data generator for use in addons */
@@ -45,7 +46,7 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
   protected abstract void addMaterialTraits();
 
   @Override
-  public void run(CachedOutput cache) {
+  public CompletableFuture<?> run(CachedOutput cache) {
     addMaterialTraits();
 
     // ensure we have traits for all materials
@@ -59,6 +60,7 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
 
     // generate
     allMaterialTraits.forEach((materialId, traits) -> saveJson(cache, materialId, traits.serialize()));
+    return CompletableFuture.completedFuture(null);
   }
 
 

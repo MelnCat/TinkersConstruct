@@ -1,7 +1,10 @@
 package slimeknights.tconstruct.common.data.model;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -27,6 +30,7 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.world.TinkerWorld;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static slimeknights.mantle.util.IdExtender.INSTANCE;
@@ -35,8 +39,8 @@ import static slimeknights.mantle.util.IdExtender.INSTANCE;
 public class TinkerBlockStateProvider extends BlockStateProvider {
   private final UncheckedModelFile GENERATED = new UncheckedModelFile("item/generated");
 
-  public TinkerBlockStateProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-    super(generator, TConstruct.MOD_ID, existingFileHelper);
+  public TinkerBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+    super(output, TConstruct.MOD_ID, existingFileHelper);
   }
 
   @Override

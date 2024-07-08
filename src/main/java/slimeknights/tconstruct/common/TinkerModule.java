@@ -70,7 +70,7 @@ public abstract class TinkerModule {
 
   // base item properties
   protected static final Item.Properties HIDDEN_PROPS = new Item.Properties();
-  protected static final Item.Properties GENERAL_PROPS = new Item.Properties().tab(TAB_GENERAL);
+  protected static final Item.Properties GENERAL_PROPS = new Item.Properties();
   protected static final Function<Block,? extends BlockItem> HIDDEN_BLOCK_ITEM = (b) -> new BlockItem(b, HIDDEN_PROPS);
   protected static final Function<Block,? extends BlockItem> GENERAL_BLOCK_ITEM = (b) -> new BlockItem(b, GENERAL_PROPS);
   protected static final Function<Block,? extends BlockItem> GENERAL_TOOLTIP_BLOCK_ITEM = (b) -> new BlockTooltipItem(b, GENERAL_PROPS);

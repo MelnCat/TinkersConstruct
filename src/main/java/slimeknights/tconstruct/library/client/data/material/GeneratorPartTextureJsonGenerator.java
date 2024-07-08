@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /** Generates the file that tells the part generator command which parts are needed for your tools */
 public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
@@ -50,7 +51,7 @@ public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
     JsonObject json = new JsonObject();
     json.addProperty("replace", false);
     json.add("parts", PartSpriteInfo.LIST_LOADABLE.serialize(spriteProvider.getSprites()));
@@ -58,6 +59,7 @@ public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
       json.add("overrides", overrides.serialize());
     }
     saveJson(cache, new ResourceLocation(modId, "generator_part_textures"), json);
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

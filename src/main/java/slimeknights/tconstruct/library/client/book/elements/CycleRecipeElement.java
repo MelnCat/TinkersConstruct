@@ -3,6 +3,7 @@ package slimeknights.tconstruct.library.client.book.elements;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -23,11 +24,12 @@ public class CycleRecipeElement extends ArrowElement {
   }
 
   @Override
-  public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
+  public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     if (this.button != null && this.isHovered(mouseX, mouseY)) {
       this.playDownSound(Minecraft.getInstance().getSoundManager());
       this.button.onPress();
     }
+    return false;
   }
 
   public void playDownSound(SoundManager handler) {
@@ -35,9 +37,9 @@ public class CycleRecipeElement extends ArrowElement {
   }
 
   @Override
-  public void drawOverlay(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, Font fontRenderer) {
+  public void drawOverlay(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
     if (this.isHovered(mouseX, mouseY)) {
-      this.drawTooltip(matrixStack, Collections.singletonList(Component.translatable("gui.tconstruct.manual.cycle.recipes")), mouseX, mouseY, fontRenderer);
+      this.drawTooltip(graphics, Collections.singletonList(Component.translatable("gui.tconstruct.manual.cycle.recipes")), mouseX, mouseY, Minecraft.getInstance().font);
     }
   }
 }

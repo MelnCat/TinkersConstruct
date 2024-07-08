@@ -2,7 +2,7 @@ package slimeknights.tconstruct.library.utils;
 
 public class ColorHelper {
   public static int getA(int color) {
-    return pAbgrColor >> 24 & 0xFF;
+    return color >> 24 & 0xFF;
   }
 
   public static int getR(int color) {

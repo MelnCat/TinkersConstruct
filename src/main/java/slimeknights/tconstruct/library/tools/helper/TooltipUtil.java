@@ -321,7 +321,7 @@ public class TooltipUtil {
         for (int i = 0; i < enchantments.size(); ++i) {
           CompoundTag enchantmentTag = enchantments.getCompound(i);
           // TODO: is this the best place for this, or should we let vanilla run?
-          Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(enchantmentTag.getString("id")))
+          BuiltInRegistries.ENCHANTMENT.getOptional(ResourceLocation.tryParse(enchantmentTag.getString("id")))
                               .ifPresent(enchantment -> tooltips.add(enchantment.getFullname(enchantmentTag.getInt("lvl"))));
         }
       }

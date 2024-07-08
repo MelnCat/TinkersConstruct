@@ -11,6 +11,7 @@ import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpri
 
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 
 /** Simple generator that generates a texture showing the entire range for a palette */
 public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
@@ -23,7 +24,7 @@ public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
     for (AbstractMaterialSpriteProvider materialProvider : materialProviders) {
       for (Entry<ResourceLocation,MaterialSpriteInfo> entry : materialProvider.getMaterials().entrySet()) {
         if (entry.getValue().getTransformer() instanceof RecolorSpriteTransformer recolor) {
@@ -41,6 +42,7 @@ public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
         }
       }
     }
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

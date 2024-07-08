@@ -3,6 +3,7 @@ package slimeknights.tconstruct.smeltery.client.screen.module;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -68,8 +69,8 @@ public class GuiTankModule {
    * Draws the tank
    * @param matrices  Matrix stack instance
    */
-  public void draw(PoseStack matrices) {
-    GuiUtil.renderFluidTank(matrices, screen, tank.getFluidInTank(TANK_INDEX), tank.getTankCapacity(TANK_INDEX), x, y, width, height, 100);
+  public void draw(GuiGraphics guiGraphics) {
+    GuiUtil.renderFluidTank(guiGraphics, screen, tank.getFluidInTank(TANK_INDEX), tank.getTankCapacity(TANK_INDEX), x, y, width, height, 100);
   }
 
   /**

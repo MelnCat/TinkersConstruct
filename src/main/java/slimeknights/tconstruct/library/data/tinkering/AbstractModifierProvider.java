@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /** Datagen for dynamic modifiers */
 @SuppressWarnings("SameParameterValue")
@@ -112,10 +113,11 @@ public abstract class AbstractModifierProvider extends GenericDataProvider {
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     addModifiers();
     allModifiers.forEach((id, data) -> saveJson(cache, id, data.serialize()));
     composableModifiers.forEach((id, data) -> saveJson(cache, id, data.serialize()));
+    return CompletableFuture.completedFuture(null);
   }
 
   /** Serializes the given modifier with its condition and redirects */

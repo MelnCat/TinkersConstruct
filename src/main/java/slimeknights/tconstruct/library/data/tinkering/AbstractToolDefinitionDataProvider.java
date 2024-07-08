@@ -1,7 +1,7 @@
 package slimeknights.tconstruct.library.data.tinkering;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -9,11 +9,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.ItemLike;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
-import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
-import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
-import slimeknights.tconstruct.library.tools.definition.ToolDefinitionData;
-import slimeknights.tconstruct.library.tools.definition.ToolDefinitionDataBuilder;
-import slimeknights.tconstruct.library.tools.definition.ToolDefinitionLoader;
+import slimeknights.tconstruct.library.tools.definition.*;
 import slimeknights.tconstruct.library.tools.definition.module.ToolModule;
 import slimeknights.tconstruct.tools.item.ArmorSlotType;
 import slimeknights.tconstruct.tools.item.ArmorSlotType.ArmorBuilder;
@@ -23,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -63,7 +60,7 @@ public abstract class AbstractToolDefinitionDataProvider extends GenericDataProv
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
     addToolDefinitions();
     Map<ResourceLocation,ToolDefinition> relevantDefinitions = ToolDefinitionLoader.getInstance().getRegisteredToolDefinitions().stream()
                                                                                    .filter(def -> def.getId().getNamespace().equals(modId))
@@ -84,6 +81,7 @@ public abstract class AbstractToolDefinitionDataProvider extends GenericDataProv
       }
       saveJson(cache, id, ToolDefinitionData.LOADABLE.serialize(entry.getValue().build()));
     }
+    return CompletableFuture.completedFuture(null);
   }
 
   /** Builder for an armor material to batch certain hooks */

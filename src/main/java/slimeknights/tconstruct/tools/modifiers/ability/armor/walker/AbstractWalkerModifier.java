@@ -29,13 +29,13 @@ public abstract class AbstractWalkerModifier extends NoLevelsModifier implements
 
   @Override
   public void onWalk(IToolStackView tool, ModifierEntry modifier, LivingEntity living, BlockPos prevPos, BlockPos newPos) {
-    if (living.isOnGround() && !tool.isBroken() && !living.level.isClientSide) {
+    if (living.onGround() && !tool.isBroken() && !living.level().isClientSide) {
       float radius = Math.min(16, getRadius(tool, modifier.getLevel()));
       MutableBlockPos mutable = new MutableBlockPos();
-      Level world = living.level;
+      Level world = living.level();
       Vec3 posVec = living.position();
-      BlockPos center = new BlockPos(posVec.x, posVec.y + 0.5, posVec.z);
-      for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, 0, -radius), center.offset(radius, 0, radius))) {
+      BlockPos center = new BlockPos((int) posVec.x, (int) (posVec.y + 0.5), (int) posVec.z);
+      for (BlockPos pos : BlockPos.betweenClosed(center.offset((int) -radius, 0, (int) -radius), center.offset((int) radius, 0, (int) radius))) {
         if (pos.closerToCenterThan(living.position(), radius)) {
           walkOn(tool, modifier.getLevel(), living, world, pos, mutable);
           if (tool.isBroken()) {

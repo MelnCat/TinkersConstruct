@@ -2,6 +2,8 @@ package slimeknights.tconstruct.fluids.data;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceKey;
@@ -13,6 +15,7 @@ import slimeknights.mantle.data.GenericDataProvider;
 
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 
 /** Quick and dirty data provider to generate fluid bucket models */
 public class FluidBucketModelProvider extends GenericDataProvider {
@@ -29,12 +32,12 @@ public class FluidBucketModelProvider extends GenericDataProvider {
     // using our own model as the forge one expects us to use item colors to handle tints, when we could just bake it in
     json.addProperty("loader", "tconstruct:fluid_container");
     json.addProperty("flip_gas", bucket.getFluid().getFluidType().isLighterThanAir());
-    json.addProperty("fluid", Registry.FLUID.getKey(bucket.getFluid()).toString());
+    json.addProperty("fluid", BuiltInRegistries.FLUID.getKey(bucket.getFluid()).toString());
     return json;
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     // loop over all liquid blocks, adding a blockstate for them
     for (Entry<ResourceKey<Item>,Item> entry : BuiltInRegistries.ITEM.entrySet()) {
       ResourceLocation id = entry.getKey().location();
@@ -42,6 +45,7 @@ public class FluidBucketModelProvider extends GenericDataProvider {
         saveJson(cache, id, makeJson(bucket));
       }
     }
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

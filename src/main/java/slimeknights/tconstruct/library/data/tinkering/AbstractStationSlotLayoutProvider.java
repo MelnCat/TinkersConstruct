@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.library.data.tinkering;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +14,7 @@ import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /** Base data generator to generate station slot layouts */
@@ -64,8 +65,9 @@ public abstract class AbstractStationSlotLayoutProvider extends GenericDataProvi
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     addLayouts();
     allLayouts.forEach((id, builder) -> saveJson(cache, id, builder.build()));
+    return CompletableFuture.completedFuture(null);
   }
 }

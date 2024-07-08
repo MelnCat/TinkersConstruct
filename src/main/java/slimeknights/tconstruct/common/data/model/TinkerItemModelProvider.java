@@ -1,7 +1,9 @@
 package slimeknights.tconstruct.common.data.model;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -21,8 +23,8 @@ import static slimeknights.tconstruct.TConstruct.getResource;
 
 @SuppressWarnings("UnusedReturnValue")
 public class TinkerItemModelProvider extends ItemModelProvider {
-  public TinkerItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-    super(generator, TConstruct.MOD_ID, existingFileHelper);
+  public TinkerItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+    super(output, TConstruct.MOD_ID, existingFileHelper);
   }
 
   @Override

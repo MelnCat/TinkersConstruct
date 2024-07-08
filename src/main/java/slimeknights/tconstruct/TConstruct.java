@@ -206,13 +206,13 @@ public class TConstruct {
         yield block == null ? null : block.asItem();
       }
     });
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registry.FLUID_REGISTRY, name -> switch (name) {
+    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.FLUID, name -> switch (name) {
       case "blood" -> TinkerFluids.earthSlime.getStill();
       case "flowing_blood" -> TinkerFluids.earthSlime.getFlowing();
       default -> null;
     });
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registry.ENTITY_TYPE_REGISTRY, name -> name.equals("earth_slime") ? EntityType.SLIME : null);
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registry.MOB_EFFECT_REGISTRY, name -> switch (name) {
+    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.ENTITY_TYPE, name -> name.equals("earth_slime") ? EntityType.SLIME : null);
+    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.MOB_EFFECT, name -> switch (name) {
       case "momentum" -> TinkerModifiers.momentumEffect.get(ToolType.HARVEST);
       case "insatiable" -> TinkerModifiers.insatiableEffect.get(ToolType.MELEE);
       default -> null;

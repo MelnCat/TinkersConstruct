@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.nbt.CompoundTag;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Replaces blocks in a structure palette with another set of blocks
@@ -55,7 +57,7 @@ public abstract class AbstractStructureRepalleter extends GenericNBTProvider {
   }
 
   @Override
-  public void run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     addStructures();
     for (Entry<ResourceLocation,Collection<RepaletteTask>> entry : structures.asMap().entrySet()) {
       ResourceLocation original = entry.getKey();
@@ -92,6 +94,7 @@ public abstract class AbstractStructureRepalleter extends GenericNBTProvider {
         TConstruct.LOG.error("Couldn't read NBT for {}", original, e);
       }
     }
+    return CompletableFuture.completedFuture(null);
   }
 
   /** Starts a builder for repaletting the given structure into the given output. Note calling multple times with an output not give the same builder. */

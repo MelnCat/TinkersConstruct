@@ -136,9 +136,9 @@ public class WorldgenDatapackRegistryProvider implements DataProvider {
     biomeModifiers.put("cobalt_ore", new AddFeaturesBiomeModifier(nether, direct(reference(TinkerWorld.placedSmallCobaltOre), reference(TinkerWorld.placedLargeCobaltOre)), Decoration.UNDERGROUND_DECORATION));
     // geodes
     biomeModifiers.put("earth_geode", new AddFeaturesBiomeModifier(overworld, direct(reference(TinkerWorld.placedEarthGeode)), Decoration.LOCAL_MODIFICATIONS));
-    biomeModifiers.put("sky_geode", new AddFeaturesBiomeModifier(and(overworld, not(Registry.BIOME_REGISTRY, or(tag(BiomeTags.IS_OCEAN), tag(BiomeTags.IS_DEEP_OCEAN), tag(BiomeTags.IS_BEACH), tag(BiomeTags.IS_RIVER)))), direct(reference(TinkerWorld.placedSkyGeode)), Decoration.LOCAL_MODIFICATIONS));
+    biomeModifiers.put("sky_geode", new AddFeaturesBiomeModifier(and(overworld, not(Registries.BIOME, or(tag(BiomeTags.IS_OCEAN), tag(BiomeTags.IS_DEEP_OCEAN), tag(BiomeTags.IS_BEACH), tag(BiomeTags.IS_RIVER)))), direct(reference(TinkerWorld.placedSkyGeode)), Decoration.LOCAL_MODIFICATIONS));
     biomeModifiers.put("ichor_geode", new AddFeaturesBiomeModifier(nether, direct(reference(TinkerWorld.placedIchorGeode)), Decoration.LOCAL_MODIFICATIONS));
-    biomeModifiers.put("ender_geode", new AddFeaturesBiomeModifier(and(end, not(Registry.BIOME_REGISTRY, direct(reference(Biomes.THE_END)))), direct(reference(TinkerWorld.placedEnderGeode)), Decoration.LOCAL_MODIFICATIONS));
+    biomeModifiers.put("ender_geode", new AddFeaturesBiomeModifier(and(end, not(Registries.BIOME, direct(reference(Biomes.THE_END)))), direct(reference(TinkerWorld.placedEnderGeode)), Decoration.LOCAL_MODIFICATIONS));
     // spawns
     biomeModifiers.put("spawn_overworld_slime", new AddSpawnsBiomeModifier(overworld, List.of(new SpawnerData(TinkerWorld.skySlimeEntity.get(), 100, 2, 4))));
     biomeModifiers.put("spawn_end_slime", new AddSpawnsBiomeModifier(end, List.of(new SpawnerData(TinkerWorld.enderSlimeEntity.get(), 10, 2, 4))));

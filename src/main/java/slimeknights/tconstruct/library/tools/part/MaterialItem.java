@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.tools.part;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -50,35 +51,6 @@ public class MaterialItem extends Item implements IMaterialItem {
   @Override
   public MaterialVariantId getMaterial(ItemStack stack) {
     return getMaterialId(stack.getTag());
-  }
-
-  @Override
-  public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-    if (this.allowedIn(group) && MaterialRegistry.isFullyLoaded()) {
-      // if a specific material is set in the config, try adding that
-      String showOnlyId = Config.COMMON.showOnlyPartMaterial.get();
-      boolean added = false;
-      if (!showOnlyId.isEmpty()) {
-        MaterialVariantId materialId = MaterialVariantId.tryParse(showOnlyId);
-        if (materialId != null && canUseMaterial(materialId.getId())) {
-          items.add(this.withMaterialForDisplay(materialId));
-          added = true;
-        }
-      }
-      // if no material is set or we failed to find it, iterate all materials
-      if (!added) {
-        for (IMaterial material : MaterialRegistry.getInstance().getVisibleMaterials()) {
-          MaterialId id = material.getIdentifier();
-          if (this.canUseMaterial(id)) {
-            items.add(this.withMaterial(id));
-            // if a specific material was requested and not found, stop after first
-            if (!showOnlyId.isEmpty()) {
-              break;
-            }
-          }
-        }
-      }
-    }
   }
 
   @Nullable

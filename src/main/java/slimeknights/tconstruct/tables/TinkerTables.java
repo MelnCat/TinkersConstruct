@@ -128,6 +128,6 @@ public final class TinkerTables extends TinkerModule {
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
     DataGenerator datagenerator = event.getGenerator();
-    datagenerator.addProvider(event.includeServer(), new TableRecipeProvider(datagenerator));
+    datagenerator.addProvider(event.includeServer(), new TableRecipeProvider(datagenerator.getPackOutput()));
   }
 }

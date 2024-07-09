@@ -6,7 +6,8 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -100,7 +101,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe {
   }
 
   @Override
-  public ItemStack assemble(IPartBuilderContainer inv, Pattern pattern) {
+  public ItemStack assemble(IPartBuilderContainer inv, Pattern pattern, RegistryAccess access) {
     ToolStack tool = ToolStack.from(inv.getStack());
     // first, try to find a matching part
     IToolPart match = null;
@@ -158,7 +159,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe {
   /** @deprecated use {@link #assemble(IPartBuilderContainer, Pattern)} */
   @Deprecated
   @Override
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return ItemStack.EMPTY;
   }
 

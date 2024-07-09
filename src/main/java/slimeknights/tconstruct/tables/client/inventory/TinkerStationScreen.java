@@ -6,9 +6,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -164,15 +165,16 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     }
     this.currentLayout = this.defaultLayout;
     this.activeInputs = Math.min(defaultLayout.getInputCount(), max);
-    this.passEvents = false;
+    //TODO!: Pass events equivalent?
+    //this.passEvents = false;
   }
 
   @Override
   public void init() {
 
     assert this.minecraft != null;
-    // TODO: pretty sure we don't need this unless we add back the renaming slot
-    this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+    // TODO!: pretty sure we don't need this unless we add back the renaming slot
+    // this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
     // workaround to line up the tabs on switching even though the GUI is a tad higher
     this.topPos += 4;
@@ -378,30 +380,29 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
   }
 
   @Override
-  protected void drawContainerName(PoseStack matrixStack) {
-    this.font.draw(matrixStack, this.getTitle(), 8.0F, 8.0F, 4210752);
+  protected void drawContainerName(GuiGraphics graphics) {
+    graphics.drawString(font, this.getTitle(), 8, 8, 4210752);
   }
 
-  public static void renderIcon(PoseStack matrices, LayoutIcon icon, int x, int y) {
+  public static void renderIcon(GuiGraphics graphics, LayoutIcon icon, int x, int y) {
     Pattern pattern = icon.getValue(Pattern.class);
     Minecraft minecraft = Minecraft.getInstance();
     if (pattern != null) {
       // draw pattern sprite
-      RenderUtils.setup(InventoryMenu.BLOCK_ATLAS);
       RenderSystem.applyModelViewMatrix();
-      GuiUtil.renderPattern(matrices, pattern, x, y);
+      GuiUtil.renderPattern(graphics, pattern, x, y);
       return;
     }
 
     ItemStack stack = icon.getValue(ItemStack.class);
     if (stack != null) {
-      minecraft.getItemRenderer().renderGuiItem(stack, x, y);
+      graphics.renderItem(stack, x, y);
     }
   }
 
   @Override
-  protected void renderBg(PoseStack matrices, float partialTicks, int mouseX, int mouseY) {
-    this.drawBackground(matrices, TINKER_STATION_TEXTURE);
+  protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    this.drawBackground(graphics, TINKER_STATION_TEXTURE);
 
     int x = 0;
     int y = 0;
@@ -416,27 +417,27 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     renderPose.pushPose();
     renderPose.translate(xOff, yOff, 0.0F);
     renderPose.scale(scale, scale, 1.0f);
-    renderIcon(matrices, currentLayout.getIcon(), (int) (this.cornerX / scale), (int) (this.cornerY / scale));
+    renderIcon(graphics, currentLayout.getIcon(), (int) (this.cornerX / scale), (int) (this.cornerY / scale));
     renderPose.popPose();
     RenderSystem.applyModelViewMatrix();
 
     // rebind gui texture since itemstack drawing sets it to something else
-    RenderUtils.setup(TINKER_STATION_TEXTURE, 1.0f, 1.0f, 1.0f, 0.82f);
+    graphics.setColor(1.0f, 1.0f, 1.0f, 0.82f);
     RenderSystem.enableBlend();
     //RenderSystem.enableAlphaTest();
     //RenderHelper.turnOff();
     RenderSystem.disableDepthTest();
-    ITEM_COVER.draw(matrices, this.cornerX + 7, this.cornerY + 18);
+    ITEM_COVER.draw(graphics, TINKER_STATION_TEXTURE, this.cornerX + 7, this.cornerY + 18);
 
     // slot backgrounds, are transparent
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.28f);
     if (!this.currentLayout.getToolSlot().isHidden()) {
       Slot slot = this.getMenu().getSlot(TINKER_SLOT);
-      SLOT_BACKGROUND.draw(matrices, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
+      SLOT_BACKGROUND.draw(graphics, TINKER_STATION_TEXTURE, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
     }
     for (int i = 0; i < this.activeInputs; i++) {
       Slot slot = this.getMenu().getSlot(i + INPUT_SLOT);
-      SLOT_BACKGROUND.draw(matrices, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
+      SLOT_BACKGROUND.draw(graphics, TINKER_STATION_TEXTURE, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
     }
 
     // slot borders, are opaque
@@ -444,7 +445,7 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     for (int i = 0; i <= maxInputs; i++) {
       Slot slot = this.getMenu().getSlot(i);
       if ((slot instanceof TinkerStationSlot && (!((TinkerStationSlot) slot).isDormant() || slot.hasItem()))) {
-        SLOT_BORDER.draw(matrices, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
+        SLOT_BORDER.draw(graphics, TINKER_STATION_TEXTURE, x + this.cornerX + slot.x - 1, y + this.cornerY + slot.y - 1);
       }
     }
 
@@ -452,53 +453,52 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     x = this.buttonsScreen.getLeftPos() - this.leftBeam.w;
     y = this.cornerY;
     // draw the beams at the top
-    x += this.leftBeam.draw(matrices, x, y);
-    x += this.centerBeam.drawScaledX(matrices, x, y, this.buttonsScreen.getImageWidth());
-    this.rightBeam.draw(matrices, x, y);
+    x += this.leftBeam.draw(graphics, TINKER_STATION_TEXTURE, x, y);
+    x += this.centerBeam.drawScaledX(graphics, TINKER_STATION_TEXTURE, x, y, this.buttonsScreen.getImageWidth());
+    this.rightBeam.draw(graphics, TINKER_STATION_TEXTURE, x, y);
 
     x = tinkerInfo.leftPos - this.leftBeam.w;
-    x += this.leftBeam.draw(matrices, x, y);
-    x += this.centerBeam.drawScaledX(matrices, x, y, this.tinkerInfo.imageWidth);
-    this.rightBeam.draw(matrices, x, y);
+    x += this.leftBeam.draw(graphics, TINKER_STATION_TEXTURE, x, y);
+    x += this.centerBeam.drawScaledX(graphics, TINKER_STATION_TEXTURE, x, y, this.tinkerInfo.imageWidth);
+    this.rightBeam.draw(graphics, TINKER_STATION_TEXTURE, x, y);
 
     // draw the decoration for the buttons
     for (SlotButtonItem button : this.buttonsScreen.getButtons()) {
-      this.buttonDecorationTop.draw(matrices, button.x, button.y - this.buttonDecorationTop.h);
+      this.buttonDecorationTop.draw(graphics, TINKER_STATION_TEXTURE, button.getX(), button.getY() - this.buttonDecorationTop.h);
       // don't draw the bottom for the buttons in the last row
       if (button.buttonId < this.buttonsScreen.getButtons().size() - COLUMN_COUNT) {
-        this.buttonDecorationBot.draw(matrices, button.x, button.y + button.getHeight());
+        this.buttonDecorationBot.draw(graphics, TINKER_STATION_TEXTURE, button.getX(), button.getY() + button.getHeight());
       }
     }
 
     // draw the decorations for the panels
-    this.panelDecorationL.draw(matrices, this.tinkerInfo.leftPos + 5, this.tinkerInfo.topPos - this.panelDecorationL.h);
-    this.panelDecorationR.draw(matrices, this.tinkerInfo.guiRight() - 5 - this.panelDecorationR.w, this.tinkerInfo.topPos - this.panelDecorationR.h);
-    this.panelDecorationL.draw(matrices, this.modifierInfo.leftPos + 5, this.modifierInfo.topPos - this.panelDecorationL.h);
-    this.panelDecorationR.draw(matrices, this.modifierInfo.guiRight() - 5 - this.panelDecorationR.w, this.modifierInfo.topPos - this.panelDecorationR.h);
+    this.panelDecorationL.draw(graphics, TINKER_STATION_TEXTURE, this.tinkerInfo.leftPos + 5, this.tinkerInfo.topPos - this.panelDecorationL.h);
+    this.panelDecorationR.draw(graphics, TINKER_STATION_TEXTURE, this.tinkerInfo.guiRight() - 5 - this.panelDecorationR.w, this.tinkerInfo.topPos - this.panelDecorationR.h);
+    this.panelDecorationL.draw(graphics, TINKER_STATION_TEXTURE, this.modifierInfo.leftPos + 5, this.modifierInfo.topPos - this.panelDecorationL.h);
+    this.panelDecorationR.draw(graphics, TINKER_STATION_TEXTURE, this.modifierInfo.guiRight() - 5 - this.panelDecorationR.w, this.modifierInfo.topPos - this.panelDecorationR.h);
 
     // render slot background icons
-    RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
     for (int i = 0; i <= maxInputs; i++) {
       Slot slot = this.getMenu().getSlot(i);
       if (!slot.hasItem()) {
         Pattern icon = currentLayout.getSlot(i).getIcon();
         if (icon != null) {
-          GuiUtil.renderPattern(matrices, icon, this.cornerX + slot.x, this.cornerY + slot.y);
+          GuiUtil.renderPattern(graphics, icon, this.cornerX + slot.x, this.cornerY + slot.y);
         }
       }
     }
 
     RenderSystem.enableDepthTest();
 
-    super.renderBg(matrices, partialTicks, mouseX, mouseY);
+    super.renderBg(graphics, partialTicks, mouseX, mouseY);
 
-    this.buttonsScreen.render(matrices, mouseX, mouseY, partialTicks);
+    this.buttonsScreen.render(graphics, mouseX, mouseY, partialTicks);
 
     // text field
     if (textField != null && textField.visible) {
-      RenderUtils.setup(TINKER_STATION_TEXTURE, 1.0f, 1.0f, 1.0f, 1.0f);
-      TEXT_BOX.draw(matrices, this.cornerX + 79, this.cornerY + 3);
-      this.textField.render(matrices, mouseX, mouseY, partialTicks);
+      graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+      TEXT_BOX.draw(graphics, TINKER_STATION_TEXTURE, this.cornerX + 79, this.cornerY + 3);
+      this.textField.render(graphics, mouseX, mouseY, partialTicks);
     }
   }
 
@@ -598,12 +598,12 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
   }
 
   @Override
-  public void renderSlot(PoseStack matrixStack, Slot slotIn) {
+  public void renderSlot(GuiGraphics graphics, Slot slotIn) {
     // don't draw dormant slots with no item
     if (slotIn instanceof TinkerStationSlot && ((TinkerStationSlot) slotIn).isDormant() && !slotIn.hasItem()) {
       return;
     }
-    super.renderSlot(matrixStack, slotIn);
+    super.renderSlot(graphics, slotIn);
   }
 
   @Override
@@ -712,7 +712,7 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
   public void removed() {
     super.removed();
     assert this.minecraft != null;
-    this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    //this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
   }
 
   @Override
@@ -720,6 +720,6 @@ public class TinkerStationScreen extends BaseTabbedScreen<TinkerStationBlockEnti
     super.onClose();
 
     assert this.minecraft != null;
-    this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    //this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
   }
 }

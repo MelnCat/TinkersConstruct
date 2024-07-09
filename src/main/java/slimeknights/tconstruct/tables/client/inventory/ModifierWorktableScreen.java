@@ -123,7 +123,7 @@ public class ModifierWorktableScreen extends BaseTabbedScreen<ModifierWorktableB
   }
 
   @Override
-  protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+  public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
     super.renderTooltip(graphics, mouseX, mouseY);
 
     // determime which button we are hovering

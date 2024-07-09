@@ -17,15 +17,4 @@ public class TableBlockItem extends RetexturedBlockItem {
     super(block, textureTag, builder);
     this.showAllCondition = showAllCondition;
   }
-
-  @Override
-  public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-    if (this.allowedIn(group)) {
-      if (showAllCondition.getAsBoolean()) {
-        addTagVariants(this.getBlock(), this.textureTag, items, true);
-      } else {
-        items.add(new ItemStack(this));
-      }
-    }
-  }
 }

@@ -7,6 +7,7 @@ import slimeknights.mantle.client.screen.ElementScreen;
 import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.ScalableElementScreen;
 import slimeknights.mantle.client.screen.Widget;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.tables.client.inventory.module.GenericScreen;
 
 public class BorderWidget extends Widget {
@@ -20,7 +21,7 @@ public class BorderWidget extends Widget {
   public ScalableElementScreen borderBottom = GenericScreen.borderBottom;
   public ScalableElementScreen borderLeft = GenericScreen.borderLeft;
   public ScalableElementScreen borderRight = GenericScreen.borderRight;
-  public ResourceLocation texture = null;
+  public ResourceLocation texture = TConstruct.getResource("textures/gui/panel.png");
 
   protected static final ScalableElementScreen textBackground = new ScalableElementScreen(7 + 18, 7, 18, 10);
 

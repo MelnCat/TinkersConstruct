@@ -39,6 +39,7 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
   protected static final ElementScreen ACTIVE_TAB_C_ELEMENT = new ElementScreen(52, 18, 26, 30, 256, 256);
   protected static final ElementScreen ACTIVE_TAB_R_ELEMENT = new ElementScreen(78, 18, 26, 30, 256, 256);
 
+  private boolean focused = false;
   private final int leftPos;
   private final int topPos;
   private final int imageWidth;
@@ -116,6 +117,16 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
   @Override
   public boolean isMouseOver(double mouseX, double mouseY) {
     return mouseX >= this.leftPos - 1 && mouseX < this.guiRight() + 1 && mouseY >= this.topPos - 1 && mouseY < this.guiBottom() + 1;
+  }
+
+  @Override
+  public void setFocused(boolean b) {
+    focused = b;
+  }
+
+  @Override
+  public boolean isFocused() {
+    return focused;
   }
 
   @Override

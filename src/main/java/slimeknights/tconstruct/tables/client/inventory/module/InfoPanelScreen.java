@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -239,13 +241,13 @@ public class InfoPanelScreen extends ModuleScreen {
   }
 
   @Override
-  protected void renderLabels(PoseStack matrixStack, int x, int y) {
+  protected void renderLabels(GuiGraphics graphics, int x, int y) {
    // no-op
   }
 
   @Override
-  protected void renderTooltip(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderTooltip(matrices, mouseX, mouseY);
+  public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderTooltip(graphics, mouseX, mouseY);
 
     if (this.tooltips == null) {
       return;
@@ -259,7 +261,7 @@ public class InfoPanelScreen extends ModuleScreen {
     int scaledFontHeight = this.getScaledFontHeight();
     if (this.hasTooltips() && mouseX >= this.guiRight() - this.border.w - this.font.width("?") / 2 && mouseX < this.guiRight()
         && mouseY > this.topPos + 5 && mouseY < this.topPos + 5 + scaledFontHeight) {
-      this.renderTooltip(matrices, this.font.split(Component.translatable("gui.tconstruct.general.hover"), 150), mouseX - 155, mouseY);
+      graphics.renderTooltip(Minecraft.getInstance().font, this.font.split(Component.translatable("gui.tconstruct.general.hover"), 150), mouseX - 155, mouseY);
     }
 
     // are we hovering over an entry?
@@ -310,7 +312,7 @@ public class InfoPanelScreen extends ModuleScreen {
 
     List<FormattedCharSequence> lines = this.font.split(this.tooltips.get(i), w);
 
-    this.renderTooltip(matrices, lines, mouseX, (mouseY - lines.size() * this.getScaledFontHeight() / 2));
+    graphics.renderTooltip(Minecraft.getInstance().font, lines, mouseX, (mouseY - lines.size() * this.getScaledFontHeight() / 2));
   }
 
   /**
@@ -324,11 +326,10 @@ public class InfoPanelScreen extends ModuleScreen {
   }
 
   @Override
-  protected void renderBg(PoseStack matrices, float partialTicks, int mouseX, int mouseY) {
-    RenderUtils.setup(BACKGROUND_IMAGE);
+  protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 
-    this.border.draw(matrices);
-    BACKGROUND.drawScaled(matrices, this.leftPos + 4, this.topPos + 4, this.imageWidth - 8, this.imageHeight - 8);
+    this.border.draw(graphics);
+    BACKGROUND.drawScaled(graphics, BACKGROUND_IMAGE, this.leftPos + 4, this.topPos + 4, this.imageWidth - 8, this.imageHeight - 8);
 
     float y = 5 + this.topPos;
     float x = 5 + this.leftPos;
@@ -336,7 +337,7 @@ public class InfoPanelScreen extends ModuleScreen {
 
     // info ? in the top right corner
     if (this.hasTooltips()) {
-      this.font.draw(matrices, "?", guiRight() - this.border.w - this.font.width("?") / 2f, this.topPos + 5, 0xff5f5f5f);
+      graphics.drawString(font, "?", guiRight() - this.border.w - this.font.width("?") / 2, this.topPos + 5, 0xff5f5f5f);
     }
 
     // draw caption
@@ -345,7 +346,7 @@ public class InfoPanelScreen extends ModuleScreen {
       int x2 = this.imageWidth / 2;
       x2 -= this.font.width(this.caption) / 2;
 
-      this.font.drawShadow(matrices, this.caption.getVisualOrderText(), (float) this.leftPos + x2, y, color);
+      graphics.drawString(font, this.caption.getVisualOrderText(), (float) this.leftPos + x2, y, color, true);
       y += scaledFontHeight + 3;
     }
 
@@ -356,8 +357,8 @@ public class InfoPanelScreen extends ModuleScreen {
 
     float textHeight = font.lineHeight + 0.5f;
     float lowerBound = (this.topPos + this.imageHeight - 5) / this.textScale;
-    matrices.pushPose();
-    matrices.scale(this.textScale, this.textScale, 1.0f);
+    graphics.pose().pushPose();
+    graphics.pose().scale(this.textScale, this.textScale, 1.0f);
     //RenderSystem.scalef(this.textScale, this.textScale, 1.0f);
     x /= this.textScale;
     y /= this.textScale;
@@ -370,17 +371,17 @@ public class InfoPanelScreen extends ModuleScreen {
       }
 
       FormattedCharSequence line = iter.next();
-      this.font.drawShadow(matrices, line, x, y, color);
+      graphics.drawString(font, line, x, y, color, true);
       y += textHeight;
     }
 
-    matrices.popPose();
+    graphics.pose().popPose();
     //RenderSystem.scalef(1f / textScale, 1f / textScale, 1.0f);
 
     //RenderSystem.setShaderTexture(0, BACKGROUND_IMAGE);
-    RenderUtils.setup(BACKGROUND_IMAGE);
+    this.slider.texture = BACKGROUND_IMAGE;
     this.slider.update(mouseX, mouseY);
-    this.slider.draw(matrices);
+    this.slider.draw(graphics);
   }
 
   @Override

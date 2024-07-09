@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tables.client.inventory.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -27,6 +28,7 @@ public class SideButtonsWidget<T extends Button> implements Renderable, GuiEvent
   private final int columns;
   protected final List<T> buttons = Lists.newArrayList();
   private Button clickedButton;
+  private boolean focused;
 
   public SideButtonsWidget(MultiModuleScreen<?> parent, int leftPos, int topPos, int columns, int rows, int buttonWidth, int buttonHeight) {
     this.parent = parent;
@@ -56,14 +58,24 @@ public class SideButtonsWidget<T extends Button> implements Renderable, GuiEvent
       T button = this.buttons.get(i);
       int x = (i % columns) * (button.getWidth() + SPACING);
       int y = (i / columns) * (button.getHeight() + SPACING);
-      button.x = leftPos + x;
-      button.y = topPos + y;
+      button.setX(leftPos + x);
+      button.setY(topPos + y);
     }
   }
 
   @Override
   public boolean isMouseOver(double mouseX, double mouseY) {
     return this.leftPos <= mouseX && mouseX < this.guiRight() && this.topPos <= mouseY && mouseY < this.guiBottom();
+  }
+
+  @Override
+  public void setFocused(boolean b) {
+    focused = b;
+  }
+
+  @Override
+  public boolean isFocused() {
+    return focused;
   }
 
   public boolean handleMouseClicked(double mouseX, double mouseY, int mouseButton) {
@@ -90,9 +102,9 @@ public class SideButtonsWidget<T extends Button> implements Renderable, GuiEvent
   }
 
   @Override
-  public void render(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
+  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
     for (T button : this.buttons) {
-      button.render(matrices, mouseX, mouseY, partialTicks);
+      button.render(graphics, mouseX, mouseY, partialTicks);
     }
   }
 

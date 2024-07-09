@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.fixture;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -8,6 +8,8 @@ import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class MaterialItemFixture {
 
@@ -17,12 +19,18 @@ public class MaterialItemFixture {
   }
 
   private static boolean init = false;
-  public static void init() {
+  public static void init()  {
     if (init) {
       return;
     }
     init = true;
-    BuiltInRegistries.ITEM.unfreeze(); // yes, I know this is bad, but this is testing so we do bad things sometimes
+    try {
+      var unfreezeMethod = BuiltInRegistries.ITEM.getClass().getMethod("unfreeze");
+      unfreezeMethod.setAccessible(true);
+      unfreezeMethod.invoke(BuiltInRegistries.ITEM); // yes, I know this is bad, but this is testing so we do bad things sometimes
+    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     MATERIAL_ITEM = new ToolPartItem(new Item.Properties(), MaterialStatsFixture.STATS_TYPE);
     MATERIAL_ITEM_2 = new ToolPartItem(new Item.Properties(), MaterialStatsFixture.STATS_TYPE_2);
     MATERIAL_ITEM_HEAD = new ToolPartItem(new Item.Properties(), HeadMaterialStats.ID);

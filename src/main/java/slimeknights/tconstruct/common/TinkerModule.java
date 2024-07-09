@@ -62,10 +62,6 @@ public abstract class TinkerModule {
   protected static final SynchronizedDeferredRegister<LootItemConditionType> LOOT_CONDITIONS = SynchronizedDeferredRegister.create(Registries.LOOT_CONDITION_TYPE, TConstruct.MOD_ID);
   protected static final SynchronizedDeferredRegister<LootItemFunctionType> LOOT_FUNCTIONS = SynchronizedDeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, TConstruct.MOD_ID);
   protected static final SynchronizedDeferredRegister<LootPoolEntryType> LOOT_ENTRIES = SynchronizedDeferredRegister.create(Registries.LOOT_POOL_ENTRY_TYPE, TConstruct.MOD_ID);
-  // worldgen
-  protected static final PlacedFeatureDeferredRegister PLACED_FEATURES = new PlacedFeatureDeferredRegister(TConstruct.MOD_ID);
-  protected static final ConfiguredFeatureDeferredRegister CONFIGURED_FEATURES = new ConfiguredFeatureDeferredRegister(TConstruct.MOD_ID);
-  //
 
   /** Creative tab for items that do not fit in another tab */
   protected static final SynchronizedDeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = SynchronizedDeferredRegister.create(Registries.CREATIVE_MODE_TAB, TConstruct.MOD_ID);
@@ -100,10 +96,9 @@ public abstract class TinkerModule {
     LOOT_ENTRIES.register(bus);
     TinkerRecipeTypes.init(bus);
     // worldgen
-    CONFIGURED_FEATURES.register(bus);
-    PLACED_FEATURES.register(bus);
     // creative mode tabs
     CREATIVE_MODE_TABS.register(bus);
+    DAMAGE_TYPES.register(bus);
   }
 
   /**

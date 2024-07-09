@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.SimpleWeightedRandomList;
@@ -136,9 +136,10 @@ public class IslandStructure extends Structure {
       return this;
     }
 
+    @SuppressWarnings("unchecked")
     /** Adds a new tree to the builder with the given weight */
     public Builder addTree(Holder<? extends ConfiguredFeature<?,?>> tree, int weight) {
-      trees.add(Holder.hackyErase(tree), weight);
+      trees.add((Holder<ConfiguredFeature<?, ?>>) tree, weight);
       return this;
     }
 

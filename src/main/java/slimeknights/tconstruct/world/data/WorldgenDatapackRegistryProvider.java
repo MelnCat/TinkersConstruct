@@ -26,6 +26,9 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.Structure.StructureSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
@@ -49,9 +52,11 @@ import net.minecraftforge.registries.holdersets.NotHolderSet;
 import net.minecraftforge.registries.holdersets.OrHolderSet;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.common.structure.ConfiguredFeatures;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
 import slimeknights.tconstruct.world.worldgen.islands.IslandStructure;
+import slimeknights.tconstruct.world.worldgen.trees.config.SlimeTreeConfig;
 
 import java.io.IOException;
 import java.util.*;
@@ -61,16 +66,8 @@ import java.util.stream.Collectors;
 
 import static net.minecraft.core.HolderSet.direct;
 import static slimeknights.tconstruct.TConstruct.getResource;
-import static slimeknights.tconstruct.world.TinkerStructures.bloodIsland;
-import static slimeknights.tconstruct.world.TinkerStructures.bloodSlimeIslandFungus;
-import static slimeknights.tconstruct.world.TinkerStructures.clayIsland;
-import static slimeknights.tconstruct.world.TinkerStructures.earthSlimeIsland;
-import static slimeknights.tconstruct.world.TinkerStructures.earthSlimeIslandTree;
-import static slimeknights.tconstruct.world.TinkerStructures.endSlimeIsland;
-import static slimeknights.tconstruct.world.TinkerStructures.enderSlimeTree;
-import static slimeknights.tconstruct.world.TinkerStructures.enderSlimeTreeTall;
-import static slimeknights.tconstruct.world.TinkerStructures.skySlimeIsland;
-import static slimeknights.tconstruct.world.TinkerStructures.skySlimeIslandTree;
+import static slimeknights.tconstruct.common.structure.ConfiguredFeatures.earthSlimeIslandTree;
+import static slimeknights.tconstruct.world.TinkerStructures.*;
 
 /**
  * Provider for all our worldgen datapack registry stuff
@@ -84,7 +81,7 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
         Registries.STRUCTURE, WorldgenDatapackRegistryProvider::generateStructures
       ).add(
         Registries.STRUCTURE_SET, WorldgenDatapackRegistryProvider::generateStructureSets
-      )
+      ).add(Registries.CONFIGURED_FEATURE, ConfiguredFeatures::generateConfiguredFeatures)
       , modIds);
   }
 
@@ -92,16 +89,17 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
     var biomeRegistry = context.lookup(Registries.BIOME);
     var treeRegistry = context.lookup(Registries.CONFIGURED_FEATURE);
 
+
     // earthslime island
     context.register(earthSlimeIsland, IslandStructure.seaBuilder()
       .addDefaultTemplates(getResource("islands/earth/"))
-      .addTree(earthSlimeIslandTree, 1)
+      .addTree(treeRegistry.getOrThrow(earthSlimeIslandTree), 1)
       .addSlimyGrass(FoliageType.EARTH)
       .build(new StructureSettings(biomeRegistry.getOrThrow(TinkerTags.Biomes.EARTHSLIME_ISLANDS), monsterOverride(EntityType.SLIME, 4, 4), Decoration.SURFACE_STRUCTURES, TerrainAdjustment.NONE)));
     // skyslime island
     context.register(skySlimeIsland, IslandStructure.skyBuilder()
       .addDefaultTemplates(getResource("islands/sky/"))
-      .addTree(skySlimeIslandTree, 1)
+      .addTree(treeRegistry.getOrThrow(skySlimeIslandTree), 1)
       .addSlimyGrass(FoliageType.SKY)
       .vines(TinkerWorld.skySlimeVine.get())
       .build(new StructureSettings(biomeRegistry.getOrThrow(TinkerTags.Biomes.SKYSLIME_ISLANDS), monsterOverride(TinkerWorld.skySlimeEntity.get(), 3, 4), Decoration.SURFACE_STRUCTURES, TerrainAdjustment.NONE)));

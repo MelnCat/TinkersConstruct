@@ -10,6 +10,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -223,8 +224,8 @@ public final class TinkerWorld extends TinkerModule {
     Function<FoliageType,BlockBehaviour.Properties> props = type -> builder(type.getMapColor(), type.isNether() ? SoundType.FUNGUS : SoundType.GRASS).pushReaction(PushReaction.DESTROY).instabreak().noCollission();
     return new EnumObject.Builder<FoliageType,Block>(FoliageType.class)
       .putAll(BLOCKS.registerEnum(FoliageType.OVERWORLD, "slime_sapling", (type) -> new SlimeSaplingBlock(new SlimeTree(type), type, props.apply(type).randomTicks()), TOOLTIP_BLOCK_ITEM))
-      .put(FoliageType.BLOOD, BLOCKS.register("blood_slime_sapling", () -> new SlimeFungusBlock(props.apply(FoliageType.BLOOD), () -> (Holder) (TinkerStructures.bloodSlimeFungus.getHolder().orElseThrow())), TOOLTIP_BLOCK_ITEM))
-      .put(FoliageType.ICHOR, BLOCKS.register("ichor_slime_sapling", () -> new SlimeFungusBlock(props.apply(FoliageType.ICHOR), () -> (Holder) (TinkerStructures.ichorSlimeFungus.getHolder().orElseThrow())), HIDDEN_BLOCK_ITEM))
+      .put(FoliageType.BLOOD, BLOCKS.register("blood_slime_sapling", () -> new SlimeFungusBlock(props.apply(FoliageType.BLOOD), (ResourceKey) TinkerStructures.bloodSlimeFungus.getKey()), TOOLTIP_BLOCK_ITEM))
+      .put(FoliageType.ICHOR, BLOCKS.register("ichor_slime_sapling", () -> new SlimeFungusBlock(props.apply(FoliageType.ICHOR), (ResourceKey) TinkerStructures.ichorSlimeFungus.getKey()), HIDDEN_BLOCK_ITEM))
       .put(FoliageType.ENDER, BLOCKS.register("ender_slime_sapling", () -> new SlimePropaguleBlock(new SlimeTree(FoliageType.ENDER), FoliageType.ENDER, props.apply(FoliageType.ENDER)), TOOLTIP_BLOCK_ITEM))
       .build();
   });
@@ -405,7 +406,7 @@ public final class TinkerWorld extends TinkerModule {
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
     DataGenerator datagenerator = event.getGenerator();
-    datagenerator.addProvider(event.includeServer(), new WorldRecipeProvider(datagenerator));
+    datagenerator.addProvider(event.includeServer(), new WorldRecipeProvider(datagenerator.getPackOutput()));
   }
 
 

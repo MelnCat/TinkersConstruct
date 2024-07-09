@@ -176,7 +176,6 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.copy(TinkerWorld.bloodshroom.getLogBlockTag(), TinkerWorld.bloodshroom.getLogItemTag());
     this.copy(TinkerWorld.enderbark.getLogBlockTag(), TinkerWorld.enderbark.getLogItemTag());
     this.copy(BlockTags.LOGS, ItemTags.LOGS);
-    this.copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
     // doors
     this.copy(BlockTags.WOODEN_FENCES, ItemTags.WOODEN_FENCES);
     this.copy(Tags.Blocks.FENCES_WOODEN, Tags.Items.FENCES_WOODEN);

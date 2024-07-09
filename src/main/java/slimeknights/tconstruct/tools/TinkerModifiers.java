@@ -378,8 +378,6 @@ public final class TinkerModifiers extends TinkerModule {
     return effect;
   });
 //
-  public static final RegistryObject<DamageType> bleedingDamage = DAMAGE_TYPES.register("bleeding", () -> new DamageType(TConstruct.prefix("bleed"), 0));
-  public static final RegistryObject<DamageType> selfDestructDamage = DAMAGE_TYPES.register("self_destruct", () -> new DamageType(TConstruct.prefix("self_destruct"), 0));
   /*
    * Recipes
    */

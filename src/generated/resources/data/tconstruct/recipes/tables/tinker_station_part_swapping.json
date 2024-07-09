@@ -1,3 +1,4 @@
 {
-  "type": "tconstruct:tinker_station_part_swapping"
+  "type": "tconstruct:tinker_station_part_swapping",
+  "category": "misc"
 }

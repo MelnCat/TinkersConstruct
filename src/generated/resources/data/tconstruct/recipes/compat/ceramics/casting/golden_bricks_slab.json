@@ -10,9 +10,9 @@
       "modid": "ceramics"
     }
   ],
-  "cooling_time": 0,
+  "cooling_time": 6,
   "fluid": {
-    "amount": 0,
+    "amount": 1,
     "tag": "forge:molten_gold"
   },
   "result": "ceramics:golden_bricks_slab"

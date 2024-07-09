@@ -2180,7 +2180,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                             .save(ceramicsConsumer, location(castingFolder + "golden_bricks"));
     ItemCastingRecipeBuilder.basinRecipe(ItemNameOutput.fromName(ceramicsId.apply("golden_bricks_slab")))
                             .setCast(ItemNameIngredient.from(ceramicsId.apply("porcelain_bricks_slab")), true)
-                            .setFluidAndTime(TinkerFluids.moltenGold, true, FluidValues.NUGGET / 16)
+                            .setFluidAndTime(TinkerFluids.moltenGold, true, FluidValues.NUGGET / 8)
                             .save(ceramicsConsumer, location(castingFolder + "golden_bricks_slab"));
     ItemCastingRecipeBuilder.basinRecipe(ItemNameOutput.fromName(ceramicsId.apply("golden_bricks_stairs")))
                             .setCast(ItemNameIngredient.from(ceramicsId.apply("porcelain_bricks_stairs")), true)

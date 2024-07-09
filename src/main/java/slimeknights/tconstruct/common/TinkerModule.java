@@ -51,7 +51,6 @@ public abstract class TinkerModule {
   protected static final EnumDeferredRegister<MobEffect> MOB_EFFECTS = new EnumDeferredRegister<>(Registries.MOB_EFFECT, TConstruct.MOD_ID);
   protected static final SynchronizedDeferredRegister<ParticleType<?>> PARTICLE_TYPES = SynchronizedDeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, TConstruct.MOD_ID);
   protected static final SynchronizedDeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = SynchronizedDeferredRegister.create(Keys.ENTITY_DATA_SERIALIZERS, TConstruct.MOD_ID);
-  protected static final SynchronizedDeferredRegister<DamageType> DAMAGE_TYPES = SynchronizedDeferredRegister.create(Registries.DAMAGE_TYPE, TConstruct.MOD_ID);
   // gameplay instances
   protected static final BlockEntityTypeDeferredRegister BLOCK_ENTITIES = new BlockEntityTypeDeferredRegister(TConstruct.MOD_ID);
   protected static final EntityTypeDeferredRegister ENTITIES = new EntityTypeDeferredRegister(TConstruct.MOD_ID);
@@ -98,7 +97,6 @@ public abstract class TinkerModule {
     // worldgen
     // creative mode tabs
     CREATIVE_MODE_TABS.register(bus);
-    DAMAGE_TYPES.register(bus);
   }
 
   /**

@@ -152,7 +152,6 @@ public class TConstruct {
     datagenerator.addProvider(server, new TConstructLootTableProvider(output));
     datagenerator.addProvider(server, new AdvancementsProvider(datagenerator));
     datagenerator.addProvider(server, new GlobalLootModifiersProvider(output));
-    datagenerator.addProvider(server, new DamageTypeTagProvider(output, provider, TConstruct.MOD_ID, existingFileHelper));
   }
 
   /** Shared behavior between item and block missing mappings */

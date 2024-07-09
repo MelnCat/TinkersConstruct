@@ -1,34 +1,21 @@
 package slimeknights.tconstruct.world.data;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
-import lombok.RequiredArgsConstructor;
-import net.minecraft.core.*;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.Structure.StructureSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
@@ -40,33 +27,30 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.JsonCodecProvider;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers.AddSpawnsBiomeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.holdersets.AndHolderSet;
 import net.minecraftforge.registries.holdersets.NotHolderSet;
 import net.minecraftforge.registries.holdersets.OrHolderSet;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.structure.ConfiguredFeatures;
+import slimeknights.tconstruct.common.structure.PlacedFeatures;
+import slimeknights.tconstruct.common.structure.TCDamageTypes;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
 import slimeknights.tconstruct.world.worldgen.islands.IslandStructure;
-import slimeknights.tconstruct.world.worldgen.trees.config.SlimeTreeConfig;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static net.minecraft.core.HolderSet.direct;
 import static slimeknights.tconstruct.TConstruct.getResource;
-import static slimeknights.tconstruct.common.structure.ConfiguredFeatures.earthSlimeIslandTree;
+import static slimeknights.tconstruct.common.structure.ConfiguredFeatures.*;
 import static slimeknights.tconstruct.world.TinkerStructures.*;
 
 /**
@@ -82,6 +66,8 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
       ).add(
         Registries.STRUCTURE_SET, WorldgenDatapackRegistryProvider::generateStructureSets
       ).add(Registries.CONFIGURED_FEATURE, ConfiguredFeatures::generateConfiguredFeatures)
+        .add(Registries.PLACED_FEATURE, PlacedFeatures::generatePlacedFeatures)
+        .add(Registries.DAMAGE_TYPE, TCDamageTypes::generateDamageTypes)
       , modIds);
   }
 
@@ -115,13 +101,13 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
       .build(new StructureSettings(biomeRegistry.getOrThrow(TinkerTags.Biomes.CLAY_ISLANDS), monsterOverride(TinkerWorld.terracubeEntity.get(), 2, 4), Decoration.SURFACE_STRUCTURES, TerrainAdjustment.NONE)));
     // blood island
     context.register(bloodIsland, IslandStructure.seaBuilder().addDefaultTemplates(getResource("islands/blood/"))
-      .addTree(bloodSlimeIslandFungus, 1)
+      .addTree(treeRegistry.getOrThrow(bloodSlimeIslandFungus), 1)
       .addSlimyGrass(FoliageType.BLOOD)
       .build(new StructureSettings(biomeRegistry.getOrThrow(TinkerTags.Biomes.BLOOD_ISLANDS), monsterOverride(EntityType.MAGMA_CUBE, 4, 6), Decoration.UNDERGROUND_DECORATION, TerrainAdjustment.NONE)));
     // enderslime
     context.register(endSlimeIsland, IslandStructure.skyBuilder().addDefaultTemplates(getResource("islands/ender/"))
-      .addTree(enderSlimeTree, 3)
-      .addTree(enderSlimeTreeTall, 17)
+      .addTree(treeRegistry.getOrThrow(enderSlimeTree), 3)
+      .addTree(treeRegistry.getOrThrow(enderSlimeTreeTall), 17)
       .addSlimyGrass(FoliageType.ENDER)
       .vines(TinkerWorld.enderSlimeVine.get())
       .build(new StructureSettings(biomeRegistry.getOrThrow(TinkerTags.Biomes.ENDERSLIME_ISLANDS), monsterOverride(TinkerWorld.enderSlimeEntity.get(), 4, 4), Decoration.SURFACE_STRUCTURES, TerrainAdjustment.NONE)));
@@ -160,8 +146,8 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
       new AddFeaturesBiomeModifier(
         nether,
         direct(
-          TinkerWorld.placedSmallCobaltOre.getHolder().orElseThrow(),
-          TinkerWorld.placedLargeCobaltOre.getHolder().orElseThrow()
+          placedFeatureRegistry.getOrThrow(PlacedFeatures.placedSmallCobaltOre),
+          placedFeatureRegistry.getOrThrow(PlacedFeatures.placedLargeCobaltOre)
         ),
         Decoration.UNDERGROUND_DECORATION
       )
@@ -173,7 +159,7 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
       new AddFeaturesBiomeModifier(
         nether,
         direct(
-          TinkerWorld.placedEarthGeode.getHolder().orElseThrow()
+          placedFeatureRegistry.getOrThrow(PlacedFeatures.placedEarthGeode)
         ),
         Decoration.LOCAL_MODIFICATIONS
       )
@@ -183,7 +169,7 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
       new AddFeaturesBiomeModifier(
         nether,
         direct(
-          TinkerWorld.placedEarthGeode.getHolder().orElseThrow()
+          placedFeatureRegistry.getOrThrow(PlacedFeatures.placedEarthGeode)
         ),
         Decoration.LOCAL_MODIFICATIONS
       )
@@ -204,7 +190,7 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
             )
           )
         )
-      ), direct(TinkerWorld.placedSkyGeode.getHolder().orElseThrow()), Decoration.LOCAL_MODIFICATIONS)
+      ), direct(placedFeatureRegistry.getOrThrow(PlacedFeatures.placedSkyGeode)), Decoration.LOCAL_MODIFICATIONS)
     );
     context.register(
       ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, TConstruct.getResource("ender_geode")),
@@ -216,7 +202,7 @@ public class WorldgenDatapackRegistryProvider extends DatapackBuiltinEntriesProv
               direct(biomeRegistry.getOrThrow(Biomes.THE_END))
             ))
         ),
-        direct(TinkerWorld.placedEnderGeode.getHolder().orElseThrow()),
+        direct(placedFeatureRegistry.getOrThrow(PlacedFeatures.placedEnderGeode)),
         Decoration.LOCAL_MODIFICATIONS
       )
     );

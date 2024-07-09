@@ -610,7 +610,6 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     if (doesBurn) {
       // regular logs is handled by slimy logs tag
-      this.tag(BlockTags.LOGS_THAT_BURN).addTag(object.getLogBlockTag());
     }
 
     // signs

@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tools.modifiers.effect;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -13,6 +14,8 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.tools.helper.ToolAttackUtil;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.modifiers.traits.melee.LaceratingModifier;
+
+import static slimeknights.tconstruct.common.structure.TCDamageTypes.bleedingDamage;
 
 /**
  * Potion effect from {@link LaceratingModifier}
@@ -34,10 +37,10 @@ public class BleedingEffect extends NoMilkEffect {
     LivingEntity lastAttacker = target.getLastHurtMob();
     DamageSource source;
     if(lastAttacker != null) {
-      source = new DamageSource(TinkerModifiers.bleedingDamage.getHolder().get(), null, lastAttacker);
+      source = new DamageSource(target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(bleedingDamage), null, lastAttacker);
     }
     else {
-      source = new DamageSource(TinkerModifiers.bleedingDamage.getHolder().get());
+      source = new DamageSource(target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(bleedingDamage));
     }
     // perform damage
     int hurtResistantTime = target.invulnerableTime;

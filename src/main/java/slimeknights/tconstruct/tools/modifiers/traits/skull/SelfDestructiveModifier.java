@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modifiers.traits.skull;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -22,6 +23,9 @@ import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.modifiers.effect.NoMilkEffect;
+
+import static slimeknights.tconstruct.common.structure.TCDamageTypes.bleedingDamage;
+import static slimeknights.tconstruct.common.structure.TCDamageTypes.selfDestructDamage;
 
 public class SelfDestructiveModifier extends NoLevelsModifier implements KeybindInteractModifierHook, EquipmentChangeModifierHook {
   /** Self damage source */
@@ -70,7 +74,7 @@ public class SelfDestructiveModifier extends NoLevelsModifier implements Keybind
       // effect level is the explosion radius
       if (!living.level().isClientSide) {
         living.level().explode(living, living.getX(), living.getY(), living.getZ(), amplifier + 1, Level.ExplosionInteraction.MOB);
-        living.hurt(new DamageSource(TinkerModifiers.selfDestructDamage.getHolder().get()), 99999);
+        living.hurt(new DamageSource(living.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(selfDestructDamage)), 99999);
       }
     }
   }

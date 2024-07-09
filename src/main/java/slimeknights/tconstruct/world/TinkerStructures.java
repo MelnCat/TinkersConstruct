@@ -41,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.common.data.tags.DamageTypeTagProvider;
 import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.world.block.FoliageType;
@@ -103,36 +104,6 @@ public final class TinkerStructures extends TinkerModule {
   /** Nether variant of slimy trees */
   public static final RegistryObject<SlimeFungusFeature> slimeFungus = FEATURES.register("slime_fungus", () -> new SlimeFungusFeature(SlimeFungusConfig.CODEC));
 
-  public static final RegistryObject<ConfiguredFeature<HugeFungusConfiguration,SlimeFungusFeature>> bloodSlimeFungus = CONFIGURED_FEATURES.registerSupplier(
-    "blood_slime_fungus", slimeFungus,
-    () -> new SlimeFungusConfig(
-      TinkerTags.Blocks.SLIMY_SOIL,
-      TinkerWorld.bloodshroom.getLog().defaultBlockState(),
-      TinkerWorld.slimeLeaves.get(FoliageType.BLOOD).defaultBlockState(),
-      TinkerWorld.congealedSlime.get(SlimeType.ICHOR).defaultBlockState(),
-      BlockPredicate.matchesTag(BlockTags.REPLACEABLE_BY_TREES),
-      true));
-  /** Bloodshroom island tree variant */
-  public static final RegistryObject<ConfiguredFeature<HugeFungusConfiguration,SlimeFungusFeature>> bloodSlimeIslandFungus = CONFIGURED_FEATURES.registerSupplier(
-    "blood_slime_island_fungus", slimeFungus,
-    () -> new SlimeFungusConfig(
-      TinkerTags.Blocks.SLIMY_NYLIUM,
-      TinkerWorld.bloodshroom.getLog().defaultBlockState(),
-      TinkerWorld.slimeLeaves.get(FoliageType.BLOOD).defaultBlockState(),
-      TinkerWorld.congealedSlime.get(SlimeType.ICHOR).defaultBlockState(),
-      BlockPredicate.matchesTag(BlockTags.REPLACEABLE_BY_TREES),
-      false));
-  /* Deprecated ichor tree */
-  public static final RegistryObject<ConfiguredFeature<HugeFungusConfiguration,SlimeFungusFeature>> ichorSlimeFungus = CONFIGURED_FEATURES.registerSupplier(
-    "ichor_slime_fungus", slimeFungus,
-    () -> new SlimeFungusConfig(
-      TinkerTags.Blocks.SLIMY_SOIL,
-      TinkerWorld.bloodshroom.getLog().defaultBlockState(),
-      TinkerWorld.slimeLeaves.get(FoliageType.ICHOR).defaultBlockState(),
-      TinkerWorld.congealedSlime.get(SlimeType.ICHOR).defaultBlockState(),
-      BlockPredicate.matchesTag(BlockTags.REPLACEABLE_BY_TREES),
-      false));
-
   /*
    * Structures
    */
@@ -152,6 +123,7 @@ public final class TinkerStructures extends TinkerModule {
     boolean server = event.includeServer();
     datagenerator.addProvider(server, new StructureRepalleter(datagenerator, existingFileHelper));
     datagenerator.addProvider(server, new WorldgenDatapackRegistryProvider(datagenerator.getPackOutput(), event.getLookupProvider(), Set.of(TConstruct.MOD_ID)));
+    datagenerator.addProvider(server, new DamageTypeTagProvider(datagenerator.getPackOutput(), event.getLookupProvider(), TConstruct.MOD_ID, existingFileHelper));
     //    datagenerator.addProvider(server, new StructureUpdater(datagenerator, existingFileHelper, TConstruct.MOD_ID, PackType.SERVER_DATA, "structures"));
     //    datagenerator.addProvider(event.includeClient(), new StructureUpdater(datagenerator, existingFileHelper, TConstruct.MOD_ID, PackType.CLIENT_RESOURCES, "book/structures"));
   }

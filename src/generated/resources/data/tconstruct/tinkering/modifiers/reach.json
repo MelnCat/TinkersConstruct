@@ -4,7 +4,7 @@
   "modules": [
     {
       "type": "tconstruct:attribute",
-      "attribute": "forge:reach_distance",
+      "attribute": "forge:entity_reach",
       "each_level": 1.0,
       "operation": "addition",
       "slots": [
@@ -19,7 +19,7 @@
     },
     {
       "type": "tconstruct:attribute",
-      "attribute": "forge:attack_range",
+      "attribute": "forge:block_reach",
       "each_level": 1.0,
       "operation": "addition",
       "slots": [

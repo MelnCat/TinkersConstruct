@@ -1,5 +1,9 @@
 {
   "values": [
-    "#tconstruct:slimy_logs"
+    "#tconstruct:slimy_logs",
+    "#tconstruct:greenheart_logs",
+    "#tconstruct:skyroot_logs",
+    "#tconstruct:bloodshroom_logs",
+    "#tconstruct:enderbark_logs"
   ]
 }

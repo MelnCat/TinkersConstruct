@@ -3,13 +3,6 @@
   "level_display": "tconstruct:no_levels",
   "modules": [
     {
-      "type": "tconstruct:block_damage",
-      "damage_source": {
-        "type": "mantle:message",
-        "message": "hotFloor"
-      }
-    },
-    {
       "type": "tconstruct:replace_fluid",
       "radius": {
         "each_level": 1.0,

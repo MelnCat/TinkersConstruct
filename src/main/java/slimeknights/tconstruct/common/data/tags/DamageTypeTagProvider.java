@@ -24,6 +24,7 @@ import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.MetalItemObject;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.registration.CastItemObject;
+import slimeknights.tconstruct.common.structure.TCDamageTypes;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.gadgets.entity.FrameType;
@@ -67,10 +68,10 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
       }));
       actions.add(new ConfigurableAction(builder, "lightning", true, "Makes lightning count as fire damage", DamageSource.LIGHTNING_BOLT::setIsFire));*/
     // There is no more is_magic (except in Neoforge)
-    tag(DamageTypeTags.IS_FIRE).add(DamageTypes.LIGHTNING_BOLT, EntityMeltingModule.SMELTERY_DAMAGE_TYPE.getKey());
-    tag(DamageTypeTags.BYPASSES_EFFECTS).add(TinkerModifiers.bleedingDamage.getKey());
-    tag(DamageTypeTags.BYPASSES_ARMOR).add(TinkerModifiers.selfDestructDamage.getKey());
-    tag(DamageTypeTags.IS_EXPLOSION).add(TinkerModifiers.selfDestructDamage.getKey());
+    tag(DamageTypeTags.IS_FIRE).add(DamageTypes.LIGHTNING_BOLT);//, TCDamageTypes.smelteryDamage);
+    //tag(DamageTypeTags.BYPASSES_EFFECTS).add(TCDamageTypes.bleedingDamage);
+    //tag(DamageTypeTags.BYPASSES_ARMOR).add(TCDamageTypes.selfDestructDamage);
+    //tag(DamageTypeTags.IS_EXPLOSION).add(TCDamageTypes.selfDestructDamage); todo!
   }
 
 }

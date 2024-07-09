@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,6 +23,7 @@ import slimeknights.mantle.block.entity.MantleBlockEntity;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags.EntityTypes;
+import slimeknights.tconstruct.common.structure.TCDamageTypes;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipe;
@@ -39,16 +41,6 @@ import java.util.function.Supplier;
 // todo! is this a tinker module?
 @RequiredArgsConstructor
 public class EntityMeltingModule extends TinkerModule {
-  /** Standard damage source for melting most mobs */
-  public static final RegistryObject<DamageType> SMELTERY_DAMAGE_TYPE = DAMAGE_TYPES.register("smeltery_damage", () -> new DamageType(TConstruct.prefix("smeltery_heat"), 0));
-  /**
-   * Special damage source for "absorbing" hot entities
-   */
-
-  public static final RegistryObject<DamageType> SMELTERY_MAGIC_TYPE = DAMAGE_TYPES.register("smeltery_magic", () -> new DamageType(TConstruct.prefix("smeltery_magic"), 0));
-
-  public static final DamageSource SMELTERY_DAMAGE = new DamageSource(SMELTERY_DAMAGE_TYPE.getHolder().get());
-  public static final DamageSource SMELTERY_MAGIC = new DamageSource(SMELTERY_MAGIC_TYPE.getHolder().get());
 
   private final MantleBlockEntity parent;
   private final IFluidHandler tank;
@@ -93,6 +85,13 @@ public class EntityMeltingModule extends TinkerModule {
     // TODO: consider a way to put this in a recipe
     return new FluidStack(TinkerFluids.liquidSoul.get(), FluidValues.GLASS_PANE / 5);
   }
+  private DamageSource getDamageSource(Entity entity) {
+    return new DamageSource(
+      Objects.requireNonNull(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(
+        entity.fireImmune() ? TCDamageTypes.smelteryMagicDamage : TCDamageTypes.smelteryDamage
+      ))
+    );
+  }
 
   /**
    * checks if an entity can be melted
@@ -101,7 +100,7 @@ public class EntityMeltingModule extends TinkerModule {
    */
   private boolean canMeltEntity(LivingEntity entity) {
     // fire based mobs are absorbed instead of damaged
-    return !entity.isInvulnerableTo(entity.fireImmune() ? SMELTERY_MAGIC : SMELTERY_DAMAGE)
+    return !entity.isInvulnerableTo(getDamageSource(entity))
            // have to special case players because for some dumb reason creative players do not return true to invulnerable to
            && !(entity instanceof Player && ((Player)entity).getAbilities().invulnerable)
            // also have to special case fire resistance, so a blaze with fire resistance is immune to the smeltery
@@ -159,7 +158,7 @@ public class EntityMeltingModule extends TinkerModule {
           }
 
           // if the entity is successfully damaged, fill the tank with fluid
-          if (entity.hurt(entity.fireImmune() ? SMELTERY_MAGIC : SMELTERY_DAMAGE, damage)) {
+          if (entity.hurt(getDamageSource(entity), damage)) {
             // its fine if we don't fill it all, leftover fluid is just lost
             tank.fill(fluid, FluidAction.EXECUTE);
             melted = true;

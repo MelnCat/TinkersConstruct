@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.recipe.tinkerstation.building;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -92,7 +93,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   }
 
   @Override
-  public ItemStack assemble(ITinkerStationContainer inv) {
+  public ItemStack assemble(ITinkerStationContainer inv, RegistryAccess access) {
     // first n slots contain parts
     List<MaterialVariant> materials = IntStream.range(0, ToolPartsHook.parts(output.getToolDefinition()).size())
                                                .mapToObj(i -> MaterialVariant.of(IMaterialItem.getMaterialFromStack(inv.getInput(i))))
@@ -103,7 +104,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   /** @deprecated Use {@link #assemble(ITinkerStationContainer)} */
   @Deprecated
   @Override
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return new ItemStack(this.output);
   }
 }

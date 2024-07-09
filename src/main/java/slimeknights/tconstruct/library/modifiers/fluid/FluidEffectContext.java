@@ -44,7 +44,7 @@ public abstract class FluidEffectContext {
   protected final Projectile projectile;
 
   /** Gets a damage source based on this context */
-  public DamageSource createDamageSource() {
+  public ModifiableDamageSource createDamageSource() {
     if (projectile != null) {
       return new ModifiableDamageSource(DamageTypes.MOB_PROJECTILE, null, projectile);
     }
@@ -107,7 +107,7 @@ public abstract class FluidEffectContext {
 
     /** Checks if the block in front of the hit block is replaceable */
     public boolean isOffsetReplaceable() {
-      return level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection())).getMaterial().isReplaceable();
+      return level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection())).canBeReplaced();
     }
   }
 

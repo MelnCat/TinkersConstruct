@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.tinkerstation;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -34,8 +35,8 @@ public interface ITinkerStationRecipe extends ICommonRecipe<ITinkerStationContai
    * @return  Recipe result, may be empty.
    */
   @Override
-  default ItemStack assemble(ITinkerStationContainer inv) {
-    return getResultItem().copy();
+  default ItemStack assemble(ITinkerStationContainer inv, RegistryAccess access) {
+    return getResultItem(access).copy();
   }
 
   /**
@@ -43,8 +44,8 @@ public interface ITinkerStationRecipe extends ICommonRecipe<ITinkerStationContai
    * TODO 1.20: switch return type to {@code RecipeResult<LazyToolStack>}
    * @return Validated result
    */
-  default RecipeResult<ItemStack> getValidatedResult(ITinkerStationContainer inv) {
-    ItemStack result = assemble(inv);
+  default RecipeResult<ItemStack> getValidatedResult(ITinkerStationContainer inv, RegistryAccess access) {
+    ItemStack result = assemble(inv, access);
     if (result.isEmpty()) {
       return RecipeResult.pass();
     }

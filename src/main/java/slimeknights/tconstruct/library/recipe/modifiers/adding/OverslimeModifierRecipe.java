@@ -2,6 +2,8 @@ package slimeknights.tconstruct.library.recipe.modifiers.adding;
 
 import lombok.Getter;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -64,7 +66,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
   }
 
   @Override
-  public RecipeResult<ItemStack> getValidatedResult(ITinkerStationContainer inv) {
+  public RecipeResult<ItemStack> getValidatedResult(ITinkerStationContainer inv, RegistryAccess access) {
     ToolStack tool = inv.getTinkerable();
     OverslimeModifier overslime = TinkerModifiers.overslime.get();
     ModifierId overslimeId = TinkerModifiers.overslime.getId();
@@ -116,7 +118,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
   /** @deprecated use {@link #assemble(ITinkerStationContainer)} */
   @Deprecated
   @Override
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return ItemStack.EMPTY;
   }
 

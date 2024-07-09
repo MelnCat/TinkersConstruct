@@ -1,13 +1,16 @@
 package slimeknights.tconstruct.tools.modifiers.upgrades.melee;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.modifiers.hook.build.ToolStatsModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.combat.MeleeHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.display.TooltipModifierHook;
@@ -37,14 +40,14 @@ public class PiercingModifier extends Modifier implements ToolStatsModifierHook,
   @Override
   public void afterMeleeHit(IToolStackView tool, ModifierEntry modifier, ToolAttackContext context, float damageDealt) {
     // deals 0.5 pierce damage per level, scaled, half of sharpness
-    DamageSource source;
+    FluidEffectContext.ModifiableDamageSource source;
     Player player = context.getPlayerAttacker();
     if (player != null) {
-      source = DamageSource.playerAttack(player);
+      source = new FluidEffectContext.ModifiableDamageSource(DamageTypes.PLAYER_ATTACK, player, player);
     } else {
-      source = DamageSource.mobAttack(context.getAttacker());
+      source = new FluidEffectContext.ModifiableDamageSource(DamageTypes.MOB_ATTACK, context.getAttacker(), context.getAttacker());
     }
-    source.bypassArmor();
+    source.addTag(DamageTypeTags.BYPASSES_ARMOR);
     float secondaryDamage = (modifier.getEffectiveLevel() * tool.getMultiplier(ToolStats.ATTACK_DAMAGE)) * context.getCooldown();
     if (context.isCritical()) {
       secondaryDamage *= 1.5f;

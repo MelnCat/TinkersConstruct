@@ -11,13 +11,13 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.tools.helper.ToolAttackUtil;
+import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.modifiers.traits.melee.LaceratingModifier;
 
 /**
  * Potion effect from {@link LaceratingModifier}
  */
 public class BleedingEffect extends NoMilkEffect {
-  private static final String SOURCE_KEY = TConstruct.prefix("bleed");
   public BleedingEffect() {
     super(MobEffectCategory.HARMFUL, 0xa80000, true);
   }
@@ -34,35 +34,20 @@ public class BleedingEffect extends NoMilkEffect {
     LivingEntity lastAttacker = target.getLastHurtMob();
     DamageSource source;
     if(lastAttacker != null) {
-      source = new BleedingDamageSource(SOURCE_KEY, lastAttacker);
+      source = new DamageSource(TinkerModifiers.bleedingDamage.getHolder().get(), null, lastAttacker);
     }
     else {
-      source = new DamageSource(SOURCE_KEY);
+      source = new DamageSource(TinkerModifiers.bleedingDamage.getHolder().get());
     }
-    source.bypassMagic();
-
     // perform damage
     int hurtResistantTime = target.invulnerableTime;
     ToolAttackUtil.attackEntitySecondary(source, (level + 1f) / 2f, target, target, true);
     target.invulnerableTime = hurtResistantTime;
 
     // damage particles
-    if (target.level instanceof ServerLevel) {
-      ((ServerLevel)target.level).sendParticles(ParticleTypes.DAMAGE_INDICATOR, target.getX(), target.getY(0.5), target.getZ(), 1, 0.1, 0, 0.1, 0.2);
+    if (target.level() instanceof ServerLevel) {
+      ((ServerLevel)target.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, target.getX(), target.getY(0.5), target.getZ(), 1, 0.1, 0, 0.1, 0.2);
     }
   }
 
-  /** Guardians use the direct entity to determine if they should thorns, while the direct marks for player kills
-   * treat this as indirect damage by making the direct entity null, so guardians treat it like arrows */
-  private static class BleedingDamageSource extends DamageSource {
-    public BleedingDamageSource(Holder<DamageType> holder, Entity entity) {
-      super(holder, entity);
-    }
-
-    @Nullable
-    @Override
-    public Entity getDirectEntity() {
-      return null;
-    }
-  }
 }

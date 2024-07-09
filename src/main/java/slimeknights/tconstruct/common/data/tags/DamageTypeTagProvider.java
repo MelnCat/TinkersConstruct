@@ -68,6 +68,9 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
       actions.add(new ConfigurableAction(builder, "lightning", true, "Makes lightning count as fire damage", DamageSource.LIGHTNING_BOLT::setIsFire));*/
     // There is no more is_magic (except in Neoforge)
     tag(DamageTypeTags.IS_FIRE).add(DamageTypes.LIGHTNING_BOLT, EntityMeltingModule.SMELTERY_DAMAGE_TYPE.getKey());
+    tag(DamageTypeTags.BYPASSES_EFFECTS).add(TinkerModifiers.bleedingDamage.getKey());
+    tag(DamageTypeTags.BYPASSES_ARMOR).add(TinkerModifiers.selfDestructDamage.getKey());
+    tag(DamageTypeTags.IS_EXPLOSION).add(TinkerModifiers.selfDestructDamage.getKey());
   }
 
 }

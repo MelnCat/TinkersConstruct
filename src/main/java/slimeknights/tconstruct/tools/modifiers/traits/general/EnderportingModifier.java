@@ -146,7 +146,7 @@ public class EnderportingModifier extends NoLevelsModifier implements PlantHarve
     if (attacker != null && attacker != target && persistentData.getBoolean(PRIMARY_ARROW)) {
       Entity hitEntity = hit.getEntity();
       Vec3 oldPosition = attacker.position();
-      if (attacker.level == projectile.level && tryTeleport(attacker, hitEntity.getX(), hitEntity.getY(), hitEntity.getZ()) && target != null) {
+      if (attacker.level() == projectile.level() && tryTeleport(attacker, hitEntity.getX(), hitEntity.getY(), hitEntity.getZ()) && target != null) {
         tryTeleport(target, oldPosition.x, oldPosition.y, oldPosition.z);
       }
     }
@@ -157,7 +157,7 @@ public class EnderportingModifier extends NoLevelsModifier implements PlantHarve
   public boolean onProjectileHitBlock(ModifierNBT modifiers, NamespacedNBT persistentData, ModifierEntry modifier, Projectile projectile, BlockHitResult hit, @Nullable LivingEntity attacker) {
     if (attacker != null && persistentData.getBoolean(PRIMARY_ARROW)) {
       BlockPos target = hit.getBlockPos().relative(hit.getDirection());
-      if (attacker.level == projectile.level && tryTeleport(attacker, target.getX() + 0.5f, target.getY(), target.getZ() + 0.5f)) {
+      if (attacker.level() == projectile.level() && tryTeleport(attacker, target.getX() + 0.5f, target.getY(), target.getZ() + 0.5f)) {
         projectile.discard();
       }
     }

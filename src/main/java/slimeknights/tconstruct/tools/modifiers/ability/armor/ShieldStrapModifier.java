@@ -46,7 +46,7 @@ public class ShieldStrapModifier extends InventoryMenuModifier {
       return super.startInteract(tool, modifier, player, equipmentSlot, keyModifier);
     }
     if (keyModifier == TooltipKey.NORMAL) {
-      if (player.level.isClientSide) {
+      if (player.level().isClientSide) {
         return true;
       }
       // offhand must be able to go in the pants
@@ -81,7 +81,7 @@ public class ShieldStrapModifier extends InventoryMenuModifier {
 
         // sound effect
         if (!newOffhand.isEmpty() || !list.isEmpty()) {
-          player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1.0f, 1.0f);
+          player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1.0f, 1.0f);
         }
         return true;
       }

@@ -39,7 +39,7 @@ public class ReflectingModifier extends Modifier {
   private void projectileImpact(ProjectileImpactEvent event) {
     Entity entity = event.getEntity();
     // first, need a projectile that is hitting a living entity
-    if (!entity.level.isClientSide) {
+    if (!entity.level().isClientSide) {
       Projectile projectile = event.getProjectile();
 
       // handle blacklist for projectiles
@@ -88,7 +88,7 @@ public class ReflectingModifier extends Modifier {
                 if (living.getType() == EntityType.PLAYER) {
                   TinkerNetwork.getInstance().sendVanillaPacket(new ClientboundSetEntityMotionPacket(projectile), living);
                 }
-                living.level.playSound(null, living.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.5F + living.level.random.nextFloat() * 0.4F);
+                living.level().playSound(null, living.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.5F + living.level().random.nextFloat() * 0.4F);
                 event.setCanceled(true);
               }
             }

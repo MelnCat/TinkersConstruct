@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tools.recipe;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -76,7 +77,7 @@ public class CreativeSlotRecipe implements ITinkerStationRecipe, IModifierRecipe
   }
 
   @Override
-  public ItemStack assemble(ITinkerStationContainer inv) {
+  public ItemStack assemble(ITinkerStationContainer inv, RegistryAccess access) {
     ToolStack toolStack = inv.getTinkerable().copy();
 
     // first, fetch the slots compound
@@ -114,7 +115,7 @@ public class CreativeSlotRecipe implements ITinkerStationRecipe, IModifierRecipe
   /** @deprecated Use {@link #assemble(ITinkerStationContainer)} */
   @Deprecated
   @Override
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return ItemStack.EMPTY;
   }
 

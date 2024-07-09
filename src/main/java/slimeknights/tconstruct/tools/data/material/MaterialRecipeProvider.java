@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data.material;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -27,8 +28,8 @@ import slimeknights.tconstruct.world.TinkerWorld;
 import java.util.function.Consumer;
 
 public class MaterialRecipeProvider extends BaseRecipeProvider implements IMaterialRecipeHelper {
-  public MaterialRecipeProvider(DataGenerator generator) {
-    super(generator);
+  public MaterialRecipeProvider(PackOutput output) {
+    super(output);
   }
 
   @Override
@@ -37,7 +38,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
   }
 
   @Override
-  protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+  protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
     addMaterialItems(consumer);
     addMaterialSmeltery(consumer);
   }

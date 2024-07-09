@@ -38,7 +38,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EnderferenceModifier extends Modifier implements ProjectileHitModifierHook, MeleeHitModifierHook, OnAttackedModifierHook {
-  private static final DamageSource FALLBACK = new DamageSource("arrow");
 
   public EnderferenceModifier() {
     MinecraftForge.EVENT_BUS.addListener(EnderferenceModifier::onTeleport);
@@ -134,11 +133,11 @@ public class EnderferenceModifier extends Modifier implements ProjectileHitModif
         Entity owner = arrow.getOwner();
         DamageSource damageSource;
         if (attacker instanceof Player player) {
-          damageSource = DamageSource.playerAttack(player);
+          damageSource = target.damageSources().playerAttack(player);
         } else if (attacker != null) {
-          damageSource = DamageSource.mobAttack(attacker);
+          damageSource = target.damageSources().mobAttack(attacker);
         } else {
-          damageSource = FALLBACK;
+          damageSource = target.damageSources().generic();
         }
         if (attacker != null) {
           attacker.setLastHurtMob(target);
@@ -151,7 +150,7 @@ public class EnderferenceModifier extends Modifier implements ProjectileHitModif
         }
 
         if (target.hurt(damageSource, (float)damage)) {
-          if (!arrow.level.isClientSide && arrow.getPierceLevel() <= 0) {
+          if (!arrow.level().isClientSide && arrow.getPierceLevel() <= 0) {
             target.setArrowCount(target.getArrowCount() + 1);
           }
 
@@ -164,7 +163,7 @@ public class EnderferenceModifier extends Modifier implements ProjectileHitModif
             }
           }
 
-          if (!arrow.level.isClientSide && attacker != null) {
+          if (!arrow.level().isClientSide && attacker != null) {
             EnchantmentHelper.doPostHurtEffects(target, attacker);
             EnchantmentHelper.doPostDamageEffects(attacker, target);
           }
@@ -175,7 +174,7 @@ public class EnderferenceModifier extends Modifier implements ProjectileHitModif
             arrow.piercedAndKilledEntities.add(target);
           }
 
-          if (!arrow.level.isClientSide && arrow.shotFromCrossbow() && owner instanceof ServerPlayer player) {
+          if (!arrow.level().isClientSide && arrow.shotFromCrossbow() && owner instanceof ServerPlayer player) {
             if (arrow.piercedAndKilledEntities != null) {
               CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(player, arrow.piercedAndKilledEntities);
             } else if (!target.isAlive()) {
@@ -193,7 +192,7 @@ public class EnderferenceModifier extends Modifier implements ProjectileHitModif
           arrow.setDeltaMovement(arrow.getDeltaMovement().scale(-0.1D));
           arrow.setYRot(arrow.getYRot() + 180.0F);
           arrow.yRotO += 180.0F;
-          if (!arrow.level.isClientSide && arrow.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+          if (!arrow.level().isClientSide && arrow.getDeltaMovement().lengthSqr() < 1.0E-7D) {
             if (arrow.pickup == AbstractArrow.Pickup.ALLOWED) {
               arrow.spawnAtLocation(arrow.getPickupItem(), 0.1F);
             }

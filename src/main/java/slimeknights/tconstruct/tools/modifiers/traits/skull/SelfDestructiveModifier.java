@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -24,7 +25,6 @@ import slimeknights.tconstruct.tools.modifiers.effect.NoMilkEffect;
 
 public class SelfDestructiveModifier extends NoLevelsModifier implements KeybindInteractModifierHook, EquipmentChangeModifierHook {
   /** Self damage source */
-  private static final DamageSource SELF_DESTRUCT = (new DamageSource(TConstruct.prefix("self_destruct"))).bypassArmor().setExplosion();
 
   @Override
   protected void registerHooks(Builder hookBuilder) {
@@ -68,9 +68,9 @@ public class SelfDestructiveModifier extends NoLevelsModifier implements Keybind
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
       // effect level is the explosion radius
-      if (!living.level.isClientSide) {
-        living.level.explode(living, living.getX(), living.getY(), living.getZ(), amplifier + 1, Explosion.BlockInteraction.DESTROY);
-        living.hurt(SELF_DESTRUCT, 99999);
+      if (!living.level().isClientSide) {
+        living.level().explode(living, living.getX(), living.getY(), living.getZ(), amplifier + 1, Level.ExplosionInteraction.MOB);
+        living.hurt(new DamageSource(TinkerModifiers.selfDestructDamage.getHolder().get()), 99999);
       }
     }
   }

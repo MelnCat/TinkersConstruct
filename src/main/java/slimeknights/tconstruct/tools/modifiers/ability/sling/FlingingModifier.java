@@ -20,9 +20,9 @@ public class FlingingModifier extends SlingModifier {
   @Override
   public void onStoppedUsing(IToolStackView tool, ModifierEntry modifier, LivingEntity entity, int timeLeft) {
     super.onStoppedUsing(tool, modifier, entity, timeLeft);
-    if (entity.isOnGround() && entity instanceof Player player) {
+    if (entity.onGround() && entity instanceof Player player) {
       // check if player was targeting a block
-      BlockHitResult mop = ModifiableItem.blockRayTrace(entity.level, player, ClipContext.Fluid.NONE);
+      BlockHitResult mop = ModifiableItem.blockRayTrace(entity.level(), player, ClipContext.Fluid.NONE);
       if (mop.getType() == HitResult.Type.BLOCK) {
         // we fling the inverted player look vector
         float f = getForce(tool, modifier, entity, timeLeft, true) * 4;
@@ -34,8 +34,8 @@ public class FlingingModifier extends SlingModifier {
                       (vec.y + random.nextGaussian() * inaccuracy) * -f / 3f,
                       (vec.z + random.nextGaussian() * inaccuracy) * -f);
           SlimeBounceHandler.addBounceHandler(player);
-          if (!entity.level.isClientSide) {
-            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.SLIME_SLING.getSound(), player.getSoundSource(), 1, 1);
+          if (!entity.level().isClientSide) {
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.SLIME_SLING.getSound(), player.getSoundSource(), 1, 1);
             player.causeFoodExhaustion(0.2F);
             player.getCooldowns().addCooldown(tool.getItem(), 3);
             ToolDamageUtil.damageAnimated(tool, 1, entity);
@@ -44,6 +44,6 @@ public class FlingingModifier extends SlingModifier {
         }
       }
     }
-    entity.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.SLIME_SLING.getSound(), entity.getSoundSource(), 1, 0.5f);
+    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.SLIME_SLING.getSound(), entity.getSoundSource(), 1, 0.5f);
   }
 }

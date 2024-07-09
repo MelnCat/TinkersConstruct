@@ -77,7 +77,7 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
   @Override
   public void onStoppedUsing(IToolStackView tool, ModifierEntry modifier, LivingEntity entity, int timeLeft) {
     ScopeModifier.stopScoping(entity);
-    if (!entity.level.isClientSide) {
+    if (!entity.level().isClientSide) {
       int chargeTime = getUseDuration(tool, modifier) - timeLeft;
       if (chargeTime > 0) {
         // find the fluid to spit
@@ -105,7 +105,7 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
               float startAngle = ModifiableLauncherItem.getAngleStart(shots);
               int primaryIndex = shots / 2;
               for (int shotIndex = 0; shotIndex < shots; shotIndex++) {
-                FluidEffectProjectile spit = new FluidEffectProjectile(entity.level, entity, new FluidStack(fluid, amount), power);
+                FluidEffectProjectile spit = new FluidEffectProjectile(entity.level(), entity, new FluidStack(fluid, amount), power);
 
                 // setup projectile target
                 Vector3f targetVector = entity.getViewVector(1.0f).toVector3f();
@@ -125,7 +125,7 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
 
                 // finally, fire the projectile
                 entity.level().addFreshEntity(spit);
-                entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1.0F, 1.0F / (entity.level.getRandom().nextFloat() * 0.4F + 1.2F) + charge * 0.5F + (angle / 10f));
+                entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1.0F, 1.0F / (entity.level().getRandom().nextFloat() * 0.4F + 1.2F) + charge * 0.5F + (angle / 10f));
 
               }
 

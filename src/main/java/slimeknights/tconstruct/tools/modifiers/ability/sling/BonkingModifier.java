@@ -86,7 +86,7 @@ public class BonkingModifier extends SlingModifier implements MeleeHitModifierHo
   @Override
   public void onStoppedUsing(IToolStackView tool, ModifierEntry modifier, LivingEntity entity, int timeLeft) {
     super.onStoppedUsing(tool, modifier, entity, timeLeft);
-    if (!entity.level.isClientSide && (entity instanceof Player player)) {
+    if (!entity.level().isClientSide && (entity instanceof Player player)) {
       float f = getForce(tool, modifier, player, timeLeft, true);
       if (f > 0) {
         Vec3 start = player.getEyePosition(1F);
@@ -94,13 +94,13 @@ public class BonkingModifier extends SlingModifier implements MeleeHitModifierHo
         Vec3 direction = start.add(look.x * RANGE, look.y * RANGE, look.z * RANGE);
         AABB bb = player.getBoundingBox().expandTowards(look.x * RANGE, look.y * RANGE, look.z * RANGE).expandTowards(1, 1, 1);
 
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(player.level, player, start, direction, bb, (e) -> e instanceof LivingEntity);
+        EntityHitResult hit = ProjectileUtil.getEntityHitResult(player.level(), player, start, direction, bb, (e) -> e instanceof LivingEntity);
         if (hit != null) {
           LivingEntity target = (LivingEntity)hit.getEntity();
           double targetDist = start.distanceToSqr(target.getEyePosition(1F));
 
           // cancel if there's a block in the way
-          BlockHitResult mop = ModifiableItem.blockRayTrace(player.level, player, ClipContext.Fluid.NONE);
+          BlockHitResult mop = ModifiableItem.blockRayTrace(player.level(), player, ClipContext.Fluid.NONE);
           if (mop.getType() != HitResult.Type.BLOCK || targetDist < mop.getBlockPos().distToCenterSqr(start)) {
             // melee tools also do damage as a treat
             if (tool.hasTag(TinkerTags.Items.MELEE)) {
@@ -122,7 +122,7 @@ public class BonkingModifier extends SlingModifier implements MeleeHitModifierHo
             }
 
             // cooldowns and stuff
-            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.BONK.getSound(), player.getSoundSource(), 1, 1);
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.BONK.getSound(), player.getSoundSource(), 1, 1);
             player.causeFoodExhaustion(0.2F);
             player.getCooldowns().addCooldown(tool.getItem(), 3);
             ToolDamageUtil.damageAnimated(tool, 1, entity);
@@ -130,7 +130,7 @@ public class BonkingModifier extends SlingModifier implements MeleeHitModifierHo
           }
         }
       }
-      player.level.playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.BONK.getSound(), player.getSoundSource(), 1, 0.5f);
+      player.level().playSound(null, player.getX(), player.getY(), player.getZ(), Sounds.BONK.getSound(), player.getSoundSource(), 1, 0.5f);
     }
   }
 }

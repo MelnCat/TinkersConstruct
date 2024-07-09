@@ -3,6 +3,8 @@ package slimeknights.tconstruct.tools;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -375,7 +377,9 @@ public final class TinkerModifiers extends TinkerModule {
     }
     return effect;
   });
-
+//
+  public static final RegistryObject<DamageType> bleedingDamage = DAMAGE_TYPES.register("bleeding", () -> new DamageType(TConstruct.prefix("bleed"), 0));
+  public static final RegistryObject<DamageType> selfDestructDamage = DAMAGE_TYPES.register("self_destruct", () -> new DamageType(TConstruct.prefix("self_destruct"), 0));
   /*
    * Recipes
    */
@@ -574,7 +578,7 @@ public final class TinkerModifiers extends TinkerModule {
     DataGenerator generator = event.getGenerator();
     boolean server = event.includeServer();
     generator.addProvider(server, new ModifierProvider(generator));
-    generator.addProvider(server, new ModifierRecipeProvider(generator));
+    generator.addProvider(server, new ModifierRecipeProvider(generator.getPackOutput()));
     generator.addProvider(server, new FluidEffectProvider(generator));
     generator.addProvider(server, new ModifierTagProvider(generator, event.getExistingFileHelper()));
     generator.addProvider(server, new EnchantmentToModifierProvider(generator));

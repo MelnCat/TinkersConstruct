@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -72,7 +74,7 @@ public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDi
   }
 
   @Override
-  public ItemStack assemble(ITinkerStationContainer inv) {
+  public ItemStack assemble(ITinkerStationContainer inv, RegistryAccess access) {
     ToolStack tool = inv.getTinkerable().copy();
 
     ModDataNBT persistentData = tool.getPersistentData();
@@ -170,7 +172,7 @@ public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDi
   /** @deprecated use {@link #assemble(ITinkerStationContainer)}  */
   @Deprecated
   @Override
-  public ItemStack getResultItem() {
+  public ItemStack getResultItem(RegistryAccess access) {
     return ItemStack.EMPTY;
   }
 

@@ -59,7 +59,7 @@ public class SlurpingModifier extends Modifier implements KeybindInteractModifie
   private int slurp(FluidStack fluid, float level, Player player, FluidAction action) {
     if (!fluid.isEmpty()) {
       FluidEffects recipe = FluidEffectManager.INSTANCE.find(fluid.getFluid());
-      return recipe.hasEntityEffects() ? recipe.applyToEntity(fluid, level, new FluidEffectContext.Entity(player.level, player, null, player), action) : 0;
+      return recipe.hasEntityEffects() ? recipe.applyToEntity(fluid, level, new FluidEffectContext.Entity(player.level(), player, null, player), action) : 0;
     }
     return 0;
   }
@@ -87,10 +87,10 @@ public class SlurpingModifier extends Modifier implements KeybindInteractModifie
       position = position.yRot(-player.getYRot() * DEGREE_TO_RADIANS);
       position = position.add(player.getX(), player.getEyeY(), player.getZ());
       FluidParticleData data = new FluidParticleData(TinkerCommons.fluidParticle.get(), fluid);
-      if (player.level instanceof ServerLevel) {
-        ((ServerLevel)player.level).sendParticles(data, position.x, position.y, position.z, 1, motion.x, motion.y + 0.05D, motion.z, 0.0D);
+      if (player.level() instanceof ServerLevel) {
+        ((ServerLevel)player.level()).sendParticles(data, position.x, position.y, position.z, 1, motion.x, motion.y + 0.05D, motion.z, 0.0D);
       } else {
-        player.level.addParticle(data, position.x, position.y, position.z, motion.x, motion.y + 0.05D, motion.z);
+        player.level().addParticle(data, position.x, position.y, position.z, motion.x, motion.y + 0.05D, motion.z);
       }
     }
   }
@@ -98,7 +98,7 @@ public class SlurpingModifier extends Modifier implements KeybindInteractModifie
   /** Drinks some of the fluid in the tank, reducing its value */
   private void finishDrinking(IToolStackView tool, Player player) {
     // only server needs to drink
-    if (!player.level.isClientSide) {
+    if (!player.level().isClientSide) {
       FluidStack fluid = TANK_HELPER.getFluid(tool);
       int consumed = slurp(fluid, tool.getModifier(this).getEffectiveLevel(), player, FluidAction.EXECUTE);
       if (!player.isCreative() && consumed > 0) {

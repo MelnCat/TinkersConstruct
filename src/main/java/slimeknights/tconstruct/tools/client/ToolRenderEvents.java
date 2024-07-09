@@ -179,7 +179,7 @@ public class ToolRenderEvents {
       matrices.pushPose();
       matrices.translate(pos.getX() - x, pos.getY() - y, pos.getZ() - z);
       PoseStack.Pose entry = matrices.last();
-      VertexConsumer blockBuilder = new SheetedDecalTextureGenerator(vertexBuilder, entry.pose(), entry.normal());
+      VertexConsumer blockBuilder = new SheetedDecalTextureGenerator(vertexBuilder, entry.pose(), entry.normal(), 1f);
       dispatcher.renderBreakingTexture(world.getBlockState(pos), pos, world, matrices, blockBuilder);
       matrices.popPose();
       rendered++;

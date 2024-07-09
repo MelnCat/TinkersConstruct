@@ -65,18 +65,4 @@ public class CreativeSlotItem extends Item {
       tooltip.add(TOOLTIP_MISSING);
     }
   }
-
-  @Override
-  public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-    if (allowedIn(group)) {
-      Collection<SlotType> allTypes = SlotType.getAllSlotTypes();
-      if (allTypes.isEmpty()) {
-        items.add(new ItemStack(this));
-      } else {
-        for (SlotType type : allTypes) {
-          items.add(withSlot(new ItemStack(this), type));
-        }
-      }
-    }
-  }
 }

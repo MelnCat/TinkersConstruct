@@ -31,7 +31,7 @@ public final class TinkerToolParts extends TinkerModule {
     }
     return TinkerToolParts.pickHead.get().withMaterial(materials.get(TConstruct.RANDOM.nextInt(materials.size())).getIdentifier());
   });*/
-  private static final Item.Properties PARTS_PROPS = new Item.Properties().tab(TAB_TOOL_PARTS);
+  private static final Item.Properties PARTS_PROPS = new Item.Properties();
 
   // repair kit, technically a head so it filters to things useful for repair
   public static final ItemObject<RepairKitItem> repairKit = ITEMS.register("repair_kit", () -> new RepairKitItem(PARTS_PROPS));

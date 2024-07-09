@@ -3,7 +3,7 @@ package slimeknights.tconstruct.tools.logic;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
@@ -189,8 +189,8 @@ public class InteractionHandler {
         BlockPos pos = event.getPos();
         Result useBlock = event.getUseBlock();
         if (useBlock == Result.ALLOW || (useBlock != Result.DENY
-                                         && (!player.isSecondaryUseActive() || player.getItemInHand(Util.getOpposite(hand)).doesSneakBypassUse(player.getLevel(), pos, player)))) {
-          InteractionResult result = player.level.getBlockState(pos).use(player.level, player, hand, trace);
+                                         && (!player.isSecondaryUseActive() || player.getItemInHand(Util.getOpposite(hand)).doesSneakBypassUse(player.level(), pos, player)))) {
+          InteractionResult result = player.level().getBlockState(pos).use(player.level(), player, hand, trace);
           if (result.consumesAction()) {
             if (player instanceof ServerPlayer serverPlayer) {
               CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, ItemStack.EMPTY);

@@ -3,6 +3,8 @@ package slimeknights.tconstruct.tools.data;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,6 +24,8 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.fluids.FluidType;
+import slimeknights.mantle.data.loadable.primitive.StringLoadable;
+import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.data.predicate.IJsonPredicate;
 import slimeknights.mantle.data.predicate.block.BlockPredicate;
 import slimeknights.mantle.data.predicate.block.BlockPropertiesPredicate;
@@ -32,6 +36,7 @@ import slimeknights.mantle.data.predicate.entity.HasEnchantmentEntityPredicate;
 import slimeknights.mantle.data.predicate.entity.LivingEntityPredicate;
 import slimeknights.mantle.data.predicate.entity.MobTypePredicate;
 import slimeknights.mantle.data.predicate.item.ItemPredicate;
+import slimeknights.mantle.data.registry.GenericLoaderRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierProvider;
@@ -101,6 +106,7 @@ import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.item.armor.ModifiableArmorItem;
 import slimeknights.tconstruct.library.tools.nbt.IToolContext;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
+import slimeknights.tconstruct.library.utils.SourceTypePredicate;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.logic.ModifierEvents;
 import slimeknights.tconstruct.tools.modifiers.ability.armor.ToolBeltModifier;
@@ -203,8 +209,8 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
       .levelDisplay(new UniqueForLevels(2));
     // general abilities
     buildModifier(ModifierIds.reach)
-      .addModule(AttributeModule.builder(ForgeMod.REACH_DISTANCE.get(), Operation.ADDITION).uniqueFrom(ModifierIds.reach).eachLevel(1))
-      .addModule(AttributeModule.builder(ForgeMod.ATTACK_RANGE.get(), Operation.ADDITION).uniqueFrom(ModifierIds.reach).eachLevel(1));
+      .addModule(AttributeModule.builder(ForgeMod.ENTITY_REACH.get(), Operation.ADDITION).uniqueFrom(ModifierIds.reach).eachLevel(1))
+      .addModule(AttributeModule.builder(ForgeMod.BLOCK_REACH.get(), Operation.ADDITION).uniqueFrom(ModifierIds.reach).eachLevel(1));
     IJsonPredicate<IToolContext> noUnbreakable = HasModifierPredicate.hasModifier(TinkerModifiers.unbreakable.getId(), 1).inverted();
     buildModifier(ModifierIds.reinforced)
       // level 0 to 5: 0.025 * LEVEL * (11 - LEVEL)
@@ -374,7 +380,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
       .addModule(BlockDamageSourceModule.source(DamageSourcePredicate.FALL).build());
     buildModifier(ModifierIds.frostWalker)
       .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-      .addModule(BlockDamageSourceModule.source(new SourceMessagePredicate(DamageSource.HOT_FLOOR)).build())
+      .addModule(BlockDamageSourceModule.source(new SourceTypePredicate(DamageTypes.HOT_FLOOR)).build())
       .addModule(ReplaceBlockWalkerModule.builder().replaceAlways(BlockPropertiesPredicate.block(Blocks.WATER).matches(LiquidBlock.LEVEL, 0).build(), Blocks.FROSTED_ICE.defaultBlockState()).amount(2, 1));
     buildModifier(ModifierIds.pathMaker).levelDisplay(ModifierLevelDisplay.NO_LEVELS).addModule(ToolActionWalkerTransformModule.builder(ToolActions.SHOVEL_FLATTEN, SoundEvents.SHOVEL_FLATTEN).amount(0.5f, 1));
     buildModifier(ModifierIds.plowing).levelDisplay(ModifierLevelDisplay.NO_LEVELS).addModule(ToolActionWalkerTransformModule.builder(ToolActions.HOE_TILL, SoundEvents.HOE_TILL).amount(0.5f, 1));

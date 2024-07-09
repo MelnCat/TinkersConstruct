@@ -115,7 +115,7 @@ public class ModifierEvents {
     }
     // this is the latest we can add slot markers to the items so we can return them to slots
     LivingEntity entity = event.getEntity();
-    if (!entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player && !(player instanceof FakePlayer)) {
+    if (!entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player && !(player instanceof FakePlayer)) {
       // start with the hotbar, must be soulbound or soul belt
       boolean soulBelt = ArmorLevelModule.getLevel(player, TinkerDataKeys.SOUL_BELT) > 0;
       Inventory inventory = player.getInventory();
@@ -190,7 +190,7 @@ public class ModifierEvents {
   static void onPlayerDropItems(LivingDropsEvent event) {
     // only care about real players with keep inventory off
     LivingEntity entity = event.getEntity();
-    if (!entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player && !(entity instanceof FakePlayer)) {
+    if (!entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player && !(entity instanceof FakePlayer)) {
       Collection<ItemEntity> drops = event.getDrops();
       Iterator<ItemEntity> iter = drops.iterator();
       Inventory inventory = player.getInventory();
@@ -243,7 +243,7 @@ public class ModifierEvents {
     Player original = event.getOriginal();
     Player clone = event.getEntity();
     // inventory already copied
-    if (clone.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || original.isSpectator()) {
+    if (clone.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || original.isSpectator()) {
       return;
     }
     // find items with the soulbound tag set and move them over

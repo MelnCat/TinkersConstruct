@@ -1,7 +1,9 @@
 package slimeknights.tconstruct.tools.data;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -88,8 +90,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ModifierRecipeProvider extends BaseRecipeProvider {
-  public ModifierRecipeProvider(DataGenerator generator) {
-    super(generator);
+  public ModifierRecipeProvider(PackOutput output) {
+    super(output);
   }
 
   @Override
@@ -98,7 +100,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
   }
 
   @Override
-  protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+  protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
     addItemRecipes(consumer);
     addModifierRecipes(consumer);
     addTextureRecipes(consumer);
@@ -153,7 +155,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                             .save(consumer, prefix(TinkerModifiers.silkyCloth, folder));
 
     // wither bone purifying
-    ShapelessRecipeBuilder.shapeless(Items.BONE)
+    ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.BONE)
                           .requires(TinkerTags.Items.WITHER_BONES)
                           .unlockedBy("has_bone", has(TinkerTags.Items.WITHER_BONES))
                           .save(withCondition(consumer, ConfigEnabledCondition.WITHER_BONE_CONVERSION), location(folder + "wither_bone_conversion"));
@@ -1511,7 +1513,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                                   .disallowCrystal()
                                   .save(consumer, wrap(ModifierIds.rebalanced, slotlessFolder, "_traits"));
     // creative
-    SpecialRecipeBuilder.special(TinkerModifiers.creativeSlotSerializer.get()).save(consumer, prefix(slotlessFolder + "creative_slot"));
+    new SpecialRecipeBuilder(TinkerModifiers.creativeSlotSerializer.get()).save(consumer, prefix(slotlessFolder + "creative_slot"));
 
     // removal
     ModifierRemovalRecipeBuilder.removal()
@@ -1710,8 +1712,8 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
 												 .save(consumer, location(folder + "wither_skeleton_skull"));
     SeveringRecipeBuilder.severing(EntityIngredient.of(EntityType.CREEPER), Items.CREEPER_HEAD)
 												 .save(consumer, location(folder + "creeper_head"));
-    SpecialRecipeBuilder.special(TinkerModifiers.playerBeheadingSerializer.get()).save(consumer, prefix(folder + "player_head"));
-    SpecialRecipeBuilder.special(TinkerModifiers.snowGolemBeheadingSerializer.get()).save(consumer, prefix(folder + "snow_golem_head"));
+    new SpecialRecipeBuilder(TinkerModifiers.playerBeheadingSerializer.get()).save(consumer, prefix(folder + "player_head"));
+    new SpecialRecipeBuilder(TinkerModifiers.snowGolemBeheadingSerializer.get()).save(consumer, prefix(folder + "snow_golem_head"));
     SeveringRecipeBuilder.severing(EntityIngredient.of(EntityType.IRON_GOLEM), Blocks.CARVED_PUMPKIN)
                          .save(consumer, location(folder + "iron_golem_head"));
     SeveringRecipeBuilder.severing(EntityIngredient.of(EntityType.ENDER_DRAGON), Items.DRAGON_HEAD)
@@ -1769,13 +1771,13 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .noChildOutput()
                          .save(consumer, location(folder + "chicken_feather"));
     // beshrooming
-    SpecialRecipeBuilder.special(TinkerModifiers.mooshroomDemushroomingSerializer.get()).save(consumer, prefix(folder + "mooshroom_shroom"));
+    new SpecialRecipeBuilder(TinkerModifiers.mooshroomDemushroomingSerializer.get()).save(consumer, prefix(folder + "mooshroom_shroom"));
     // beshelling
     SeveringRecipeBuilder.severing(EntityIngredient.of(EntityType.TURTLE), Items.TURTLE_HELMET)
                          .setChildOutput(ItemOutput.fromItem(Items.SCUTE))
                          .save(consumer, location(folder + "turtle_shell"));
     // befleecing
-    SpecialRecipeBuilder.special(TinkerModifiers.sheepShearing.get()).save(consumer, prefix(folder + "sheep_wool"));
+    new SpecialRecipeBuilder(TinkerModifiers.sheepShearing.get()).save(consumer, prefix(folder + "sheep_wool"));
   }
 
   /** Adds recipes for a plate armor texture with a custom tag */

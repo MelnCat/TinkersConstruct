@@ -13,11 +13,13 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
 import slimeknights.tconstruct.library.client.RenderUtils;
@@ -55,17 +57,16 @@ public class PartBuilderCategory implements IRecipeCategory<IDisplayPartBuilderR
   }
 
   @Override
-  public void draw(IDisplayPartBuilderRecipe recipe, IRecipeSlotsView slots, PoseStack matrixStack, double mouseX, double mouseY) {
+  public void draw(IDisplayPartBuilderRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
     MaterialVariant variant = recipe.getMaterial();
     if (!variant.isEmpty()) {
       Font fontRenderer = Minecraft.getInstance().font;
       Component name = MaterialTooltipCache.getColoredDisplayName(variant.getVariant());
-      fontRenderer.drawShadow(matrixStack, name, 3, 2, -1);
+      graphics.drawString(fontRenderer, name, 3, 2, -1, true);
       String coolingString = I18n.get(KEY_COST, recipe.getCost());
-      fontRenderer.draw(matrixStack, coolingString, 3, 35, Color.GRAY.getRGB());
+      graphics.drawString(fontRenderer, coolingString, 3, 35, Color.GRAY.getRGB());
     } else {
-      RenderUtils.setup(InventoryMenu.BLOCK_ATLAS);
-      GuiUtil.renderPattern(matrixStack, Patterns.INGOT, 25, 16);
+      GuiUtil.renderPattern(graphics, Patterns.INGOT, 25, 16);
     }
   }
 
@@ -82,6 +83,6 @@ public class PartBuilderCategory implements IRecipeCategory<IDisplayPartBuilderR
     // TODO: material input?
 
     // output
-    builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 15).addItemStack(recipe.getResultItem());
+    builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 15).addItemStack(recipe.getResultItem(ServerLifecycleHooks.getCurrentServer().registryAccess()));
   }
 }

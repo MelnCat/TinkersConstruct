@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.plugin.jsonthings.item;
 
+import dev.gigaherz.jsonthings.things.IFlexItem;
 import dev.gigaherz.jsonthings.things.builders.ItemBuilder;
 import dev.gigaherz.jsonthings.things.items.FlexItem;
 import net.minecraft.ChatFormatting;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /** Tool part cast item, which adds the part cost to the tooltip */
-public class FlexPartCastItem extends FlexItem {
+public class FlexPartCastItem extends FlexItem implements IFlexItem {
   private final Supplier<Item> part;
   public FlexPartCastItem(Properties properties, ItemBuilder builder, Supplier<Item> part) {
     super(properties, builder);

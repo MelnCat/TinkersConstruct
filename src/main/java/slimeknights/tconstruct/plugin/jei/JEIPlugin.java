@@ -8,28 +8,25 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IModIdHelper;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
-import mezz.jei.api.registration.IGuiHandlerRegistration;
-import mezz.jei.api.registration.IModIngredientRegistration;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.IRecipeTransferRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -44,6 +41,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
+import org.apache.commons.lang3.tuple.Pair;
 import slimeknights.mantle.item.RetexturedBlockItem;
 import slimeknights.mantle.recipe.helper.RecipeHelper;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -110,6 +108,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -336,7 +335,7 @@ public class JEIPlugin implements IModPlugin {
 
   @Override
   public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-    registration.addGenericGuiContainerHandler(MelterScreen.class, new GuiContainerTankHandler<>());
+    registration.addGenericGuiContainerHandler(MelterScreen.class, new GuiContainerTankHandler<>(registration.getJeiHelpers()));
     registration.addGenericGuiContainerHandler(HeatingStructureScreen.class, new GuiContainerTankHandler<>());
   }
 
@@ -399,7 +398,6 @@ public class JEIPlugin implements IModPlugin {
 
     // shown via the modifiers
     NonNullList<ItemStack> modifierCrystals = NonNullList.create();
-    TinkerModifiers.modifierCrystal.get().fillItemCategory(CreativeModeTab.TAB_SEARCH, modifierCrystals);
     if (!modifierCrystals.isEmpty()) {
       manager.removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, modifierCrystals);
     }
@@ -425,12 +423,38 @@ public class JEIPlugin implements IModPlugin {
     modIdHelper = jeiRuntime.getJeiHelpers().getModIdHelper();
   }
 
+  public static class ClickableIngredient<T> implements IClickableIngredient<T> {
+    ITypedIngredient<T> typedIngredient;
+    Rect2i area;
+
+    public ClickableIngredient(ITypedIngredient<T> typedIngredient, Rect2i area) {
+      this.typedIngredient = typedIngredient;
+      this.area = area;
+    }
+
+    @Override
+    public ITypedIngredient<T> getTypedIngredient() {
+      return typedIngredient;
+    }
+
+    @Override
+    public Rect2i getArea() {
+      return area;
+    }
+  }
   /** Class to pass {@link IScreenWithFluidTank} into JEI */
   public static class GuiContainerTankHandler<C extends AbstractContainerMenu, T extends AbstractContainerScreen<C> & IScreenWithFluidTank> implements IGuiContainerHandler<T> {
+    private final IJeiHelpers jeiHelpers;
+
+    public GuiContainerTankHandler(IJeiHelpers jeiHelpers) {
+      this.jeiHelpers = jeiHelpers;
+    }
+
     @Override
-    @Nullable
-    public Object getIngredientUnderMouse(T containerScreen, double mouseX, double mouseY) {
-      return containerScreen.getIngredientUnderMouse(mouseX, mouseY);
+    public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(T containerScreen, double mouseX, double mouseY) {
+      Pair<?, Rect2i> ingredient = containerScreen.getClickableIngredientUnderMouse(mouseX, mouseY);
+      var typedIngredient = jeiHelpers.getIngredientManager().createTypedIngredient(ingredient.getLeft());
+      return new ClickableIngredient<Object>(typedIngredient, ingredient.getRight());
     }
   }
 

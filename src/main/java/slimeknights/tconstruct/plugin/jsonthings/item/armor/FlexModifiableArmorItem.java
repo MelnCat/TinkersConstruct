@@ -4,6 +4,7 @@ import dev.gigaherz.jsonthings.things.IFlexItem;
 import dev.gigaherz.jsonthings.things.StackContext;
 import dev.gigaherz.jsonthings.things.events.FlexEventHandler;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
@@ -20,25 +21,12 @@ public class FlexModifiableArmorItem extends ModifiableArmorItem implements IFle
   private final Map<String,FlexEventHandler> eventHandlers = new HashMap<>();
   private final Set<CreativeModeTab> tabs = new HashSet<>();
 
-  public FlexModifiableArmorItem(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn, ToolDefinition toolDefinition) {
-    super(materialIn, slot, builderIn, toolDefinition);
+  public FlexModifiableArmorItem(ArmorMaterial materialIn, ArmorItem.Type type, Properties builderIn, ToolDefinition toolDefinition) {
+    super(materialIn, type, builderIn, toolDefinition);
   }
 
 
   /* JSON things does not use the item properties tab, they handle it via the below method */
-
-  @Override
-  public void addCreativeStack(StackContext stackContext, Iterable<CreativeModeTab> tabs) {
-    for (CreativeModeTab tab : tabs) {
-      this.tabs.add(tab);
-    }
-  }
-
-  @Override
-  protected boolean allowedIn(CreativeModeTab category) {
-    return this.tabs.contains(category);
-  }
-
 
   /* not honestly sure what events do, but trivial to support */
 

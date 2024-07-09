@@ -6,10 +6,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
 import slimeknights.mantle.Mantle;
 import slimeknights.mantle.fluid.tooltip.FluidTooltipHandler;
 import slimeknights.tconstruct.library.client.GuiUtil;
@@ -79,7 +81,7 @@ public class GuiTankModule {
    * @param checkX    Mouse X position, screen relative
    * @param checkY    Mouse Y position, screen relative
    */
-  public void highlightHoveredFluid(PoseStack matrices, int checkX, int checkY) {
+  public void highlightHoveredFluid(GuiGraphics graphics, int checkX, int checkY) {
     // highlight hovered fluid
     if (isHovered(checkX, checkY)) {
       int fluidHeight = getFluidHeight();
@@ -87,10 +89,10 @@ public class GuiTankModule {
 
       // highlight just fluid
       if (checkY > middle) {
-        GuiUtil.renderHighlight(matrices, x, middle, width, fluidHeight);
+        GuiUtil.renderHighlight(graphics, x, middle, width, fluidHeight);
       } else {
         // or highlight empty
-        GuiUtil.renderHighlight(matrices, x, y, width, height - fluidHeight);
+        GuiUtil.renderHighlight(graphics, x, y, width, height - fluidHeight);
       }
     }
   }
@@ -148,9 +150,9 @@ public class GuiTankModule {
    * @return  Fluid stack under mouse
    */
   @Nullable
-  public FluidStack getIngreientUnderMouse(int checkX, int checkY) {
+  public Pair<FluidStack, Rect2i> getIngreientUnderMouse(int checkX, int checkY) {
     if (isHovered(checkX, checkY) && checkY > (y + height) - getFluidHeight()) {
-      return tank.getFluidInTank(TANK_INDEX);
+      return Pair.of(tank.getFluidInTank(TANK_INDEX), new Rect2i(x, y, width, height));
     }
     return null;
   }

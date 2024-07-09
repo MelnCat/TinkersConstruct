@@ -6,8 +6,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
 import slimeknights.mantle.client.screen.ScalableElementScreen;
 import slimeknights.mantle.fluid.tooltip.FluidTooltipHandler;
 import slimeknights.tconstruct.TConstruct;
@@ -83,16 +85,16 @@ public class GuiFuelModule {
    * @param checkX    Top corner relative mouse X
    * @param checkY    Top corner relative mouse Y
    */
-  public void renderHighlight(PoseStack matrices, int checkX, int checkY) {
+  public void renderHighlight(GuiGraphics graphics, int checkX, int checkY) {
     if (isHovered(checkX, checkY)) {
       // if there is a fuel slot, render highlight lower
       if (hasFuelSlot) {
         if (checkY > y + 18) {
-          GuiUtil.renderHighlight(matrices, x, y + 18, width, height - 18);
+          GuiUtil.renderHighlight(graphics, x, y + 18, width, height - 18);
         }
       } else {
         // full fluid highlight
-        GuiUtil.renderHighlight(matrices, x, y, width, height);
+        GuiUtil.renderHighlight(graphics, x, y, width, height);
       }
     }
   }
@@ -151,9 +153,9 @@ public class GuiFuelModule {
    * @return  Fluid stack under mouse
    */
   @Nullable
-  public FluidStack getIngredient(int checkX, int checkY) {
+  public Pair<FluidStack, Rect2i> getIngredient(int checkX, int checkY) {
     if (!hasFuelSlot && isHovered(checkX, checkY) && !fuelInfo.isEmpty()) {
-      return fuelInfo.getFluid();
+      return Pair.of(fuelInfo.getFluid(), new Rect2i(x, y, width, height));
     }
     return null;
   }

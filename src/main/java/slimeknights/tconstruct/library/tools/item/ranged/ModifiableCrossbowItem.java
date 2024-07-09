@@ -171,7 +171,7 @@ public class ModifiableCrossbowItem extends ModifiableLauncherItem {
    */
   public static void fireCrossbow(IToolStackView tool, Player player, InteractionHand hand, CompoundTag heldAmmo) {
     // ammo already loaded? time to fire
-    Level level = player.level;
+    Level level = player.level();
     if (!level.isClientSide) {
       // shoot the projectile
       int damage = 0;
@@ -310,7 +310,7 @@ public class ModifiableCrossbowItem extends ModifiableLauncherItem {
         // copy the stack's tooltip if advanced
         if (tooltipFlag.isAdvanced() && player != null) {
           List<Component> nestedTooltip = new ArrayList<>();
-          heldStack.getItem().appendHoverText(heldStack, player.level, nestedTooltip, tooltipFlag);
+          heldStack.getItem().appendHoverText(heldStack, player.level(), nestedTooltip, tooltipFlag);
           for (Component nested : nestedTooltip) {
             tooltips.add(Component.literal("  ").append(nested).withStyle(ChatFormatting.GRAY));
           }

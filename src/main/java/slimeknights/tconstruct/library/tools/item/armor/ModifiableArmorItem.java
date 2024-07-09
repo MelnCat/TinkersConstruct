@@ -72,13 +72,13 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   private final ToolDefinition toolDefinition;
   /** Cache of the tool built for rendering */
   private ItemStack toolForRendering = null;
-  public ModifiableArmorItem(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn, ToolDefinition toolDefinition) {
+  public ModifiableArmorItem(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builderIn, ToolDefinition toolDefinition) {
     super(materialIn, slot, builderIn);
     this.toolDefinition = toolDefinition;
   }
 
   public ModifiableArmorItem(ModifiableArmorMaterial material, ArmorSlotType slotType, Properties properties) {
-    this(material, slotType.getEquipmentSlot(), properties, Objects.requireNonNull(material.getArmorDefinition(slotType), "Missing tool definition for " + slotType));
+    this(material, slotType.getType(), properties, Objects.requireNonNull(material.getArmorDefinition(slotType), "Missing tool definition for " + slotType));
   }
 
   /* Basic properties */
@@ -95,7 +95,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   @Override
   public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer) {
-    return slot == EquipmentSlot.FEET && ModifierUtil.checkVolatileFlag(stack, SNOW_BOOTS);
+    return type == Type.BOOTS && ModifierUtil.checkVolatileFlag(stack, SNOW_BOOTS);
   }
 
   @Override
@@ -279,7 +279,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   @Override
   public Multimap<Attribute,AttributeModifier> getAttributeModifiers(IToolStackView tool, EquipmentSlot slot) {
-    if (slot != getSlot()) {
+    if (slot != getType().getSlot()) {
       return ImmutableMultimap.of();
     }
 
@@ -287,7 +287,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
     if (!tool.isBroken()) {
       // base stats
       StatsNBT statsNBT = tool.getStats();
-      UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
+      UUID uuid = ARMOR_MODIFIER_UUID_PER_TYPE.get(type);
       builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "tconstruct.armor.armor", statsNBT.get(ToolStats.ARMOR), AttributeModifier.Operation.ADDITION));
       builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "tconstruct.armor.toughness", statsNBT.get(ToolStats.ARMOR_TOUGHNESS), AttributeModifier.Operation.ADDITION));
       double knockbackResistance = statsNBT.get(ToolStats.KNOCKBACK_RESISTANCE);
@@ -307,7 +307,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   @Override
   public Multimap<Attribute,AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
     CompoundTag nbt = stack.getTag();
-    if (slot != getSlot() || nbt == null) {
+    if (slot != type.getSlot() || nbt == null) {
       return ImmutableMultimap.of();
     }
     return getAttributeModifiers(ToolStack.from(stack), slot);
@@ -318,12 +318,12 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   @Override
   public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-    return slot == EquipmentSlot.CHEST && !ToolDamageUtil.isBroken(stack) && ModifierUtil.checkVolatileFlag(stack, ELYTRA);
+    return type.getSlot() == EquipmentSlot.CHEST && !ToolDamageUtil.isBroken(stack) && ModifierUtil.checkVolatileFlag(stack, ELYTRA);
   }
 
   @Override
   public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
-    if (slot == EquipmentSlot.CHEST) {
+    if (type.getSlot() == EquipmentSlot.CHEST) {
       ToolStack tool = ToolStack.from(stack);
       if (!tool.isBroken()) {
         // if any modifier says stop flying, stop flying
@@ -333,7 +333,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
           }
         }
         // damage the tool and keep flying
-        if (!entity.level.isClientSide && (flightTicks + 1) % 20 == 0) {
+        if (!entity.level().isClientSide && (flightTicks + 1) % 20 == 0) {
           ToolDamageUtil.damageAnimated(tool, 1, entity, EquipmentSlot.CHEST);
         }
         return true;
@@ -358,7 +358,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
       List<ModifierEntry> modifiers = tool.getModifierList();
       if (!modifiers.isEmpty()) {
         LivingEntity living = (LivingEntity) entityIn;
-        boolean isCorrectSlot = living.getItemBySlot(slot) == stack;
+        boolean isCorrectSlot = living.getItemBySlot(type.getSlot()) == stack;
         // we pass in the stack for most custom context, but for the sake of armor its easier to tell them that this is the correct slot for effects
         for (ModifierEntry entry : modifiers) {
           entry.getHook(ModifierHooks.INVENTORY_TICK).onInventoryTick(tool, entry, levelIn, living, itemSlot, isSelected, isCorrectSlot, stack);
@@ -383,7 +383,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   @Override
   public List<Component> getStatInformation(IToolStackView tool, @Nullable Player player, List<Component> tooltips, TooltipKey key, TooltipFlag tooltipFlag) {
     tooltips = TooltipUtil.getArmorStats(tool, player, tooltips, key, tooltipFlag);
-    TooltipUtil.addAttributes(this, tool, player, tooltips, TooltipUtil.SHOW_ARMOR_ATTRIBUTES, getSlot());
+    TooltipUtil.addAttributes(this, tool, player, tooltips, TooltipUtil.SHOW_ARMOR_ATTRIBUTES, type.getSlot());
     return tooltips;
   }
 
@@ -393,13 +393,6 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   }
 
   /* Display items */
-
-  @Override
-  public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-    if (this.allowedIn(group)) {
-      ToolBuildHandler.addDefaultSubItems(this, items);
-    }
-  }
 
   @Override
   public ItemStack getRenderTool() {

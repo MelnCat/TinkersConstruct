@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,7 +29,7 @@ public class FluidParticleData implements ParticleOptions {
       reader.expect(' ');
       int i = reader.getCursor();
       ResourceLocation id = ResourceLocation.read(reader);
-      Fluid fluid = Registry.FLUID.getOptional(id).orElseThrow(() -> {
+      Fluid fluid = BuiltInRegistries.FLUID.getOptional(id).orElseThrow(() -> {
         reader.setCursor(i);
         return UNKNOWN_FLUID.createWithContext(reader, id.toString());
       });
@@ -58,9 +59,9 @@ public class FluidParticleData implements ParticleOptions {
   @Override
   public String writeToString() {
     StringBuilder builder = new StringBuilder();
-    builder.append(Registry.PARTICLE_TYPE.getKey(getType()));
+    builder.append(BuiltInRegistries.PARTICLE_TYPE.getKey(getType()));
     builder.append(" ");
-    builder.append(Registry.FLUID.getKey(fluid.getFluid()));
+    builder.append(BuiltInRegistries.FLUID.getKey(fluid.getFluid()));
     CompoundTag nbt = fluid.getTag();
     if (nbt != null) {
       builder.append(nbt);

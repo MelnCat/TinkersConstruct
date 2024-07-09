@@ -132,7 +132,7 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
         }
 
         // try for UI errors
-        RecipeResult<ItemStack> validatedResult = recipe.getValidatedResult(this.inventoryWrapper);
+        RecipeResult<ItemStack> validatedResult = recipe.getValidatedResult(this.inventoryWrapper, level.registryAccess());
         if (validatedResult.isSuccess()) {
           result = validatedResult.getResult();
         } else if (validatedResult.hasError()) {
@@ -146,7 +146,7 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     }
     // client side only needs to update result, server syncs message elsewhere
     else if (this.lastRecipe != null && this.lastRecipe.matches(this.inventoryWrapper, level)) {
-      RecipeResult<ItemStack> validatedResult = this.lastRecipe.getValidatedResult(this.inventoryWrapper);
+      RecipeResult<ItemStack> validatedResult = this.lastRecipe.getValidatedResult(this.inventoryWrapper, level.registryAccess());
       if (validatedResult.isSuccess()) {
         result = validatedResult.getResult();
       } else if (validatedResult.hasError()) {
@@ -203,7 +203,7 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
   @Override
   protected void playCraftSound(Player player) {
     if (isSoundReady(player)) {
-      SoundUtils.playSoundForAll(player, this.getInputCount() > 4 ? SoundEvents.ANVIL_USE : Sounds.SAW.getSound(), 0.8f, 0.8f + 0.4f * player.level.random.nextFloat());
+      SoundUtils.playSoundForAll(player, this.getInputCount() > 4 ? SoundEvents.ANVIL_USE : Sounds.SAW.getSound(), 0.8f, 0.8f + 0.4f * player.level().random.nextFloat());
     }
   }
 

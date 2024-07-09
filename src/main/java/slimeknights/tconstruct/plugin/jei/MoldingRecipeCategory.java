@@ -12,10 +12,12 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
@@ -56,17 +58,17 @@ public class MoldingRecipeCategory implements IRecipeCategory<MoldingRecipe> {
   }
 
   @Override
-  public void draw(MoldingRecipe recipe, IRecipeSlotsView slots, PoseStack matrixStack, double mouseX, double mouseY) {
+  public void draw(MoldingRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
     // draw the main block
     IDrawable block = recipe.getType() == TinkerRecipeTypes.MOLDING_BASIN.get() ? basin : table;
-    block.draw(matrixStack, 3, 40);
+    block.draw(graphics, 3, 40);
 
     // if no mold, we "pickup" the item, so draw no table
     if (!recipe.getPattern().isEmpty()) {
-      block.draw(matrixStack, 51, 40);
-      downArrow.draw(matrixStack, 8, 17);
+      block.draw(graphics, 51, 40);
+      downArrow.draw(graphics, 8, 17);
     } else {
-      upArrow.draw(matrixStack, 8, 17);
+      upArrow.draw(graphics, 8, 17);
     }
   }
 
@@ -82,7 +84,7 @@ public class MoldingRecipeCategory implements IRecipeCategory<MoldingRecipe> {
   public void setRecipe(IRecipeLayoutBuilder builder, MoldingRecipe recipe, IFocusGroup focuses) {
     // basic input output
     builder.addSlot(RecipeIngredientRole.INPUT, 3, 24).addIngredients(recipe.getMaterial());
-    builder.addSlot(RecipeIngredientRole.OUTPUT, 51, 24).addItemStack(recipe.getResultItem());
+    builder.addSlot(RecipeIngredientRole.OUTPUT, 51, 24).addItemStack(recipe.getResultItem(ServerLifecycleHooks.getCurrentServer().registryAccess()));
 
     // if we have a mold, we are pressing into the table, so draw pressed item on input and output
     Ingredient pattern = recipe.getPattern();

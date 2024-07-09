@@ -3,13 +3,14 @@ package slimeknights.tconstruct.smeltery.client.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.apache.commons.lang3.tuple.Pair;
 import slimeknights.mantle.client.screen.ElementScreen;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
-import slimeknights.tconstruct.library.client.RenderUtils;
 import slimeknights.tconstruct.smeltery.block.entity.controller.MelterBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.module.FuelModule;
 import slimeknights.tconstruct.smeltery.client.screen.module.GuiFuelModule;
@@ -105,7 +106,7 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
 
   @Nullable
   @Override
-  public Object getIngredientUnderMouse(double mouseX, double mouseY) {
+  public Pair<?, Rect2i> getClickableIngredientUnderMouse(double mouseX, double mouseY) {
     Object ingredient = null;
     int checkX = (int) mouseX - leftPos;
     int checkY = (int) mouseY - topPos;
@@ -117,6 +118,6 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
     if (tank != null && ingredient == null)
       ingredient = tank.getIngreientUnderMouse(checkX, checkY);
 
-    return ingredient;
+    return ingredient == null ? null : Pair.of(ingredient, new Rect2i(leftPos, topPos, width, height));
   }
 }

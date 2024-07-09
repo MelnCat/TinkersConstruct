@@ -1,15 +1,16 @@
 package slimeknights.tconstruct.smeltery.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import mezz.jei.api.runtime.IClickableIngredient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.apache.commons.lang3.tuple.Pair;
 import slimeknights.mantle.client.screen.ElementScreen;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
-import slimeknights.tconstruct.library.client.RenderUtils;
 import slimeknights.tconstruct.smeltery.block.entity.controller.AlloyerBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.module.FuelModule;
 import slimeknights.tconstruct.smeltery.block.entity.module.alloying.MixerAlloyTank;
@@ -17,7 +18,7 @@ import slimeknights.tconstruct.smeltery.client.screen.module.GuiFuelModule;
 import slimeknights.tconstruct.smeltery.client.screen.module.GuiTankModule;
 import slimeknights.tconstruct.smeltery.menu.AlloyerContainerMenu;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class AlloyerScreen extends AbstractContainerScreen<AlloyerContainerMenu> implements IScreenWithFluidTank {
   private static final int[] INPUT_TANK_START_X = {54, 22, 38, 70, 6};
@@ -106,28 +107,27 @@ public class AlloyerScreen extends AbstractContainerScreen<AlloyerContainerMenu>
   }
 
   @Override
-  protected void renderLabels(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderLabels(matrices, mouseX, mouseY);
+  protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderLabels(graphics, mouseX, mouseY);
     int checkX = mouseX - this.leftPos;
     int checkY = mouseY - this.topPos;
 
     // highlight hovered tank
-    if (outputTank != null) outputTank.highlightHoveredFluid(matrices, checkX, checkY);
+    if (outputTank != null) outputTank.highlightHoveredFluid(graphics, checkX, checkY);
     for (GuiTankModule tankModule : inputTanks) {
-      tankModule.highlightHoveredFluid(matrices, checkX, checkY);
+      tankModule.highlightHoveredFluid(graphics, checkX, checkY);
     }
 
     // highlight hovered fuel
-    if (fuel != null) fuel.renderHighlight(matrices, checkX, checkY);
+    if (fuel != null) fuel.renderHighlight(graphics, checkX, checkY);
 
     // scala
     assert minecraft != null;
-    RenderUtils.setup(BACKGROUND);
-    SCALA.draw(matrices, 114, 16);
+    SCALA.draw(graphics, BACKGROUND, 114, 16);
   }
 
   @Override
-  protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+  public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
     super.renderTooltip(graphics, mouseX, mouseY);
 
     // tank tooltip
@@ -141,10 +141,9 @@ public class AlloyerScreen extends AbstractContainerScreen<AlloyerContainerMenu>
     if (fuel != null) fuel.addTooltip(graphics, mouseX, mouseY, true);
   }
 
-  @Nullable
   @Override
-  public Object getIngredientUnderMouse(double mouseX, double mouseY) {
-    Object ingredient = null;
+  public Pair<?, Rect2i> getClickableIngredientUnderMouse(double mouseX, double mouseY) {
+    Pair<?, Rect2i> ingredient = null;
     int checkX = (int) mouseX - leftPos;
     int checkY = (int) mouseY - topPos;
 

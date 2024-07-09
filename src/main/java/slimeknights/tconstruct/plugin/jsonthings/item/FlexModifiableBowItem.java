@@ -24,19 +24,6 @@ public class FlexModifiableBowItem extends ModifiableBowItem implements IFlexIte
 
   /* JSON things does not use the item properties tab, they handle it via the below method */
 
-  @Override
-  public void addCreativeStack(StackContext stackContext, Iterable<CreativeModeTab> tabs) {
-    for (CreativeModeTab tab : tabs) {
-      this.tabs.add(tab);
-    }
-  }
-
-  @Override
-  protected boolean allowedIn(CreativeModeTab category) {
-    return this.tabs.contains(category);
-  }
-
-
   /* not honestly sure what events do, but trivial to support */
 
   @Override

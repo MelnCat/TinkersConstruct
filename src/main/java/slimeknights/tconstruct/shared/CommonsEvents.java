@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -36,7 +37,7 @@ public class CommonsEvents {
     }
 
     // check if we jumped from a slime block
-    BlockPos pos = new BlockPos(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
+    BlockPos pos = BlockPos.containing(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
     if (event.getEntity().getCommandSenderWorld().isEmptyBlock(pos)) {
       pos = pos.below();
     }

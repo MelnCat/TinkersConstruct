@@ -123,7 +123,7 @@ public class HeatingStructureScreen extends MultiModuleScreen<HeatingStructureCo
 
   @Nullable
   @Override
-  public Object getIngredientUnderMouse(double mouseX, double mouseY) {
+  public Object getClickableIngredientUnderMouse(double mouseX, double mouseY) {
     Object ingredient = null;
 
     int checkX = (int) mouseX - cornerX;

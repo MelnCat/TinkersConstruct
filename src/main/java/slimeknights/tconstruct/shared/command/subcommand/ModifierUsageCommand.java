@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.TablePrinter;
 import slimeknights.mantle.command.MantleCommand;
@@ -160,7 +161,7 @@ public class ModifierUsageCommand {
     // finally, output the table
     table.build(logOutput);
     TConstruct.LOG.info(logOutput.toString());
-    context.getSource().sendSuccess(SUCCESS, true);
+    context.getSource().sendSuccess(() -> SUCCESS, true);
     return finalList.size();
   }
 

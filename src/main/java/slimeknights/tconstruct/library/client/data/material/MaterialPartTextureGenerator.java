@@ -73,7 +73,7 @@ public class MaterialPartTextureGenerator extends GenericTextureGenerator {
 
 
   @Override
-  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     runCallbacks(existingFileHelper, null);
     
     // ensure we have parts

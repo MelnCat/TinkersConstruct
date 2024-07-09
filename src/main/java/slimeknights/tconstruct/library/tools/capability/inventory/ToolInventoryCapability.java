@@ -245,7 +245,7 @@ public class ToolInventoryCapability extends InventoryModifierHookIterator<Modif
     } else {
       // space leftover? does it match?
       int limit = Math.min(current.getMaxStackSize(), slotLimit);
-      if (current.getCount() >= limit || !current.sameItem(stack)) {
+      if (current.getCount() >= limit || !ItemStack.isSameItemSameTags(stack, current)) {
         return stack;
       }
       int maxSize = current.getCount() + stack.getCount();
@@ -454,7 +454,7 @@ public class ToolInventoryCapability extends InventoryModifierHookIterator<Modif
           TooltipUtil.getDisplayName(stack, tool, definition)
         ), buf -> buf.writeEnum(slotType));
       }
-      return InteractionResult.sidedSuccess(player.level.isClientSide);
+      return InteractionResult.sidedSuccess(player.level().isClientSide);
     }
     return InteractionResult.PASS;
   }

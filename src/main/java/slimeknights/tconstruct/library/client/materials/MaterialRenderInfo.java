@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 
 import javax.annotation.Nullable;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -76,14 +77,14 @@ public class MaterialRenderInfo {
    * @param textures  Texture consumer
    * @param base      Base texture, will be used to generate texture names
    */
-  public void getTextureDependencies(Predicate<Material> textures, Material base) {
+  public void getTextureDependencies(BiPredicate<String, Material> textures, Material base) {
     if (texture != null) {
-      if (textures.test(getMaterial(base.texture(), getSuffix(texture)))) {
+      if (textures.test(texture.getPath() + "_" + getSuffix(texture), getMaterial(base.texture(), getSuffix(texture)))) {
         return;
       }
     }
     for (String fallback : fallbacks) {
-      if (textures.test(getMaterial(base.texture(), fallback))) {
+      if (textures.test(texture.getPath() + "_" + fallback, getMaterial(base.texture(), fallback))) {
         break;
       }
     }

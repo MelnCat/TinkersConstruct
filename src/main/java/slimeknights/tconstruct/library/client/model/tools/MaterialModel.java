@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.client.model.tools;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -9,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Transformation;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -25,6 +27,7 @@ import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import org.joml.Vector3f;
+import slimeknights.mantle.client.model.util.ExtraTextureContext;
 import slimeknights.mantle.client.model.util.MantleItemLayerModel;
 import slimeknights.mantle.util.ItemLayerPixels;
 import slimeknights.tconstruct.common.config.Config;
@@ -45,7 +48,7 @@ import java.util.function.Predicate;
 /**
  * Model for an item with material texture variants, such as tool parts. Used only for single material items, {@link ToolModel} is used for multi-material items.
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
   /** Shared loader instance */
   public static final IGeometryLoader<MaterialModel> LOADER = MaterialModel::deserialize;
@@ -57,12 +60,12 @@ public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
   private final int index;
   /** Transform matrix to apply to child parts */
   private final Vec2 offset;
+  private Map<String, Material> allTextures = new HashMap<>();
 
   @Override
-  public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation,UnbakedModel> modelGetter, Set<Pair<String,String>> missingTextureErrors) {
-    Set<Material> allTextures = Sets.newHashSet();
-    getMaterialTextures(allTextures, owner, "texture", material);
-    return allTextures;
+  public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+    allTextures = new HashMap<>();
+    getMaterialTextures(allTextures, context, "texture", material);
   }
 
   /**
@@ -72,14 +75,14 @@ public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
    * @param textureName  Texture name to add
    * @param material     List of materials
    */
-  public static void getMaterialTextures(Collection<Material> allTextures, IGeometryBakingContext owner, String textureName, @Nullable MaterialVariantId material) {
+  public static void getMaterialTextures(Map<String, Material> allTextures, IGeometryBakingContext owner, String textureName, @Nullable MaterialVariantId material) {
     Material texture = owner.getMaterial(textureName);
-    allTextures.add(texture);
+    allTextures.put(textureName, texture);
 
     // if the texture is missing, stop here
     if (!MissingTextureAtlasSprite.getLocation().equals(texture.texture())) {
       // texture should exist in item/tool, or the validator cannot handle them
-      Predicate<Material> textureAdder = DynamicTextureLoader.getTextureAdder(allTextures, Config.CLIENT.logMissingMaterialTextures.get());
+      var textureAdder = DynamicTextureLoader.getTextureAdder(allTextures, Config.CLIENT.logMissingMaterialTextures.get());
       // if no specific material is set, load all materials as dependencies. If just one material, use just that one
       if (material == null) {
         MaterialRenderInfoLoader.INSTANCE.getAllRenderInfos().forEach(info -> info.getTextureDependencies(textureAdder, texture));
@@ -122,7 +125,7 @@ public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
   }
 
   /**
-   * Same as {@link #bake(IGeometryBakingContext, ModelBakery, Function, ModelState, ItemOverrides, ResourceLocation)} , but uses fewer arguments and does not require an instance
+   * Same as {@link #bake(IGeometryBakingContext, ModelBaker, Function, ModelState, ItemOverrides, ResourceLocation)} , but uses fewer arguments and does not require an instance
    * @param owner          Model configuration
    * @param spriteGetter   Sprite getter function
    * @param transform      Transform to apply to the quad fetching. Should not include rotation or it will look wrong in UIs
@@ -140,7 +143,7 @@ public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
   }
 
   @Override
-  public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides vanillaOverrides, ResourceLocation modelLocation) {
+  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides vanillaOverrides, ResourceLocation modelLocation) {
     // create transforms from offset
     // TODO: figure out forge transforms, can I use them here?
     Transformation transforms;
@@ -159,7 +162,7 @@ public class MaterialModel implements IUnbakedGeometry<MaterialModel> {
     }
 
     // after that its base logic
-    return bakeInternal(owner, spriteGetter, transforms, Objects.requireNonNullElse(material, IMaterial.UNKNOWN_ID), index, overrides);
+    return bakeInternal(new ExtraTextureContext(owner, allTextures), spriteGetter, transforms, Objects.requireNonNullElse(material, IMaterial.UNKNOWN_ID), index, overrides);
   }
 
   /**

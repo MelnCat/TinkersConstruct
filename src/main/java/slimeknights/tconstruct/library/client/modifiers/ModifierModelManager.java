@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -156,7 +157,7 @@ public class ModifierModelManager implements IEarlySafeManagerReloadListener {
    * @return  Texture, or null if missing
    */
   @Nullable
-  private static Material getTexture(List<ResourceLocation> modifierRoots, Predicate<Material> textureAdder, ResourceLocation modifier, String suffix) {
+  private static Material getTexture(List<ResourceLocation> modifierRoots, BiPredicate<String, Material> textureAdder, ResourceLocation modifier, String suffix) {
     if (modifierModels.isEmpty()) {
       return null;
     }
@@ -164,7 +165,7 @@ public class ModifierModelManager implements IEarlySafeManagerReloadListener {
     // try the non-logging ones first
     for (ResourceLocation root : modifierRoots) {
       Material texture = getModifierTexture(root, modifier, suffix);
-      if (textureAdder.test(texture)) {
+      if (textureAdder.test(root.getPath() + modifier.getNamespace() + "_" + modifier.getPath() + suffix, texture)) {
         return texture;
       }
     }
@@ -179,7 +180,7 @@ public class ModifierModelManager implements IEarlySafeManagerReloadListener {
    * @param largeModifierRoots  List of modifier roots for large tools, null if the tool is not large
    * @return  Map of models
    */
-  public static Map<ModifierId,IBakedModifierModel> getModelsForTool(List<ResourceLocation> smallModifierRoots, List<ResourceLocation> largeModifierRoots, Collection<Material> textures) {
+  public static Map<ModifierId,IBakedModifierModel> getModelsForTool(List<ResourceLocation> smallModifierRoots, List<ResourceLocation> largeModifierRoots, Map<String, Material> textures) {
     // if we have no modifier models, or both lists of modifier roots are empty, nothing to do
     if (modifierModels.isEmpty() || (smallModifierRoots.isEmpty() && largeModifierRoots.isEmpty())) {
       return Collections.emptyMap();
@@ -189,7 +190,7 @@ public class ModifierModelManager implements IEarlySafeManagerReloadListener {
     ImmutableMap.Builder<ModifierId,IBakedModifierModel> modelMap = ImmutableMap.builder();
 
     // create two texture adders, so we only log on the final option if missing
-    Predicate<Material> textureAdder = DynamicTextureLoader.getTextureAdder(textures, Config.CLIENT.logMissingModifierTextures.get());
+    var textureAdder = DynamicTextureLoader.getTextureAdder(textures, Config.CLIENT.logMissingModifierTextures.get());
 
     // load each modifier
     for (Entry<ModifierId, IUnbakedModifierModel> entry : modifierModels.entrySet()) {

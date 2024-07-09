@@ -165,7 +165,7 @@ public class GadgetRecipeProvider extends BaseRecipeProvider {
    * @param folder      Folder to store the recipe
    */
   private void campfireCooking(Consumer<FinishedRecipe> consumer, ItemLike input, ItemLike output, float experience, String folder) {
-    SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(input), RecipeCategory.MISC, output, experience, 600, RecipeSerializer.CAMPFIRE_COOKING_RECIPE)
+    SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(input), RecipeCategory.MISC, output, experience, 600)
                               .unlockedBy("has_item", has(input))
                               .save(consumer, wrap(id(output), folder, "_campfire"));
   }
@@ -187,7 +187,7 @@ public class GadgetRecipeProvider extends BaseRecipeProvider {
                               .unlockedBy("has_item", criteria)
                               .save(consumer, wrap(outputId, folder, "_furnace"));
     // smoker 100 ticks
-    SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(input), RecipeCategory.MISC, output, experience, 100, RecipeSerializer.SMOKING_RECIPE)
+    SimpleCookingRecipeBuilder.smoking(Ingredient.of(input), RecipeCategory.MISC, output, experience, 100)
                               .unlockedBy("has_item", criteria)
                               .save(consumer, wrap(outputId, folder, "_smoker"));
   }

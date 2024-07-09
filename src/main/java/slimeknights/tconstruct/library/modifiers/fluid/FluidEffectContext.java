@@ -2,15 +2,28 @@ package slimeknights.tconstruct.library.modifiers.fluid;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static slimeknights.tconstruct.library.tools.helper.ModifierUtil.asLiving;
 import static slimeknights.tconstruct.library.tools.helper.ModifierUtil.asPlayer;
@@ -33,16 +46,16 @@ public abstract class FluidEffectContext {
   /** Gets a damage source based on this context */
   public DamageSource createDamageSource() {
     if (projectile != null) {
-      return DamageSource.indirectMobAttack(projectile, entity).setProjectile();
+      return new ModifiableDamageSource(DamageTypes.MOB_PROJECTILE, null, projectile);
     }
     if (player != null) {
-      return DamageSource.playerAttack(player);
+      return new ModifiableDamageSource(DamageTypes.PLAYER_ATTACK, null, player);
     }
     if (entity != null) {
-      return DamageSource.mobAttack(entity);
+      return new ModifiableDamageSource(DamageTypes.MOB_ATTACK, null, entity);
     }
     // we should never reach here, but just in case
-    return new DamageSource("generic");
+    return new ModifiableDamageSource(DamageTypes.GENERIC, null, null);
   }
 
   /** Context for fluid effects targeting an entity */
@@ -95,6 +108,23 @@ public abstract class FluidEffectContext {
     /** Checks if the block in front of the hit block is replaceable */
     public boolean isOffsetReplaceable() {
       return level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection())).getMaterial().isReplaceable();
+    }
+  }
+
+  public static class ModifiableDamageSource extends DamageSource {
+    private Set<TagKey<DamageType>> tags = new HashSet<>();
+
+    public ModifiableDamageSource(ResourceKey<DamageType> pType, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.Entity pDirectEntity, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.Entity pCausingEntity) {
+      super(ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(pType), pDirectEntity, pCausingEntity);
+    }
+
+    public void addTag(TagKey<DamageType> tag) {
+      tags.add(tag);
+    }
+
+    @Override
+    public boolean is(TagKey<DamageType> pDamageTypeKey) {
+      return tags.contains(pDamageTypeKey) || super.is(pDamageTypeKey);
     }
   }
 }

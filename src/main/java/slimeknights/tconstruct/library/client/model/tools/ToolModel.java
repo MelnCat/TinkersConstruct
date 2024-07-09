@@ -18,11 +18,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -37,6 +33,7 @@ import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import org.joml.Vector3f;
+import slimeknights.mantle.client.model.util.ExtraTextureContext;
 import slimeknights.mantle.client.model.util.MantleItemLayerModel;
 import slimeknights.mantle.data.loadable.Loadable;
 import slimeknights.mantle.data.loadable.mapping.CompactLoadable;
@@ -62,13 +59,7 @@ import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
 import javax.annotation.Nullable;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -199,6 +190,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
   private final List<FirstModifier> firstModifiers;
   /** Models for the relevant modifiers */
   private Map<ModifierId,IBakedModifierModel> modifierModels = Collections.emptyMap();
+  private Map<String, Material> allTextures;
 
   public ToolModel(List<ToolPart> parts, boolean isLarge, Vec2 offset, List<ResourceLocation> smallModifierRoots, List<ResourceLocation> largeModifierRoots, List<FirstModifier> firstModifiers) {
     this.toolParts = parts;
@@ -209,9 +201,10 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     this.firstModifiers = firstModifiers;
   }
 
+
   @Override
-  public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation,UnbakedModel> modelGetter, Set<Pair<String,String>> missingTextureErrors) {
-    Set<Material> allTextures = Sets.newHashSet();
+  public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+    allTextures = new HashMap<>();
     // default is just a single part named tool, no material
     if (toolParts.isEmpty()) {
       toolParts = ToolPart.DEFAULT_PARTS;
@@ -221,22 +214,20 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     for (ToolPart part : toolParts) {
       // if material variants, fetch textures from the material model
       if (part.hasMaterials()) {
-        MaterialModel.getMaterialTextures(allTextures, owner, part.getName(false), null);
+        MaterialModel.getMaterialTextures(allTextures, context, part.getName(false), null);
         if (isLarge) {
-          MaterialModel.getMaterialTextures(allTextures, owner, part.getName(true), null);
+          MaterialModel.getMaterialTextures(allTextures, context, part.getName(true), null);
         }
       } else {
         // static texture
-        allTextures.add(owner.getMaterial(part.getName(false)));
+        allTextures.put(part.getName(false), context.getMaterial(part.getName(false)));
         if (isLarge) {
-          allTextures.add(owner.getMaterial(part.getName(true)));
+          allTextures.put(part.getName(true), context.getMaterial(part.getName(true)));
         }
       }
     }
     // load modifier models
     modifierModels = ModifierModelManager.getModelsForTool(smallModifierRoots, isLarge ? largeModifierRoots : Collections.emptyList(), allTextures);
-
-    return allTextures;
   }
 
   /**
@@ -315,7 +306,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
   }
 
   /**
-   * Same as {@link #bake(IGeometryBakingContext, ModelBakery, Function, ModelState, ItemOverrides, ResourceLocation)}, but uses fewer arguments and does not require an instance
+   * Same as {@link #bake(IGeometryBakingContext, ModelBaker, Function, ModelState, ItemOverrides, ResourceLocation)}, but uses fewer arguments and does not require an instance
    * @param owner           Model configuration
    * @param spriteGetter    Sprite getter function
    * @param largeTransforms Transform to apply to the large parts. If null, only generates small parts
@@ -400,11 +391,11 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
   }
 
   @Override
-  public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material,TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
+  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
     Transformation largeTransforms = isLarge ? new Transformation(new Vector3f((offset.x - 8) / 32, (-offset.y - 8) / 32, 0), null, new Vector3f(2, 2, 1), null) : null;
     overrides = new MaterialOverrideHandler(owner, toolParts, firstModifiers, largeTransforms, modifierModels, overrides);
     // bake the original with no tool, meaning it will skip modifiers and materials
-    return bakeInternal(owner, spriteGetter, largeTransforms, toolParts, modifierModels, firstModifiers, Collections.emptyList(), null, overrides);
+    return bakeInternal(new ExtraTextureContext(owner, allTextures), spriteGetter, largeTransforms, toolParts, modifierModels, firstModifiers, Collections.emptyList(), null, overrides);
   }
 
   /** Swaps out the large model for the small or gui model as needed */

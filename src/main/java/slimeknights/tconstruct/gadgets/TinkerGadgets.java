@@ -146,6 +146,6 @@ public final class TinkerGadgets extends TinkerModule {
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
     DataGenerator datagenerator = event.getGenerator();
-    datagenerator.addProvider(event.includeServer(), new GadgetRecipeProvider(datagenerator));
+    datagenerator.addProvider(event.includeServer(), new GadgetRecipeProvider(datagenerator.getPackOutput()));
   }
 }

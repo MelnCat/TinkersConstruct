@@ -5,8 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.nbt.CompoundTag;
@@ -84,7 +86,7 @@ public abstract class AbstractStructureRepalleter extends GenericNBTProvider {
           // if requested, run it through the structure template to cleanup NBT (e.g. compact palettes)
           if (task.reprocess) {
             StructureTemplate template = new StructureTemplate();
-            template.load(newStructure);
+            template.load(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), newStructure);
             newStructure = template.save(new CompoundTag());
           }
           saveNBT(cache, new ResourceLocation(modId, task.location), newStructure);

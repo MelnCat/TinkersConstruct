@@ -24,7 +24,7 @@ public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
   }
 
   @Override
-  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     for (AbstractMaterialSpriteProvider materialProvider : materialProviders) {
       for (Entry<ResourceLocation,MaterialSpriteInfo> entry : materialProvider.getMaterials().entrySet()) {
         if (entry.getValue().getTransformer() instanceof RecolorSpriteTransformer recolor) {

@@ -104,7 +104,7 @@ public abstract class ArmoredSlimeEntity extends Slime {
   public void remove(Entity.RemovalReason reason) {
     // on death, split into multiple slimes, and let them inherit armor if it did not drop
     int size = this.getSize();
-    if (!this.level.isClientSide && size > 1 && this.isDeadOrDying()) {
+    if (!this.level().isClientSide && size > 1 && this.isDeadOrDying()) {
       Component name = this.getCustomName();
       boolean noAi = this.isNoAi();
       boolean invulnerable = this.isInvulnerable();
@@ -123,7 +123,7 @@ public abstract class ArmoredSlimeEntity extends Slime {
       for(int i = 0; i < count; ++i) {
         float x = ((i % 2) - 0.5F) * offset;
         float z = ((i / 2) - 0.5F) * offset;
-        Slime slime = this.getType().create(this.level);
+        Slime slime = this.getType().create(this.level());
         assert slime != null;
         if (this.isPersistenceRequired()) {
           slime.setPersistenceRequired();
@@ -139,7 +139,7 @@ public abstract class ArmoredSlimeEntity extends Slime {
           slime.setItemSlot(EquipmentSlot.HEAD, helmet.copy());
         }
         slime.moveTo(this.getX() + x, this.getY() + 0.5D, this.getZ() + z, this.random.nextFloat() * 360.0F, 0.0F);
-        this.level.addFreshEntity(slime);
+        this.level().addFreshEntity(slime);
       }
     }
 

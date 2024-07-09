@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -64,13 +65,13 @@ public class DynamicTextureLoader {
    * @param logMissingTextures  If true, log textures that were not found
    * @return  Texture consumer
    */
-  public static Predicate<Material> getTextureAdder(Collection<Material> allTextures, boolean logMissingTextures) {
+  public static BiPredicate<String, Material> getTextureAdder(Map<String, Material> allTextures, boolean logMissingTextures) {
     ResourceManager manager = Minecraft.getInstance().getResourceManager();
-    return mat -> {
+    return (key, mat) -> {
       // either must be non-blocks, or must exist. We have fallbacks if it does not exist
       ResourceLocation loc = mat.texture();
       if (!InventoryMenu.BLOCK_ATLAS.equals(mat.atlasLocation()) || textureExists(manager, loc)) {
-        allTextures.add(mat);
+        allTextures.put(key, mat);
         return true;
       }
       if (logMissingTextures) {

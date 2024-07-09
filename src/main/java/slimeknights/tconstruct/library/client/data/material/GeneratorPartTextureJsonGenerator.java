@@ -51,7 +51,7 @@ public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
   }
 
   @Override
-  public CompletableFuture<?> run(CachedOutput cache) throws IOException {
+  public CompletableFuture<?> run(CachedOutput cache) {
     JsonObject json = new JsonObject();
     json.addProperty("replace", false);
     json.add("parts", PartSpriteInfo.LIST_LOADABLE.serialize(spriteProvider.getSprites()));

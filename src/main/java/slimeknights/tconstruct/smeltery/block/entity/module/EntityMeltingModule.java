@@ -1,7 +1,9 @@
 package slimeknights.tconstruct.smeltery.block.entity.module;
 
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,8 +16,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import slimeknights.mantle.block.entity.MantleBlockEntity;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags.EntityTypes;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.recipe.FluidValues;
@@ -31,12 +36,19 @@ import java.util.function.Supplier;
 /**
  * Module to handle fetching items from the bounds and interacting with entities in the structure
  */
+// todo! is this a tinker module?
 @RequiredArgsConstructor
-public class EntityMeltingModule {
+public class EntityMeltingModule extends TinkerModule {
   /** Standard damage source for melting most mobs */
-  public static final DamageSource SMELTERY_DAMAGE = new DamageSource(TConstruct.prefix("smeltery_heat")).setIsFire();
-  /** Special damage source for "absorbing" hot entities */
-  public static final DamageSource SMELTERY_MAGIC = new DamageSource(TConstruct.prefix("smeltery_magic")).setMagic();
+  public static final RegistryObject<DamageType> SMELTERY_DAMAGE_TYPE = DAMAGE_TYPES.register("smeltery_damage", () -> new DamageType(TConstruct.prefix("smeltery_heat"), 0));
+  /**
+   * Special damage source for "absorbing" hot entities
+   */
+
+  public static final RegistryObject<DamageType> SMELTERY_MAGIC_TYPE = DAMAGE_TYPES.register("smeltery_magic", () -> new DamageType(TConstruct.prefix("smeltery_magic"), 0));
+
+  public static final DamageSource SMELTERY_DAMAGE = new DamageSource(SMELTERY_DAMAGE_TYPE.getHolder().get());
+  public static final DamageSource SMELTERY_MAGIC = new DamageSource(SMELTERY_MAGIC_TYPE.getHolder().get());
 
   private final MantleBlockEntity parent;
   private final IFluidHandler tank;

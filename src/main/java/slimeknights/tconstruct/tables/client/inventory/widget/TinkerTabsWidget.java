@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -147,11 +148,11 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
   }
 
   @Override
-  public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     int sel = this.tabs.selected;
     this.tabs.update(mouseX, mouseY);
-    this.tabs.draw(poseStack);
+    this.tabs.draw(graphics);
 
     // new selection
     if (sel != this.tabs.selected) {
@@ -159,10 +160,10 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
         onNewTabSelection(this.tabData.get(this.tabs.selected));
     }
 
-    renterTooltip(poseStack, mouseX, mouseY);
+    renterTooltip(graphics, mouseX, mouseY);
   }
 
-  protected void renterTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+  protected void renterTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
     // highlighted tooltip
     Level world = parent.getMinecraft().level;
     if (this.tabs.highlighted > -1 && world != null) {
@@ -176,7 +177,7 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
       }
 
       // TODO: renderComponentTooltip->renderTooltip
-      parent.renderComponentTooltip(poseStack, Lists.newArrayList(title), mouseX, mouseY);
+      graphics.renderComponentTooltip(Minecraft.getInstance().font, Lists.newArrayList(title), mouseX, mouseY);
     }
   }
 

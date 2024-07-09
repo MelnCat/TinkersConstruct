@@ -336,7 +336,7 @@ public class JEIPlugin implements IModPlugin {
   @Override
   public void registerGuiHandlers(IGuiHandlerRegistration registration) {
     registration.addGenericGuiContainerHandler(MelterScreen.class, new GuiContainerTankHandler<>(registration.getJeiHelpers()));
-    registration.addGenericGuiContainerHandler(HeatingStructureScreen.class, new GuiContainerTankHandler<>());
+    registration.addGenericGuiContainerHandler(HeatingStructureScreen.class, new GuiContainerTankHandler<>(registration.getJeiHelpers()));
   }
 
   @Override
@@ -453,8 +453,9 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(T containerScreen, double mouseX, double mouseY) {
       Pair<?, Rect2i> ingredient = containerScreen.getClickableIngredientUnderMouse(mouseX, mouseY);
+      if (ingredient == null) return Optional.empty();
       var typedIngredient = jeiHelpers.getIngredientManager().createTypedIngredient(ingredient.getLeft());
-      return new ClickableIngredient<Object>(typedIngredient, ingredient.getRight());
+      return Optional.of(new ClickableIngredient<>(typedIngredient.get(), ingredient.getRight()));
     }
   }
 

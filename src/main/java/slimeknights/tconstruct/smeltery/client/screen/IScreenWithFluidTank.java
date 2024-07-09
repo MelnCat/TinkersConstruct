@@ -17,5 +17,6 @@ public interface IScreenWithFluidTank {
    * @param mouseY Mouse Y
    * @return Ingredient under mouse, or null if no ingredient. Does not need to handle item stacks
    */
+  @Nullable
   Pair<?, Rect2i> getClickableIngredientUnderMouse(double mouseX, double mouseY);
 }

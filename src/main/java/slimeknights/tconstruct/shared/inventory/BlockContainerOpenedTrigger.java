@@ -55,7 +55,7 @@ public class BlockContainerOpenedTrigger extends SimpleCriterionTrigger<BlockCon
     }
 
     public static Instance container(BlockEntityType<?> type) {
-      return new Instance(Composite.ANY, type);
+      return new Instance(ContextAwarePredicate.ANY, type);
     }
 
     /** Tests if this instance matches */

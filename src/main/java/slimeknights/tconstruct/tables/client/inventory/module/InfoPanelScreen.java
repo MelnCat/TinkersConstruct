@@ -39,7 +39,7 @@ public class InfoPanelScreen extends ModuleScreen {
   protected static final ElementScreen BOTTOM_LEFT = new ElementScreen(0, resH + 4, 4, 4);
   protected static final ElementScreen BOTTOM_RIGHT = new ElementScreen(resW + 4, resH + 4, 4, 4);
 
-  protected static final ScalableElementScreen TOP = new ScalableElementScreen(4, 0, resW, 4);
+  protected static final ScalableElementScreen TOP =  new ScalableElementScreen(4, 0, resW, 4);
   protected static final ScalableElementScreen BOTTOM = new ScalableElementScreen(4, 4 + resH, resW, 4);
   protected static final ScalableElementScreen LEFT = new ScalableElementScreen(0, 4, 4, resH);
   protected static final ScalableElementScreen RIGHT = new ScalableElementScreen(4 + resW, 4, 4, resH);

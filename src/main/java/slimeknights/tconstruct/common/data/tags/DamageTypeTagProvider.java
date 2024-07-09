@@ -31,6 +31,7 @@ import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.smeltery.block.entity.module.EntityMeltingModule;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.TinkerToolParts;
@@ -66,7 +67,7 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
       }));
       actions.add(new ConfigurableAction(builder, "lightning", true, "Makes lightning count as fire damage", DamageSource.LIGHTNING_BOLT::setIsFire));*/
     // There is no more is_magic (except in Neoforge)
-    tag(DamageTypeTags.IS_FIRE).add(DamageTypes.LIGHTNING_BOLT);
+    tag(DamageTypeTags.IS_FIRE).add(DamageTypes.LIGHTNING_BOLT, EntityMeltingModule.SMELTERY_DAMAGE_TYPE.getKey());
   }
 
 }

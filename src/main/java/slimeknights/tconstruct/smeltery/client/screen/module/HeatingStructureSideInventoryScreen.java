@@ -2,6 +2,7 @@ package slimeknights.tconstruct.smeltery.client.screen.module;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,23 +37,21 @@ public class HeatingStructureSideInventoryScreen extends SideInventoryScreen<Hea
   }
 
   @Override
-  protected int drawSlots(PoseStack matrices, int xPos, int yPos) {
-    RenderSystem.setShaderTexture(0, SLOT_LOCATION);
-    int ret = super.drawSlots(matrices, xPos, yPos);
-    RenderSystem.setShaderTexture(0, GENERIC_INVENTORY);
+  protected int drawSlots(GuiGraphics graphics, ResourceLocation texture, int xPos, int yPos) {
+    int ret = super.drawSlots(graphics, SLOT_LOCATION, xPos, yPos);
     return ret;
   }
 
   @Override
-  public void renderLabels(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderLabels(matrices, mouseX, mouseY);
+  public void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderLabels(graphics, mouseX, mouseY);
   }
 
   @Override
-  protected void renderTooltip(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderTooltip(matrices, mouseX, mouseY);
+  public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderTooltip(graphics, mouseX, mouseY);
     if (parent.melting != null) {
-      parent.melting.drawHeatTooltips(matrices, mouseX, mouseY);
+      parent.melting.drawHeatTooltips(graphics, mouseX, mouseY);
     }
   }
 }

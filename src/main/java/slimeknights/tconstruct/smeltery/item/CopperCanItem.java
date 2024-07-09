@@ -2,6 +2,7 @@ package slimeknights.tconstruct.smeltery.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -82,7 +83,7 @@ public class CopperCanItem extends Item {
       }
     } else {
       CompoundTag nbt = stack.getOrCreateTag();
-      nbt.putString(TAG_FLUID, Registry.FLUID.getKey(fluid.getFluid()).toString());
+      nbt.putString(TAG_FLUID, BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString());
       CompoundTag fluidTag = fluid.getTag();
       if (fluidTag != null) {
         nbt.put(TAG_FLUID_TAG, fluidTag.copy());

@@ -1,6 +1,8 @@
 package slimeknights.tconstruct.smeltery.client.screen.module;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -71,7 +73,7 @@ public class GuiSmelteryTank {
    * Renders the smeltery tank
    * @param matrices  Matrix stack instance
    */
-  public void renderFluids(PoseStack matrices) {
+  public void renderFluids(GuiGraphics graphics) {
     // draw liquids
     if (tank.getContained() > 0) {
       int[] heights = calcLiquidHeights(true);
@@ -80,7 +82,7 @@ public class GuiSmelteryTank {
       for (int i = 0; i < heights.length; i++) {
         int fluidH = heights[i];
         FluidStack liquid = tank.getFluids().get(i);
-        GuiUtil.renderTiledFluid(matrices, parent, liquid, x, bottom - fluidH, width, fluidH, 100);
+        GuiUtil.renderTiledFluid(graphics, parent, liquid, x, bottom - fluidH, width, fluidH, 100);
         bottom -= fluidH;
       }
     }
@@ -119,12 +121,12 @@ public class GuiSmelteryTank {
    * @param mouseX    Mouse X
    * @param mouseY    Mouse Y
    */
-  public void renderHighlight(PoseStack matrices, int mouseX, int mouseY) {
+  public void renderHighlight(GuiGraphics graphics, int mouseX, int mouseY) {
     int checkX = mouseX - parent.leftPos;
     int checkY = mouseY - parent.topPos;
     if (withinTank(checkX, checkY)) {
       if (tank.getContained() == 0) {
-        GuiUtil.renderHighlight(matrices, x, y, width, height);
+        GuiUtil.renderHighlight(graphics, x, y, width, height);
       } else {
         int[] heights = calcLiquidHeights(false);
         int hovered = getFluidFromMouse(heights, checkY);
@@ -137,9 +139,9 @@ public class GuiSmelteryTank {
         }
         // render the area
         if (hovered == -1) {
-          GuiUtil.renderHighlight(matrices, x, y, width, height - heightSum);
+          GuiUtil.renderHighlight(graphics, x, y, width, height - heightSum);
         } else {
-          GuiUtil.renderHighlight(matrices, x, (y + height) - heightSum, width, heights[hovered]);
+          GuiUtil.renderHighlight(graphics, x, (y + height) - heightSum, width, heights[hovered]);
         }
       }
     }
@@ -151,7 +153,7 @@ public class GuiSmelteryTank {
    * @param mouseX    Mouse X
    * @param mouseY    Mouse Y
    */
-  public void drawTooltip(PoseStack matrices, int mouseX, int mouseY) {
+  public void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
     // Liquids
     int checkX = mouseX - parent.leftPos;
     int checkY = mouseY - parent.topPos;
@@ -180,7 +182,7 @@ public class GuiSmelteryTank {
       else {
         tooltip = FluidTooltipHandler.getFluidTooltip(tank.getFluidInTank(hovered));
       }
-      parent.renderComponentTooltip(matrices, tooltip, mouseX, mouseY);
+      graphics.renderComponentTooltip(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
     }
   }
 

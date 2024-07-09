@@ -59,11 +59,11 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
     if (fuel != null) {
       // draw the correct background for the fuel type
       if (menu.isHasFuelSlot()) {
-        FUEL_SLOT.draw(graphics, leftPos + 150, topPos + 31);
+        FUEL_SLOT.draw(graphics, BACKGROUND, leftPos + 150, topPos + 31);
       } else {
-        FUEL_TANK.draw(graphics, leftPos + 152, topPos + 31);
+        FUEL_TANK.draw(graphics, BACKGROUND, leftPos + 152, topPos + 31);
       }
-      fuel.draw(graphics);
+      fuel.draw(graphics, BACKGROUND);
     }
 
     // fluids
@@ -82,7 +82,7 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
     if (fuel != null) fuel.renderHighlight(graphics, checkX, checkY);
 
     // scala
-    SCALA.draw(graphics, 90, 16);
+    SCALA.draw(graphics, BACKGROUND, 90, 16);
 
     // heat bars
     if (melting != null) {
@@ -91,17 +91,17 @@ public class MelterScreen extends AbstractContainerScreen<MelterContainerMenu> i
   }
 
   @Override
-  protected void renderTooltip(PoseStack matrices, int mouseX, int mouseY) {
-    super.renderTooltip(matrices, mouseX, mouseY);
+  public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderTooltip(graphics, mouseX, mouseY);
 
     // tank tooltip
-    if (tank != null) tank.renderTooltip(matrices, mouseX, mouseY);
+    if (tank != null) tank.renderTooltip(graphics, mouseX, mouseY);
 
     // heat tooltips
-    if (melting != null) melting.drawHeatTooltips(matrices, mouseX, mouseY);
+    if (melting != null) melting.drawHeatTooltips(graphics, mouseX, mouseY);
 
     // fuel tooltip
-    if (fuel != null) fuel.addTooltip(matrices, mouseX, mouseY, true);
+    if (fuel != null) fuel.addTooltip(graphics, mouseX, mouseY, true);
   }
 
   @Nullable

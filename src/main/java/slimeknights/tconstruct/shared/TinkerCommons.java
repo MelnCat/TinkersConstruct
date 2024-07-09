@@ -177,8 +177,8 @@ public final class TinkerCommons extends TinkerModule {
     ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
     boolean client = event.includeClient();
     generator.addProvider(client, new ModelSpriteProvider(generator, existingFileHelper));
-    generator.addProvider(client, new TinkerItemModelProvider(generator, existingFileHelper));
-    generator.addProvider(client, new TinkerBlockStateProvider(generator, existingFileHelper));
-    generator.addProvider(event.includeServer(), new CommonRecipeProvider(generator));
+    generator.addProvider(client, new TinkerItemModelProvider(generator.getPackOutput(), existingFileHelper));
+    generator.addProvider(client, new TinkerBlockStateProvider(generator.getPackOutput(), existingFileHelper));
+    generator.addProvider(event.includeServer(), new CommonRecipeProvider(generator.getPackOutput()));
   }
 }

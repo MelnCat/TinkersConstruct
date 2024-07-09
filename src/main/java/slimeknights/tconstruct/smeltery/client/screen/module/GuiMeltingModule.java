@@ -2,6 +2,7 @@ package slimeknights.tconstruct.smeltery.client.screen.module;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.AllArgsConstructor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -78,7 +79,7 @@ public class GuiMeltingModule {
    * @param mouseX  Mouse X position
    * @param mouseY  Mouse Y position
    */
-  public void drawHeatTooltips(PoseStack matrices, int mouseX, int mouseY) {
+  public void drawHeatTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
     int checkX = mouseX - screen.leftPos;
     int checkY = mouseY - screen.topPos;
     int temperature = this.temperature.getAsInt();
@@ -106,7 +107,7 @@ public class GuiMeltingModule {
 
           // draw tooltip if relevant
           if (tooltip != null) {
-            screen.renderTooltip(matrices, tooltip, mouseX, mouseY);
+            graphics.renderTooltip(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
           }
 
           // cannot hover two slots, so done

@@ -27,11 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.SkullBlock.Type;
@@ -69,7 +65,7 @@ public class SlimeArmorLayer<T extends Slime, M extends HierarchicalModel<T>, A 
 
       Item item = helmet.getItem();
       // helmet renderer, based on humanoid armor layer
-      if (item instanceof ArmorItem armor && armor.getSlot() == EquipmentSlot.HEAD) {
+      if (item instanceof ArmorItem armor && armor.getType() == ArmorItem.Type.HELMET) {
         this.getParentModel().copyPropertiesTo(armorModel);
         armorModel.setAllVisible(false);
         armorModel.head.visible = true;
@@ -106,7 +102,7 @@ public class SlimeArmorLayer<T extends Slime, M extends HierarchicalModel<T>, A 
         } else {
           // standard rendering
           CustomHeadLayer.translateToHead(matrices, false);
-          Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, helmet, ItemTransforms.TransformType.HEAD, false, matrices, buffer, packedLight);
+          Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, helmet, ItemDisplayContext.HEAD, false, matrices, buffer, packedLight);
         }
       }
       matrices.popPose();

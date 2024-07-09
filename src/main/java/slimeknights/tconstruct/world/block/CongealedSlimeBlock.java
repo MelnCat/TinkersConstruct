@@ -68,7 +68,7 @@ public class CongealedSlimeBlock extends Block {
   @Override
   public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
     // no fall damage on congealed slime
-    entityIn.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
+    entityIn.causeFallDamage(fallDistance, 0.0F, entityIn.damageSources().fall());
   }
 
   @Override

@@ -4,6 +4,10 @@ Very cursed, old description below if you want to compile it yourself.
 
 Run `./gradlew build` if you want to compile it, everything is cursed.
 
+![image](https://github.com/user-attachments/assets/73eaa6d5-e0c1-4d5f-81b5-43840f8a0bcd)
+
+hey at least it looks cool even if the guis are broken and functionality is kind of broken
+
 # OLD DESC -> [Tinkers' Construct](http://minecraft.curseforge.com/projects/tinkers-construct)
 
 Modify all the things, then do it again!   

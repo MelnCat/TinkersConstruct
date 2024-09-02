@@ -1,8 +1,10 @@
 # Cursed attempt at 1.20.1 port
 
-Very cursed, old description below if you want to compile it yourself
+Very cursed, old description below if you want to compile it yourself.
 
-# [Tinkers' Construct](http://minecraft.curseforge.com/projects/tinkers-construct)
+Run `./gradlew build` if you want to compile it, everything is cursed.
+
+# OLD DESC -> [Tinkers' Construct](http://minecraft.curseforge.com/projects/tinkers-construct)
 
 Modify all the things, then do it again!   
 Melt down any metals you find. 	 
